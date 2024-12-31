@@ -43,10 +43,14 @@ void Enemy::displayDamage(sf::RenderWindow& window, int charSize) {
 
 	sf::Text text;
 	text.setFont(font);
-	text.setCharacterSize(charSize);
+	text.setCharacterSize(charSize / 2);
 	text.setString(std::to_string(lastDamageAmount));
 	text.setFillColor(sf::Color::Yellow);
-	text.setPosition(x * charSize, (y - 1) * charSize);
+
+	float offsetX = (charSize - text.getLocalBounds().width) / 2;
+	float offsetY = charSize / 2;
+
+	text.setPosition((x * charSize - 5) + offsetX, (y * charSize) - offsetY);
 	window.draw(text);
 }
 

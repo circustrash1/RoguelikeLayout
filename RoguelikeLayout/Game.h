@@ -34,6 +34,7 @@ private:
     Player* createPlayer(const std::string& className);
     void updateHealth();
     HealthBar* healthBar;
+    ShowStats* showStats;
 
     // Screen shake
     void screenShake(float intensity, float duration);

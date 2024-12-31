@@ -406,7 +406,7 @@ void Map::carveCorridor(int cx, int cy, std::default_random_engine& rng, std::st
 }
 
 void Map::render(sf::RenderWindow& window, int playerX, int playerY, int charSize, Player* player) {
-	revealArea(playerX, playerY, 3); // Reveal an area around the player
+	revealArea(playerX, playerY, 60); // Reveal an area around the player
 
 	sf::Font font; // Create a font object
 	if (!font.loadFromFile("fs-min.ttf")) { // Load the font

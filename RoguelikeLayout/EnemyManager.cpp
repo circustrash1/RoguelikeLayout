@@ -3,7 +3,7 @@
 #include <cstdlib>
 
 void EnemyManager::spawnEnemies(int roomX, int roomY, int roomWidth, int roomHeight, std::vector<std::vector<char>>& map) {
-	int numEnemies = std::rand() % 10 + 3;
+	int numEnemies = std::rand() % 3 + 3;
 
 	for (int i = 0; i < numEnemies; ++i) {
 		int x = 0, y = 0;

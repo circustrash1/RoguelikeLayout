@@ -2,7 +2,7 @@
 #include <iostream>
 
 Warrior::Warrior(int x, int y)
-	: Player(x, y, '@', 150, 15) {
+	: Player(x, y, '@', 150, 15, generateRandomStats(3, 0, 3, 0, 0, 0)) {
 }
 
 void Warrior::attack(std::vector<Enemy*>& enemies) {

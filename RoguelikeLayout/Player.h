@@ -5,12 +5,13 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "Enemies.h" // Include the Enemies header file
+#include "Stats.h"
 
 class Enemy; // Forward declaration of Enemy class
 
 class Player {
 public:
-    Player(int x, int y, char symbol, int health, int attackDmg);
+    Player(int x, int y, char symbol, int health, int attackDmg, const Stat& stats);
     virtual ~Player() = default;
     virtual void move(char direction, const std::vector<std::vector<char>>& map, const std::vector<Enemy*>& enemies);
     virtual void attack(std::vector<Enemy*>& enemies) = 0;
@@ -21,6 +22,7 @@ public:
     int getHealth() const;
     void loseHealth(int amount);
     sf::Clock attackCooldownClock;
+    const Stat& getStats() const;
 
 private:
     sf::Clock damageClock;
@@ -31,6 +33,7 @@ protected:
     char symbol;
     int health;
     int attackDmg;
+    Stat stats;
 };
 
 #endif // PLAYER_H

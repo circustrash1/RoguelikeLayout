@@ -1,4 +1,3 @@
-// Game.cpp
 #include "Game.h"
 #include <iostream>
 #include "Player.h"
@@ -8,7 +7,7 @@
 Game::Game()
     : scaleX(static_cast<float>(sf::VideoMode::getDesktopMode().width) / 640.0f),
     scaleY(static_cast<float>(sf::VideoMode::getDesktopMode().height) / 360.0f),
-    window(sf::VideoMode(640, 360), "Roguelike Layout"), map(62, 32), player(nullptr), isShaking(false), shakeIntensity(0.1f), healthBar(nullptr) {
+    window(sf::VideoMode(640, 360), "Roguelike Layout"), map(62, 32), player(nullptr), isShaking(false), shakeIntensity(0.1f), healthBar(nullptr), showStats(nullptr) {
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 
@@ -105,14 +104,21 @@ void Game::displayCharacterSelection() {
                 if (event.key.code == sf::Keyboard::Num1) {
                     player = createPlayer("Warrior");
                     healthBar = new HealthBar(20, 300, 12, 150, scaleX, scaleY); // Initialize HealthBar for Warrior
+                    showStats = new ShowStats(*player); // Initialize ShowStats for Warrior
                     characterSelected = true;
                 }
                 else if (event.key.code == sf::Keyboard::Num2) {
                     player = createPlayer("Mage");
                     healthBar = new HealthBar(20, 300, 12, 100, scaleX, scaleY); // Initialize HealthBar for Mage
+                    showStats = new ShowStats(*player); // Initialize ShowStats for Mage
                     characterSelected = true;
                 }
-                healthText.setString("Health: " + std::to_string(player->getHealth()));
+                if (player != nullptr) {
+                    healthText.setString("Health: " + std::to_string(player->getHealth()));
+                }
+                else {
+                    std::cerr << "Error: Player creation failed!" << std::endl;
+                }
             }
         }
     }
@@ -124,6 +130,7 @@ Game::~Game() {
     }
     delete player;
     delete healthBar; // Clean up healthBar
+    delete showStats; // Clean up showStats
 }
 
 void Game::run() {
@@ -215,10 +222,23 @@ void Game::render() {
         button->draw(window);
     }
 
-    map.render(window, player->getX(), player->getY(), 24, player); // Pass the desired character size
-    player->render(window, 24); // Render the player
+    if (player != nullptr) {
+        map.render(window, player->getX(), player->getY(), 24, player); // Line 228
+        player->render(window, 24); // Render the player
 
-    healthBar->render(window);
+        // Render Mage's projectile
+        if (Mage* mage = dynamic_cast<Mage*>(player)) {
+            mage->renderProjectile(window, 24);
+        }
+    }
+
+    if (healthBar != nullptr) {
+        healthBar->render(window);
+    }
+
+    if (showStats != nullptr && player != nullptr) {
+        showStats->renderPlayerStats(window, *player, 24, scaleX, scaleY);
+    }
 
     window.display();
 }
@@ -228,4 +248,3 @@ void Game::screenShake(float intensity, float duration) {
     shakeIntensity = intensity;
     shakeClock.restart();
 }
-

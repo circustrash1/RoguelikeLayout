@@ -2,7 +2,8 @@
 #include "Player.h"
 #include <iostream>
 
-Player::Player(int x, int y, char symbol, int health, int attackDmg) : x(x), y(y), symbol(symbol), health(health), attackDmg(attackDmg) {}
+Player::Player(int x, int y, char symbol, int health, int attackDmg, const Stat& stats) : x(x), y(y), symbol(symbol), health(health), attackDmg(attackDmg), 
+stats(stats) {}
 
 int Player::getX() const {
     return x;
@@ -64,6 +65,10 @@ void Player::update(const std::vector<Enemy*>& enemies) {
         }
         damageClock.restart();
     }
+}
+
+const Stat& Player::getStats() const {
+    return stats;
 }
 
 void Player::render(sf::RenderWindow& window, int charSize) const {

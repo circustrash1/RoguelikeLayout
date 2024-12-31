@@ -46,3 +46,31 @@ void HealthBar::update(int currentHealth) {
 void HealthBar::render(sf::RenderWindow& window) {
     window.draw(healthText);
 }
+
+ShowStats::ShowStats(const Player& player) : player(player) {
+    if (!font.loadFromFile("fs-min.ttf")) {
+        std::cerr << "Error loading font!" << std::endl;
+        exit(-1);
+    }
+
+    statsText.setFont(font);
+
+    statsText.setFillColor(sf::Color::White);
+
+
+
+}
+
+void ShowStats::renderPlayerStats(sf::RenderWindow& window, const Player& player, int charSize, float scaleX, float scaleY) {
+    const Stat& stats = player.getStats();
+    std::string statsString = "STR: " + std::to_string(stats.strength) + "\n" +
+        "DEX: " + std::to_string(stats.dexterity) + "\n" +
+        "CON: " + std::to_string(stats.constitution) + "\n" +
+        "INT: " + std::to_string(stats.intelligence) + "\n" +
+        "WIS: " + std::to_string(stats.wisdom) + "\n" +
+        "CHA: " + std::to_string(stats.charisma);
+    statsText.setString(statsString);
+    statsText.setCharacterSize(charSize);
+    statsText.setPosition(500 * scaleX, 280 * scaleY);
+    window.draw(statsText);
+}
