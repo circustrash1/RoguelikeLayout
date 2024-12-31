@@ -22,9 +22,17 @@ void EnemyManager::spawnEnemies(int roomX, int roomY, int roomWidth, int roomHei
 }
 
 void EnemyManager::updateEnemies(const std::vector<std::vector<char>>& map, int playerX, int playerY) {
-	for (Enemy* enemy : enemies) {
-		enemy->move(map, playerX, playerY, enemies); // Ensure the move method in Enemy class takes the map as an argument
-		enemy->attack();
+	for (auto it = enemies.begin(); it != enemies.end(); ) {
+		Enemy* enemy = *it;
+		if (!enemy->isAlive()) {
+			delete enemy;
+			it = enemies.erase(it);
+		}
+		else {
+			enemy->move(map, playerX, playerY, enemies);
+			enemy->attack();
+			++it;
+		}
 	}
 }
 
@@ -32,6 +40,10 @@ void EnemyManager::renderEnemies(sf::RenderWindow& window, int charSize, int pla
 	for (Enemy* enemy : enemies) {
 		enemy->render(window, charSize, playerX, playerY, player, enemies);
 	}
+}
+
+bool EnemyManager::allEnemiesDead() const {
+	return enemies.empty();
 }
 
 const std::vector<Enemy*>& EnemyManager::getEnemies() const {

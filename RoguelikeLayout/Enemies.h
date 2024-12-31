@@ -18,7 +18,7 @@ public:
     virtual void attack() = 0;
     void render(sf::RenderWindow& window, int charSize, int playerX, int playerY, Player* player, const std::vector<Enemy*>& enemies);
     void takeDamage(int damage);
-    void displayDamage(sf::RenderWindow& window, int damage, int charSize);
+    void displayDamage(sf::RenderWindow& window, int charSize);
     bool isAlive() const;
     virtual void playDeathAnimation(sf::RenderWindow& window) = 0;
 
@@ -39,6 +39,7 @@ protected:
     bool isTakingDamage;
     bool isDisplayingDamage;
     bool alive;
+    int lastDamageAmount;
 };
 
 class Goblin : public Enemy {

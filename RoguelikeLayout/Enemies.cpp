@@ -28,13 +28,14 @@ void Enemy::takeDamage(int damage) {
 	isDisplayingDamage = true;
 	enemyDamageClock.restart();
 	damageDisplayClock.restart();
+	lastDamageAmount = damage;
 }
 
 bool Enemy::isAlive() const {
 	return alive;
 }
 
-void Enemy::displayDamage(sf::RenderWindow& window, int damage, int charSize) {
+void Enemy::displayDamage(sf::RenderWindow& window, int charSize) {
 	sf::Font font;
 	if (!font.loadFromFile("fs-min.ttf")) {
 		return;
@@ -43,7 +44,7 @@ void Enemy::displayDamage(sf::RenderWindow& window, int damage, int charSize) {
 	sf::Text text;
 	text.setFont(font);
 	text.setCharacterSize(charSize);
-	text.setString(std::to_string(damage));
+	text.setString(std::to_string(lastDamageAmount));
 	text.setFillColor(sf::Color::Yellow);
 	text.setPosition(x * charSize, (y - 1) * charSize);
 	window.draw(text);
@@ -58,7 +59,7 @@ void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int play
 	sf::Text text;
 	text.setFont(font);
 	text.setCharacterSize(charSize);
-	text.setString(this->symbol); // Fixed the error by using this->symbol
+	text.setString(this->symbol);
 
 	int distance = std::abs(playerX - x) + std::abs(playerY - y);
 	int maxDistance = 10;
@@ -70,20 +71,23 @@ void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int play
 		opacity = minOpacity;
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
+	text.setFillColor(sf::Color(255, 0, 0, opacity));
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 		player->attack(const_cast<std::vector<Enemy*>&>(enemies));
+		std::cout << "Enemy at (" << x << ", " << y << ") has " << enemyHealth << " health." << std::endl;
 	}
 
 	if (isTakingDamage && enemyDamageClock.getElapsedTime().asSeconds() < 0.1f) {
-		text.setFillColor(sf::Color(255, 255, 255));
+		text.setFillColor(sf::Color(255, 255, 255, opacity));
 	}
 	else {
-		text.setFillColor(sf::Color(255, 0, 0));
+		text.setFillColor(sf::Color(255, 0, 0, opacity));
 		isTakingDamage = false;
 	}
 
 	if (isDisplayingDamage && damageDisplayClock.getElapsedTime().asSeconds() < 0.5f) {
-		displayDamage(window, 10, charSize);
+		displayDamage(window, charSize);
 	}
 	else {
 		isDisplayingDamage = false;

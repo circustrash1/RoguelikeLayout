@@ -155,7 +155,6 @@ void Game::processEvents() {
 void Game::updateHealth() {
     healthText.setString("Health: " + std::to_string(player->getHealth()));
     healthBar->update(player->getHealth());
-    std::cout << "Displaying health bar" << std::endl;
 }
 
 void Game::update() {

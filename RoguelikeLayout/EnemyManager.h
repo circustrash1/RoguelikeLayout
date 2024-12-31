@@ -18,9 +18,12 @@ public:
 	void updateEnemies(const std::vector<std::vector<char>>& map, int playerX, int playerY);
 	void renderEnemies(sf::RenderWindow& window, int charSize, int playerX, int playerY, Player* player);
 	const std::vector<Enemy*>& getEnemies() const;
+	bool allEnemiesDead() const;
 
 private:
 	std::vector<Enemy*> enemies;
 };
+
+
 
 #endif // ENEMYMANAGER_H

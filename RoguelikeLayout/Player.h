@@ -20,9 +20,11 @@ public:
     int getY() const;
     int getHealth() const;
     void loseHealth(int amount);
+    sf::Clock attackCooldownClock;
 
 private:
     sf::Clock damageClock;
+
 
 protected:
     int x, y;
