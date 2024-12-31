@@ -1,0 +1,348 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\EnemyManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\EnemyManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\EnemyManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\EnemyManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Map.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\Map.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Map.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\Map.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Enemies.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\Enemies.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Enemies.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\Enemies.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Warrior.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\Warrior.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Mage.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\Mage.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Mage.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\Mage.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Warrior.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\Warrior.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\GuiElements.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\GuiElements.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\GuiElements.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\GuiElements.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\ClassDiagram.cd||{59B0B277-7DDF-4E36-A3ED-02DAC5B9E2FA}|",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\ClassDiagram.cd||{59B0B277-7DDF-4E36-A3ED-02DAC5B9E2FA}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Button.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\Button.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CDF4B69B-47AC-48BB-A24C-0D3C65E6A143}|RoguelikeLayout\\RoguelikeLayout.vcxproj|solutionrelative:RoguelikeLayout\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 19,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d84ee353-0bef-5a41-a649-8f89aca5d84d}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "ClassDiagram.cd",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\ClassDiagram.cd",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\ClassDiagram.cd",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\ClassDiagram.cd",
+              "RelativeToolTip": "RoguelikeLayout\\ClassDiagram.cd",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000463|",
+              "WhenOpened": "2024-12-31T15:20:49.582Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "GuiElements.cpp",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\GuiElements.cpp",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\GuiElements.cpp",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\GuiElements.cpp",
+              "RelativeToolTip": "RoguelikeLayout\\GuiElements.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-12-31T13:46:22.806Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "GuiElements.h",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\GuiElements.h",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\GuiElements.h",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\GuiElements.h",
+              "RelativeToolTip": "RoguelikeLayout\\GuiElements.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-12-31T13:43:31.493Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Mage.h",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Mage.h",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\Mage.h",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Mage.h",
+              "RelativeToolTip": "RoguelikeLayout\\Mage.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-12-31T13:15:07.028Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Mage.cpp",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Mage.cpp",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\Mage.cpp",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Mage.cpp",
+              "RelativeToolTip": "RoguelikeLayout\\Mage.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-12-31T13:15:13.081Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Warrior.h",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Warrior.h",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\Warrior.h",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Warrior.h",
+              "RelativeToolTip": "RoguelikeLayout\\Warrior.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-12-31T12:46:29.851Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Warrior.cpp",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Warrior.cpp",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\Warrior.cpp",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Warrior.cpp",
+              "RelativeToolTip": "RoguelikeLayout\\Warrior.cpp",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAkwBIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-12-31T12:46:22.236Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Player.cpp",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Player.cpp",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\Player.cpp",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Player.cpp",
+              "RelativeToolTip": "RoguelikeLayout\\Player.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-12-31T01:18:06.366Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Player.h",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Player.h",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\Player.h",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Player.h",
+              "RelativeToolTip": "RoguelikeLayout\\Player.h",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAkwBgAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-12-31T01:17:59.814Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Enemies.cpp",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Enemies.cpp",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\Enemies.cpp",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Enemies.cpp",
+              "RelativeToolTip": "RoguelikeLayout\\Enemies.cpp",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAAACgAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-12-30T18:23:35.417Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Enemies.h",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Enemies.h",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\Enemies.h",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Enemies.h",
+              "RelativeToolTip": "RoguelikeLayout\\Enemies.h",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAIwDMAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-12-30T18:23:53.415Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Map.h",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Map.h",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\Map.h",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Map.h",
+              "RelativeToolTip": "RoguelikeLayout\\Map.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-12-26T17:20:59.092Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Map.cpp",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Map.cpp",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\Map.cpp",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Map.cpp*",
+              "RelativeToolTip": "RoguelikeLayout\\Map.cpp*",
+              "ViewState": "AgIAAJYBAAAAAAAAAAAkwNcBAABJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-12-26T17:21:04.089Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Button.cpp",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Button.cpp",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\Button.cpp",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Button.cpp",
+              "RelativeToolTip": "RoguelikeLayout\\Button.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-12-26T16:33:41.534Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Game.h",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Game.h",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\Game.h",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Game.h",
+              "RelativeToolTip": "RoguelikeLayout\\Game.h",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACMAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-12-26T16:33:46.591Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Game.cpp",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Game.cpp",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\Game.cpp",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\Game.cpp",
+              "RelativeToolTip": "RoguelikeLayout\\Game.cpp",
+              "ViewState": "AgIAAMkAAAAAAAAAAAAkwNsAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-12-26T17:19:40.653Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "EnemyManager.h",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\EnemyManager.h",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\EnemyManager.h",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\EnemyManager.h",
+              "RelativeToolTip": "RoguelikeLayout\\EnemyManager.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-12-30T18:30:58.897Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EnemyManager.cpp",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\EnemyManager.cpp",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\EnemyManager.cpp",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\EnemyManager.cpp*",
+              "RelativeToolTip": "RoguelikeLayout\\EnemyManager.cpp*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-12-30T18:30:39.673Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\main.cpp",
+              "RelativeDocumentMoniker": "RoguelikeLayout\\main.cpp",
+              "ToolTip": "C:\\Code\\C\u002B\u002B\\RoguelikeLayout\\RoguelikeLayout\\main.cpp",
+              "RelativeToolTip": "RoguelikeLayout\\main.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-12-24T17:16:24.977Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

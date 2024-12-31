@@ -1,0 +1,14 @@
+﻿  EnemyManager.cpp
+  Map.cpp
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(108,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(108,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(137,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(137,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(309,19): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(312,18): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(460,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(460,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(469,47): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(469,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Generating Code...
+  RoguelikeLayout.vcxproj -> C:\Code\C++\RoguelikeLayout\x64\Debug\RoguelikeLayout.exe
