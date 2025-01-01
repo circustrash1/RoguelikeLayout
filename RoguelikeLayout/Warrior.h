@@ -9,6 +9,9 @@ class Warrior : public Player {
 public:
 	Warrior(int x, int y);
 	void attack(std::vector<Enemy*>& enemies) override;
+	void enableCleave();
+private:
+	bool cleaveEnabled;
 };
 
 #endif // WARRIOR_H

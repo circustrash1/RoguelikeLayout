@@ -7,11 +7,11 @@
 Game::Game()
     : scaleX(static_cast<float>(sf::VideoMode::getDesktopMode().width) / 640.0f),
     scaleY(static_cast<float>(sf::VideoMode::getDesktopMode().height) / 360.0f),
-    window(sf::VideoMode(640, 360), "Roguelike Layout"), map(62, 32), player(nullptr), isShaking(false), shakeIntensity(0.1f), healthBar(nullptr), showStats(nullptr) {
+    window(sf::VideoMode(640, 360), "Roguelike Layout"), map(62, 32), player(nullptr), isShaking(false), shakeIntensity(0.1f), 
+    healthBar(nullptr), showStats(nullptr) {
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 
-    std::cout << "scaleX: " << scaleX << ", scaleY: " << scaleY << std::endl;
 
     window.create(desktop, "Roguelike Layout", sf::Style::Fullscreen);
 
@@ -122,6 +122,133 @@ void Game::displayCharacterSelection() {
             }
         }
     }
+
+    // Cleanup
+    window.clear(sf::Color::Black);
+    window.display();
+}
+
+void Game::displayUpgradeSelection() {
+    window.clear(sf::Color::Black);
+
+    // Title
+    sf::Text title;
+    title.setFont(font);
+    title.setCharacterSize(12 * scaleY);
+    title.setFillColor(sf::Color::White);
+    title.setString("Select an upgrade");
+    title.setPosition(145 * scaleX, 10 * scaleY);
+    window.draw(title);
+
+    // Calculate card positions
+    float cardWidth = 60 * scaleX;
+    float cardHeight = 100 * scaleY;
+    float spaceBetweenCards = 80 * scaleX;
+    float totalWidth = 3 * cardWidth + 2 * spaceBetweenCards;
+    float startX = (window.getSize().x - totalWidth) / 2 - 280;
+    float startY = 50 * scaleY - 50;
+
+    // Render ASCII cards
+    for (size_t i = 0; i < availableUpgrades.size(); ++i) {
+        const std::vector<std::string>& asciiArt = availableUpgrades[i].getAsciiArt();
+        sf::Text cardArt;
+		sf::Text cardName;
+        sf::Text cardPositiveEffects;
+        sf::Text cardNegativeEffects;
+        cardArt.setFont(font);
+        cardArt.setCharacterSize(10 * scaleY);
+		cardArt.setFillColor(availableUpgrades[i].getColor());
+        cardArt.setLineSpacing(1.6f);
+        std::string cardString;
+        for (const std::string& line : asciiArt) {
+            cardString += line + "\n";
+        }
+        cardArt.setString(cardString);
+		cardArt.setPosition(startX + i * (cardWidth + spaceBetweenCards), startY);
+
+        // Render card names
+		cardName.setFont(font);
+		cardName.setCharacterSize(10 * scaleY);
+		cardName.setFillColor(availableUpgrades[i].getColor());
+		cardName.setString(availableUpgrades[i].getName());
+		cardName.setPosition(startX + i * (cardWidth + spaceBetweenCards) - 40, startY + cardHeight + 250);
+
+        // Render positive effects
+        cardPositiveEffects.setFont(font);
+		cardPositiveEffects.setCharacterSize(6 * scaleY);
+        cardPositiveEffects.setFillColor(sf::Color::Green);
+		cardPositiveEffects.setString(availableUpgrades[i].getPositiveEffects());
+		cardPositiveEffects.setPosition(startX + i * (cardWidth + spaceBetweenCards) - 40, startY + cardHeight + 300);
+
+        // Render negative effects
+        cardNegativeEffects.setFont(font);
+        cardNegativeEffects.setCharacterSize(6 * scaleY);
+        cardNegativeEffects.setFillColor(sf::Color::Red);
+        cardNegativeEffects.setString(availableUpgrades[i].getNegativeEffects());
+        cardNegativeEffects.setPosition(startX + i * (cardWidth + spaceBetweenCards) - 40, startY + cardHeight + 300);
+
+        // Calculate column positions
+        float columnX = startX + i * (cardWidth + spaceBetweenCards);
+        float columnY = startY;
+
+		alignCards(cardName, cardArt, cardPositiveEffects, cardNegativeEffects, 5.0f, columnX);
+        std::cout << i;
+
+        window.draw(cardName);
+        window.draw(cardArt);
+        window.draw(cardPositiveEffects);
+        window.draw(cardNegativeEffects);
+    }
+
+    window.draw(mainBar);
+    window.draw(sideBar);
+    window.draw(healthText);
+
+    for (Button* button : buttons) {
+        button->draw(window);
+    }
+
+    if (healthBar != nullptr) {
+        healthBar->render(window);
+    }
+
+    if (showStats != nullptr && player != nullptr) {
+        showStats->renderPlayerStats(window, *player, 24, scaleX, scaleY);
+    }
+
+    window.display();
+    bool upgradeSelected = false;
+    while (!upgradeSelected) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
+                window.close();
+                return;
+            }
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Num1 && availableUpgrades.size() >= 1) {
+                    std::cout << "Player picked up: " << availableUpgrades[0].getName() << std::endl;
+                    player->applyUpgrade(availableUpgrades[0]);
+                    upgradeSelected = true;
+                }
+                else if (event.key.code == sf::Keyboard::Num2 && availableUpgrades.size() >= 2) {
+                    std::cout << "Player picked up: " << availableUpgrades[1].getName() << std::endl;
+                    player->applyUpgrade(availableUpgrades[1]);
+                    upgradeSelected = true;
+                }
+                else if (event.key.code == sf::Keyboard::Num3 && availableUpgrades.size() >= 3) {
+                    player->applyUpgrade(availableUpgrades[2]);
+					std::cout << "Player picked up: " << availableUpgrades[2].getName() << std::endl;
+                    upgradeSelected = true;
+                }
+            }
+        }
+    }
+
+    // Cleanup
+    window.clear(sf::Color::Black);
+    window.display();
+
 }
 
 Game::~Game() {
@@ -191,6 +318,18 @@ void Game::update() {
 
     player->update(map.getEnemies());
     updateHealth();
+
+    // Check for upgrade pickup
+    for (Room& room : map.getRooms()) {
+        if (room.upgradeSpawned && player->getX() == room.upgradePosition.first && player->getY() == room.upgradePosition.second) {
+            room.upgradeSpawned = false;
+            room.upgradeCollected = true;
+            handleUpgradePickup();
+            break;
+        }
+    }
+
+    map.advanceToNextLevel(player);
 }
 
 void Game::render() {
@@ -223,7 +362,7 @@ void Game::render() {
     }
 
     if (player != nullptr) {
-        map.render(window, player->getX(), player->getY(), 24, player); // Line 228
+        map.render(window, player->getX(), player->getY(), 24, player);
         player->render(window, 24); // Render the player
 
         // Render Mage's projectile
@@ -243,8 +382,24 @@ void Game::render() {
     window.display();
 }
 
+void Game::handleUpgradePickup() {
+    availableUpgrades = map.upgradeManager().generateUpgrades(3, player->getClassType());
+    // Display available upgrades and allow player to choose
+    // Apply the chosen upgrade to the player
+
+	displayUpgradeSelection();
+
+    // EXAMPLE
+    /*if (!availableUpgrades.empty()) {
+        player->applyUpgrade(availableUpgrades[0]);
+        std::cout << "Player picked up: " << availableUpgrades[0].getName() << std::endl;
+    }*/
+}
+
 void Game::screenShake(float intensity, float duration) {
     isShaking = true;
     shakeIntensity = intensity;
     shakeClock.restart();
 }
+
+

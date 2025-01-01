@@ -6,6 +6,8 @@
 
 void alignText(sf::Text& text, const sf::RectangleShape& button, float padding = 10.0f);
 
+void alignCards(sf::Text& name, sf::Text& art, sf::Text& positiveEffects, sf::Text& negativeEffects, float padding, float columnX);
+
 
 
 class HealthBar {

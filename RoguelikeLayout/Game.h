@@ -15,6 +15,7 @@ public:
     Game();
     ~Game();
     void run();
+    void handleUpgradePickup();
 
 private:
     sf::RenderWindow window;
@@ -32,6 +33,7 @@ private:
 
     void displayCharacterSelection();
     Player* createPlayer(const std::string& className);
+    void displayUpgradeSelection();
     void updateHealth();
     HealthBar* healthBar;
     ShowStats* showStats;
@@ -42,6 +44,8 @@ private:
     sf::Clock shakeClock;
     bool isShaking;
     float shakeIntensity;
+
+    std::vector<Upgrade> availableUpgrades;
 
     void processEvents();
     void update();

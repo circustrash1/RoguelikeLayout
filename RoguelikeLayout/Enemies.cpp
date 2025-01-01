@@ -1,9 +1,11 @@
 #include "Enemies.h"
 #include "Player.h"
+#include "ElementalType.h"
 #include <iostream>
 
 Enemy::Enemy(int x, int y, char symbol, int enemyHealth)
-	: x(x), y(y), symbol(symbol), isTakingDamage(false), isDisplayingDamage(false), enemyHealth(enemyHealth), alive(true) {
+	: x(x), y(y), symbol(symbol), isTakingDamage(false), isTakingFireDamage(false), isDisplayingDamage(false), isDisplayingFireDamage(false),
+	enemyHealth(enemyHealth), maxHealth(enemyHealth), alive(true), isPlayingDeathAnimation(false), fireDamageOverTime(0) {
 }
 
 int Enemy::getX() const {
@@ -19,16 +21,55 @@ char Enemy::getSymbol() const {
 }
 
 void Enemy::takeDamage(int damage) {
+	if (!alive) return;
 	enemyHealth -= damage;
-	if (enemyHealth < 0) {
+	if (enemyHealth <= 0) {
 		enemyHealth = 0;
 		alive = false;
+		isPlayingDeathAnimation = true;
+		deathAnimationClock.restart();
 	}
 	isTakingDamage = true;
 	isDisplayingDamage = true;
 	enemyDamageClock.restart();
 	damageDisplayClock.restart();
 	lastDamageAmount = damage;
+	healthBarNeedsUpdate = true;
+}
+
+void Enemy::takeFireDamage(int damage) {
+	if (!alive) return;
+	std::cout << "Enemy at (" << x << ", " << y << ") takes " << damage << " fire damage." << std::endl;
+	enemyHealth -= damage;
+	if (enemyHealth <= 0) {
+		enemyHealth = 0;
+		alive = false;
+		isPlayingDeathAnimation = true;
+		deathAnimationClock.restart();
+	}
+	isTakingFireDamage = true;
+	isDisplayingFireDamage = true;
+	fireDamageClock.restart();
+	lastFireDamageAmount = damage;
+	healthBarNeedsUpdate = true;
+}
+
+void Enemy::applyFireDamage(int damage) {
+	if (!alive) return;
+	fireDamageOverTime += damage;
+	fireDamageClock.restart();
+}
+
+void Enemy::updateFireDamage() {
+	if (fireDamageClock.getElapsedTime().asSeconds() >= 1.0f && fireDamageOverTime > 0) {
+		takeFireDamage(fireDamageOverTime);
+		fireDamageOverTime -= 1;
+		fireDamageClock.restart();
+	}
+}
+
+void Enemy::setColor(const sf::Color& color) {
+	this->color = color;
 }
 
 bool Enemy::isAlive() const {
@@ -54,10 +95,61 @@ void Enemy::displayDamage(sf::RenderWindow& window, int charSize) {
 	window.draw(text);
 }
 
-void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int playerY, Player* player, const std::vector<Enemy*>& enemies) {
+void Enemy::displayFireDamage(sf::RenderWindow& window, int charSize) {
 	sf::Font font;
 	if (!font.loadFromFile("fs-min.ttf")) {
 		return;
+	}
+
+	sf::Text text;
+	text.setFont(font);
+	text.setCharacterSize(charSize / 2);
+	text.setString(std::to_string(lastFireDamageAmount));
+	text.setFillColor(sf::Color::Red);
+
+	float offsetX = (charSize - text.getLocalBounds().width) / 2;
+	float offsetY = charSize / 2;
+
+	text.setPosition((x * charSize - 5) + offsetX, (y * charSize) - offsetY - 10);
+	window.draw(text);
+}
+
+void Enemy::renderHealthBar(sf::RenderWindow& window, int charSize) const {
+    if (!alive || isPlayingDeathAnimation) return;
+
+    sf::Sprite healthBarSprite(healthBarTexture.getTexture());
+    healthBarSprite.setPosition(x * charSize - 3, (y * charSize) + 30);
+    window.draw(healthBarSprite);
+}
+
+void Enemy::playDeathAnimation(sf::RenderWindow& window) {
+	std::cout << "Running death animation for enemy at (" << x << ", " << y << ")." << std::endl;
+	if (deathAnimationClock.getElapsedTime().asSeconds() < 1.0f) {
+		if (static_cast<int>(deathAnimationClock.getElapsedTime().asMilliseconds() / 100) % 2 == 0) {
+			symbol = '!';
+		}
+		else {
+			symbol = ' ';
+		}
+	}
+	else {
+		isPlayingDeathAnimation = false;
+	}
+}
+
+bool Enemy::isDeathAnimationComplete() const {
+	return deathAnimationClock.getElapsedTime().asSeconds() >= 1.0f;
+}
+
+
+void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int playerY, Player* player, const std::vector<Enemy*>& enemies) {
+	static sf::Font font;
+	static bool fontLoaded = false;
+	if (!fontLoaded) {
+		if (!font.loadFromFile("fs-min.ttf")) {
+			return;
+		}
+		fontLoaded = true;
 	}
 
 	sf::Text text;
@@ -75,35 +167,69 @@ void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int play
 		opacity = minOpacity;
 	}
 
-	text.setFillColor(sf::Color(255, 0, 0, opacity));
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-		player->attack(const_cast<std::vector<Enemy*>&>(enemies));
-		std::cout << "Enemy at (" << x << ", " << y << ") has " << enemyHealth << " health." << std::endl;
-	}
-
-	if (isTakingDamage && enemyDamageClock.getElapsedTime().asSeconds() < 0.1f) {
-		text.setFillColor(sf::Color(255, 255, 255, opacity));
-	}
-	else {
+	if (isAlive()) {
 		text.setFillColor(sf::Color(255, 0, 0, opacity));
-		isTakingDamage = false;
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			player->attack(const_cast<std::vector<Enemy*>&>(enemies));
+		}
+
+		if (isTakingDamage && enemyDamageClock.getElapsedTime().asSeconds() < 0.1f) {        // Flash white when taking damage
+			text.setFillColor(sf::Color(255, 255, 255, opacity));
+		}
+		else {
+			text.setFillColor(sf::Color(0, 255, 0, opacity));
+			isTakingDamage = false;
+		}
+
+		if (isTakingFireDamage && fireDamageClock.getElapsedTime().asSeconds() < 0.25f) {        // Flash red when taking fire damage
+			text.setFillColor(sf::Color(255, 0, 0, opacity));
+		}
+
+		if (isDisplayingDamage && damageDisplayClock.getElapsedTime().asSeconds() < 0.5f) {        // Show basic attack damage numbers
+			displayDamage(window, charSize);
+		}
+		else {
+			isDisplayingDamage = false;
+		}
+		if (isDisplayingFireDamage && fireDamageClock.getElapsedTime().asSeconds() < 0.5f) {    // Show fire damage numbers
+			displayFireDamage(window, charSize);
+		}
+		else {
+			isDisplayingFireDamage = false;
+		}
+
+		// Only draw text if the enemy is within a certain distance from the player
+		if (distance <= maxDistance) {
+			text.setPosition(x * charSize, y * charSize);
+			updateHealthBar(charSize);
+			renderHealthBar(window, charSize);
+			window.draw(text);
+		}
+	}
+	else if (isPlayingDeathAnimation) {
+		std::cout << "Playing death animation for enemy at (" << x << ", " << y << ")." << std::endl;
+		text.setFillColor(sf::Color(0, 255, 0, opacity));
+		playDeathAnimation(window);
+
+		// Draw the death animation text
+		text.setPosition(x * charSize, y * charSize);
+		window.draw(text);
 	}
 
-	if (isDisplayingDamage && damageDisplayClock.getElapsedTime().asSeconds() < 0.5f) {
-		displayDamage(window, charSize);
+	// Ensure fire damage display logic is executed
+	if (isDisplayingFireDamage && fireDamageClock.getElapsedTime().asSeconds() < 0.5f) {    // Show fire damage numbers
+		displayFireDamage(window, charSize);
 	}
 	else {
-		isDisplayingDamage = false;
+		isDisplayingFireDamage = false;
 	}
-
-	text.setPosition(x * charSize, y * charSize);
-	window.draw(text);
 }
 
-Goblin::Goblin(int x, int y) : Enemy(x, y, 'G', 50) {}
+Goblin::Goblin(int x, int y) : Enemy(x, y, 'G', 30) {}
 
 void Goblin::move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) {
+	if (!alive) return;
 	int dx = std::rand() % 3 - 1;
 	int dy = std::rand() % 3 - 1;
 
@@ -142,12 +268,23 @@ void Goblin::attack() {
 }
 
 void Goblin::playDeathAnimation(sf::RenderWindow& window) {
-	// Implement Goblin-specific death animation
+	if (deathAnimationClock.getElapsedTime().asSeconds() < 1.0f) {
+		if (static_cast<int>(deathAnimationClock.getElapsedTime().asMilliseconds() / 100) % 2 == 0) {
+			symbol = '!';
+		}
+		else {
+			symbol = ' ';
+		}
+	}
+	else {
+		isPlayingDeathAnimation = false;
+	}
 }
 
-Orc::Orc(int x, int y) : Enemy(x, y, 'O', 100) {}
+Orc::Orc(int x, int y) : Enemy(x, y, 'O', 60) {}
 
 void Orc::move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) {
+	if (!alive) return;
 	int dx = std::rand() % 3 - 1;
 	int dy = std::rand() % 3 - 1;
 
@@ -186,5 +323,37 @@ void Orc::attack() {
 }
 
 void Orc::playDeathAnimation(sf::RenderWindow& window) {
-	// Implement Orc-specific death animation
+	if (deathAnimationClock.getElapsedTime().asSeconds() < 1.0f) {
+		if (static_cast<int>(deathAnimationClock.getElapsedTime().asMilliseconds() / 100) % 2 == 0) {
+			symbol = '!';
+		}
+		else {
+			symbol = ' ';
+		}
+	}
+	else {
+		isPlayingDeathAnimation = false;
+	}
+}
+
+void Enemy::updateHealthBar(int charSize) {
+	if (!healthBarNeedsUpdate) return;
+
+	healthBarTexture.create(charSize, charSize / 4);
+	healthBarTexture.clear(sf::Color::Transparent);
+
+	sf::RectangleShape healthBarBackground(sf::Vector2f(charSize, charSize / 4));
+	healthBarBackground.setFillColor(sf::Color(255, 0, 0, 75));
+	healthBarBackground.setPosition(0, 0);
+
+	float healthPercentage = static_cast<float>(enemyHealth) / maxHealth;
+	sf::RectangleShape healthBar(sf::Vector2f(charSize * healthPercentage, charSize / 4));
+	healthBar.setFillColor(sf::Color(0, 255, 0, 75));
+	healthBar.setPosition(0, 0);
+
+	healthBarTexture.draw(healthBarBackground);
+	healthBarTexture.draw(healthBar);
+	healthBarTexture.display();
+
+	healthBarNeedsUpdate = false;
 }

@@ -153,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="ElementalType.h" />
     <ClInclude Include="Enemies.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="Game.h" />

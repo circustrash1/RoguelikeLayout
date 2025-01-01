@@ -8,6 +8,7 @@
 class Mage : public Player {
 public:
     Mage(int x, int y);
+    ~Mage() override = default;
     void attack(std::vector<Enemy*>& enemies) override;
     void renderProjectile(sf::RenderWindow& window, int charSize);
 

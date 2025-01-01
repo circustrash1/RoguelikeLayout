@@ -3,7 +3,8 @@
 #include <iostream>
 
 Mage::Mage(int x, int y)
-    : Player(x, y, '@', 100, 10, generateRandomStats(0, 0, 0, 3, 3, 0)), isProjectileActive(false), projectileX(0), projectileY(0), projectileTargetX(0), projectileTargetY(0) {
+    : Player(x, y, '@', 100, 10, generateRandomStats(0, 0, 0, 3, 3, 0), ClassType::Mage), isProjectileActive(false), 
+    projectileX(0), projectileY(0), projectileTargetX(0), projectileTargetY(0) {
 }
 
 void Mage::attack(std::vector<Enemy*>& enemies) {
@@ -29,6 +30,11 @@ void Mage::attack(std::vector<Enemy*>& enemies) {
         int enemyX = closestEnemy->getX();
         int enemyY = closestEnemy->getY();
         closestEnemy->takeDamage(attackDmg);
+        if (attackCounter % 2 == 0 && elementalDamage == ElementalType::Fire) {
+            int totalFireDamage = getTotalFireDamage();
+            closestEnemy->applyFireDamage(totalFireDamage);
+            std::cout << "Fire attack!\n";
+        }
         std::cout << "Mage attacks enemy at (" << enemyX << ", " << enemyY << ")!" << std::endl;
         projectileTargetX = closestEnemy->getX();
         projectileTargetY = closestEnemy->getY();

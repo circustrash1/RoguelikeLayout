@@ -1,5 +1,6 @@
 #include "Map.h" // Include the Map class header
 #include "EnemyManager.h"
+#include "Player.h"
 #include <stack> // Include stack for the DFS algorithm
 #include <queue> // Include queue for flood fill algo
 #include <cstdlib> // Include cstdlib for std::srand and std::rand
@@ -9,9 +10,7 @@
 #include <iostream>
 #include "Game.h"
 
-// TODO: Stored entry/exit points. Use them to carve walls after enemy condition is met
-
-Map::Map(int width, int height) : width(width), height(height), roomCount(0) {
+Map::Map(int width, int height) : width(width), height(height), roomCount(0), firstGeneration(true) {
 	map.resize(height, std::vector<char>(width, '#')); // Initialize the map with walls ('#')
 	revealed.resize(height, std::vector<bool>(width, false)); // Initialize the revealed array with false
 	enemyManager = new EnemyManager();
@@ -30,6 +29,11 @@ void Map::generate() {
 	do {
 		entryPoints.clear();
 		exitPoints.clear(); // Clear exitPoints as well
+		rooms.clear();
+		roomUpgrades.clear();
+		roomUpgrades.clear();
+		enemyManager->clearEnemies();
+		revealed.assign(height, std::vector<bool>(width, false)); // Reset the revealed array
 
 		// Reset the map to walls
 		for (int y = 0; y < height; ++y) {
@@ -56,7 +60,18 @@ void Map::generate() {
 		wallRooms();
 
 		map[32 / 2][62 / 2] = '.'; // Mark the starting position as a path ('.')
+
+		// Create a 2-wall border around the map
+		for (int y = 0; y < height; ++y) {
+			for (int x = 0; x < width; ++x) {
+				if (y < 2 || y >= height - 2 || x < 2 || x >= width - 2) {
+					map[y][x] = '#';
+				}
+			}
+		}
+
 		chooseCarveExits();
+
 		connectRegions();
 
 		if (isConnected() && calculatePathPercentage() >= 35.0) {
@@ -182,7 +197,7 @@ void Map::carveRoom(int x, int y, std::default_random_engine& rng) {
 	int endY = startY + roomHeight;
 
 	// Ensure room is within bounds
-	if (startX <= 0 || startY <= 0 || endX >= width || endY >= height) {
+	if (startX <= 2 || startY <= 2 || endX >= width - 2 || endY >= height - 2) {
 		return; // If out of bounds, do not carve the room
 	}
 
@@ -263,7 +278,7 @@ void Map::wallRooms(bool blockEntries) {
 
 void Map::chooseCarveExits() {
 	// Iterate through each room
-	for (const Room& room : rooms) {
+	for (Room& room : rooms) {
 		int startX = room.startX;
 		int startY = room.startY;
 		int endX = room.endX;
@@ -272,20 +287,25 @@ void Map::chooseCarveExits() {
 		// Select entry and exit points on the perimeter
 		std::vector<std::pair<int, int>> perimeter;
 		for (int nx = startX; nx < endX; ++nx) {
+			int adjustedStartY = startY - 2;
+			int adjustedEndY = endY;
+			while (adjustedStartY <= 0) adjustedStartY++;
+			while (adjustedEndY >= height - 2) adjustedEndY--;
 			if (nx != startX && nx != endX - 1) {
-				perimeter.push_back({ nx, startY - 1 }); // Top edge
-				perimeter.push_back({ nx, endY }); // Bottom edge
+				perimeter.push_back({ nx, adjustedStartY }); // Top edge
+				perimeter.push_back({ nx, adjustedEndY }); // Bottom edge
 			}
 		}
 		for (int ny = startY; ny < endY; ++ny) {
+			int adjustedStartX = startX - 2;
+			int adjustedEndX = endX;
+			while (adjustedStartX <= 0) adjustedStartX++;
+			while (adjustedEndX >= width - 2) adjustedEndX--;
 			if (ny != startY && ny != endY - 1) {
-				perimeter.push_back({ startX - 1, ny }); // Left edge
-				perimeter.push_back({ endX, ny }); // Right edge
+				perimeter.push_back({ adjustedStartX, ny }); // Left edge
+				perimeter.push_back({ adjustedEndX, ny }); // Right edge
 			}
 		}
-
-		// Shuffle the perimeter to randomize selection
-		std::shuffle(perimeter.begin(), perimeter.end(), std::default_random_engine());
 
 		// Lambda to check if the perimeter point is adjacent to a corridor ('.')
 		auto isCorridorAdjacent = [&](int px, int py) {
@@ -299,88 +319,90 @@ void Map::chooseCarveExits() {
 			return false;
 			};
 
-		// Find entry and exit points that connect to corridors
-		int entryIndex = -1, exitIndex = -1;
-		for (size_t i = 0; i < perimeter.size(); ++i) {
-			auto [px, py] = perimeter[i];
-			std::cout << "Checking perimeter point: (" << px << ", " << py << ")\n"; // Debug output
-			if (isCorridorAdjacent(px, py)) {
-				if (entryIndex == -1) {
-					entryIndex = i;
-				}
-				else {
-					exitIndex = i;
-					break;
-				}
-			}
-		}
-
 		// Lambda to check if a point is part of the room wall
 		auto isRoomWall = [&](int x, int y) {
 			return (x == startX - 1 || x == endX || y == startY - 1 || y == endY);
 			};
 
-		// Carve the entry point
-		if (entryIndex != -1) {
-			auto [ex, ey] = perimeter[entryIndex];
-			if (ex > 0 && ey > 0 && ex < width - 1 && ey < height - 1) {
-				map[ey][ex] = '.'; // Carve the entry point
-				entryPoints.push_back({ ex, ey }); // Store the entry point
-			}
-			std::cout << "Entry point stored at: (" << ex << ", " << ey << ")\n"; // Debug output
+		// Keep looping until at least 2 entry and 2 exit points are found for the current room
+		int entryCount = 0;
+		int exitCount = 0;
+		while (entryCount < 2 || exitCount < 2) {
+			std::shuffle(perimeter.begin(), perimeter.end(), std::default_random_engine());
 
-			// Ensure the entry point is connected to a path
-			for (auto [dx, dy] : std::vector<std::pair<int, int>>{ {0, -1}, {0, 1}, {-1, 0}, {1, 0} }) {
-				int adjX = ex + dx;
-				int adjY = ey + dy;
-				if (adjX >= 0 && adjY >= 0 && adjX < width && adjY < height && map[adjY][adjX] == '#' && !isRoomWall(adjX, adjY)) {
-					map[adjY][adjX] = '.'; // Carve the adjacent wall tile
-					entryPoints.push_back({ adjX, adjY }); // Store the adjacent point
-					std::cout << "Carving adjacent spot at: (" << adjX << ", " << adjY << ")\n"; // Debug output
+			for (size_t i = 0; i < perimeter.size(); ++i) {
+				auto [px, py] = perimeter[i];
+				if (isCorridorAdjacent(px, py)) {
+					if (entryCount < 2) {
+						if (px > 0 && py > 0 && px < width - 1 && py < height - 1) {
+							map[py][px] = '.'; // Carve the entry point
+							entryPoints.push_back({ px, py }); // Store the entry point
+							entryCount++;
+						}
+					}
+					else if (exitCount < 2) {
+						if (px > 0 && py > 0 && px < width - 1 && py < height - 1) {
+							map[py][px] = '.'; // Carve the exit point
+							exitPoints.push_back({ px, py }); // Store the exit point
+							exitCount++;
+						}
+					}
+
+					// Ensure the entry/exit point is connected to a path
+					for (auto [dx, dy] : std::vector<std::pair<int, int>>{ {0, -1}, {0, 1}, {-1, 0}, {1, 0} }) {
+						int adjX = px + dx;
+						int adjY = py + dy;
+						if (adjX >= 0 && adjY >= 0 && adjX < width && adjY < height && map[adjY][adjX] == '#' && !isRoomWall(adjX, adjY)) {
+							map[adjY][adjX] = '.'; // Carve the adjacent wall tile
+							if (entryCount < 2) {
+								entryPoints.push_back({ adjX, adjY }); // Store the adjacent point
+							}
+							else if (exitCount < 2) {
+								exitPoints.push_back({ adjX, adjY }); // Store the adjacent point
+							}
+						}
+					}
 				}
-			}
-		}
 
-		// Carve the exit point
-		if (exitIndex != -1) {
-			auto [ex, ey] = perimeter[exitIndex];
-			if (ex > 0 && ey > 0 && ex < width - 1 && ey < height - 1) {
-				map[ey][ex] = '.'; // Carve the exit point
-				exitPoints.push_back({ ex, ey }); // Store the exit point
-			}
-			std::cout << "Exit point stored at: (" << ex << ", " << ey << ")\n"; // Debug output
-
-			// Ensure the exit point is connected to a path
-			for (auto [dx, dy] : std::vector<std::pair<int, int>>{ {0, -1}, {0, 1}, {-1, 0}, {1, 0} }) {
-				int adjX = ex + dx;
-				int adjY = ey + dy;
-				if (adjX >= 0 && adjY >= 0 && adjX < width && adjY < height && map[adjY][adjX] == '#' && !isRoomWall(adjX, adjY)) {
-					map[adjY][adjX] = '.'; // Carve the adjacent wall tile
-					exitPoints.push_back({ adjX, adjY }); // Store the adjacent point
-					std::cout << "Carving adjacent spot at: (" << adjX << ", " << adjY << ")\n"; // Debug output
+				if (entryCount >= 2 && exitCount >= 2) {
+					break;
 				}
 			}
 		}
 	}
-	std::cout << "Total entry points stored: " << entryPoints.size() << std::endl; // Debug output
-	std::cout << "Total exit points stored: " << exitPoints.size() << std::endl; // Debug output
+
+	// Create an exit room at the border of the map
+	int exitX = width - 3;
+	int exitY = height / 2;
+	for (int i = -1; i <= 1; ++i) {
+		map[exitY + i][exitX] = '.'; // Create a large opening in the border
+		map[exitY + i][exitX + 1] = '.';
+		map[exitY + i][exitX + 2] = '.';
+	}
+
+	// Create a symmetrical exit on the left side of the map
+	if (!firstGeneration) {
+		int symExitX = 2;
+		for (int i = -1; i <= 1; ++i) {
+			map[exitY + i][symExitX] = '.'; // Create a large opening in the border
+			map[exitY + i][symExitX - 1] = '.';
+			map[exitY + i][symExitX - 2] = '.';
+		}
+	}
 }
 
 void Map::carveExits() {
 	// Define the condition to check (e.g., a specific key press or a game event)
 
 	if (enemyManager->allEnemiesDead() || (sf::Keyboard::isKeyPressed(sf::Keyboard::E))) {
-		std::cout << "Carving exits..." << std::endl;
 		if (entryPoints.empty()) {
 			std::cout << "No entry points to carve." << std::endl; // Debug output
 		}
 		else {
 			for (const auto& entryPoint : entryPoints) {
-				std::cout << "Carving at: (" << entryPoint.first << ", " << entryPoint.second << ")\n"; // Debug output
 				map[entryPoint.second][entryPoint.first] = '.'; // Carve the wall at the entry point
 			}
 			for (const auto& exitPoint : exitPoints) {
-				std::cout << "Carving at: (" << exitPoint.first << ", " << exitPoint.second << ")\n"; // Debug output
 				map[exitPoint.second][exitPoint.first] = '.'; // Carve the wall at the entry point
 			}
 		}
@@ -468,11 +490,30 @@ void Map::render(sf::RenderWindow& window, int playerX, int playerY, int charSiz
 	text.setPosition(playerX * charSize, playerY * charSize); // Adjust position based on charSize
 	window.draw(text); // Draw the player
 
+	// Render the upgrade pickups
+	for (Room& room : rooms) {
+		if (room.upgradeSpawned) {
+			text.setString("U"); // Set the text to the upgrade character
+			text.setFillColor(sf::Color::Color(218, 165, 32));
+			text.setPosition(room.upgradePosition.first * charSize, room.upgradePosition.second * charSize);
+			window.draw(text);
+		}
+	}
+
 	enemyManager->renderEnemies(window, charSize, playerX, playerY, player);
 }
 
 void Map::updateEnemies(int playerX, int playerY) {
 	enemyManager->updateEnemies(map, playerX, playerY);
+	for (Room& room : rooms) {
+		if (playerX >= room.startX && playerX < room.endX && playerY >= room.startY && playerY < room.endY) {
+			if (!room.upgradeSpawned && !room.upgradeCollected && enemyManager->allEnemiesDead()) {
+				dropUpgrade(room);
+				room.upgradeSpawned = true;
+			}
+			break;
+		}
+	}
 }
 
 bool Map::playerInRoom(int playerX, int playerY) const {
@@ -708,4 +749,28 @@ const std::vector<std::vector<char>>& Map::getMap() const {
 
 const std::vector<Enemy*>& Map::getEnemies() const {
 	return enemyManager->getEnemies(); // Assuming EnemyManager has a getEnemies method
+}
+
+void Map::dropUpgrade(Room& room) {
+	int centerX = (room.startX + room.endX) / 2;
+	int centerY = (room.startY + room.endY) / 2;	// Drop an upgrade in the center of the room
+	std::cout << "Dropped upgrade: at (" << centerX << ", " << centerY << ")\n";
+	room.upgradePosition = { centerX, centerY };
+}
+
+UpgradeManager& Map::upgradeManager() {
+	return upgradeManager_;
+}
+
+std::vector<Room>& Map::getRooms() {
+	return rooms;
+}
+
+void Map::advanceToNextLevel(Player* player) {
+	// Check if the player is at the exit
+	if (player->getX() == 61) {
+		firstGeneration = false;
+		generate(); // Generate a new level
+		player->setPosition(0, player->getY()); // Move the player to the center of the new map
+	}
 }

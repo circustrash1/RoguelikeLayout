@@ -7,4 +7,7 @@ C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Mage.cpp;C:\Code\C++\RoguelikeLayout
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\main.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\main.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\Map.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Player.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\Player.obj
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Stats.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\Stats.obj
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Upgrade.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\Upgrade.obj
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\UpgradeManager.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\UpgradeManager.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Warrior.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\Warrior.obj

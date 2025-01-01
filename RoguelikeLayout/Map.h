@@ -2,6 +2,7 @@
 #define MAP_H
 
 #include "EnemyManager.h" // Include the EnemyManager class header
+#include "UpgradeManager.h"
 #include <vector> // Include vector for storing the map layout
 #include <stack> // Include stack for the DFS algorithm
 #include <random> // Include random for std::default_random_engine
@@ -16,11 +17,15 @@ struct Room {
     int startX, startY;
     int endX, endY;
     bool enemiesSpawned = false;
+    bool upgradeSpawned = false;
+    bool upgradeCollected = false;
+    std::pair<int, int> upgradePosition;
 };
 
 class Map {
 public:
     Map(int width, int height); // Constructor to initialize the map with given width and height
+    ~Map();
     void generate(); // Function to generate the map
     double calculatePathPercentage() const; // Function to calculate the percentage of paths in the map
     void debugRender(sf::RenderWindow& window, int charSize); // Function to render the map for debugging
@@ -30,11 +35,15 @@ public:
     void reveal(int x, int y); // Function to reveal a specific position on the map
     void revealArea(int x, int y, int radius); // Function to reveal an area around a specific position
     bool isConnected(); // Function to check if all path tiles are connected
+    void advanceToNextLevel(Player* player); // Function to advance to the next level
     const std::vector<std::vector<char>>& getMap() const;
     const std::vector<Enemy*>& getEnemies() const;
+    std::vector<Room>& getRooms();
 
     void updateEnemies(int playerX, int playerY);
-    ~Map();
+
+    void dropUpgrade(Room& room);
+    UpgradeManager& upgradeManager();
 
     bool successfulGeneration = false; // Flag to indicate if the map was successfully generated
 
@@ -50,6 +59,8 @@ private:
     std::vector<std::pair<int, int>> exitPoints; // Vector to store entry points
 
     EnemyManager* enemyManager; // Instance of the EnemyManager class
+    UpgradeManager upgradeManager_;
+    std::vector<Upgrade> roomUpgrades;
 
     void carve(int x, int y); // Function to carve paths in the map
     void carveRoom(int x, int y, std::default_random_engine& rng); // Function to carve rooms in the map
@@ -64,7 +75,10 @@ private:
     bool playerInRoom(int playerX, int playerY) const; // Function to check if the player is inside a room
     void chooseCarveExits(); // Function to choose and carve initial exits
     void carveExits(); // Function to carve exits on condition
+    bool firstGeneration = true;
+
     bool debug = false; // Debug flag
 };
+
 
 #endif // MAP_H
