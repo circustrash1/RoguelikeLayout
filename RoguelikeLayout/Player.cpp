@@ -82,8 +82,6 @@ void Player::move(char direction, const std::vector<std::vector<char>>& map, con
 	}
 }
 
-
-
 // UPGRADES GO HERE
 
 void Player::applyUpgrade(const Upgrade& upgrade) {
@@ -126,20 +124,25 @@ int Player::getTotalFireDamage() const {
 }
 
 void Player::update(const std::vector<Enemy*>& enemies) {
-	if (damageClock.getElapsedTime().asSeconds() >= 1.0f) {
-		for (const Enemy* enemy : enemies) {
+	for (Enemy* enemy : enemies) {
+		if (enemy->getAttackCooldownClock().getElapsedTime().asSeconds() >= enemy->getAttackCooldown()) {
 			int enemyX = enemy->getX();
 			int enemyY = enemy->getY();
-			if ((std::abs(enemyX - x) <= 1 && enemyY == y) || (std::abs(enemyY - y) <= 1 && enemyX == x)) {
-				loseHealth(2);
+			if ((std::abs(enemyX - x) <= 1 && std::abs(enemyY - y) <= 1)) {
+				loseHealth(enemy->getAttackDamage());
+				const_cast<sf::Clock&>(enemy->getAttackCooldownClock()).restart();
 				break;
 			}
 		}
-		damageClock.restart();
-	}
-
-	for (Enemy* enemy : enemies) {
 		enemy->updateFireDamage();
+
+		// Check if the enemy is a SkeletonArcher and within attack range
+		if (SkeletonArcher* archer = dynamic_cast<SkeletonArcher*>(enemy)) {
+			int distance = std::abs(archer->getX() - x) + std::abs(archer->getY() - y);
+			if (distance <= 5) { // Adjust the range as needed
+				archer->attack(this);
+			}
+		}
 	}
 }
 

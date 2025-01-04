@@ -3,21 +3,28 @@
 
 #include <string>
 #include <vector>
+#include <random>
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "ElementalType.h"
+#include "Projectile.h"
 
-// Forward declaration of Player class
+// Forward declaration
 class Player;
+class Projectile;
 
 class Enemy {
 public:
-    Enemy(int x, int y, char symbol, int enemyHealth); // Updated constructor declaration
+    Enemy(int x, int y, char symbol, int enemyHealth, int attackDamage, float attackCooldown); // Updated constructor declaration
     virtual ~Enemy() = default;
 
     virtual void move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) = 0;
-    virtual void attack() = 0;
+    virtual void attack(Player* player) = 0;
     void render(sf::RenderWindow& window, int charSize, int playerX, int playerY, Player* player, const std::vector<Enemy*>& enemies);
+
+    int getAttackDamage() const;
+    const sf::Clock& getAttackCooldownClock() const;
+	float getAttackCooldown() const;    // Get unique enemy attack cooldown
 
     // Enemy health bars
     void renderHealthBar(sf::RenderWindow& window, int charSize) const;
@@ -52,15 +59,21 @@ public:
     bool isGoldAmountAdded() const;
     void setGoldAmountAdded(bool value);
 
+    // Scaling
+    void scaleAttributes(float healthFactor, float damageFactor);
+
 
 protected:
     int x, y;
     char symbol;
     int enemyHealth;
     int maxHealth;
+    int attackDamage;
+    float attackCooldown;   // Individual enemy attack cooldown
+    sf::Clock attackCooldownClock;  // Enemy attack cooldown clock
     sf::Clock deathAnimationClock;
     sf::Clock enemyClock;
-    sf::Clock enemyDamageClock;
+	sf::Clock enemyDamageClock; // Damage flash rate
     sf::Clock damageDisplayClock;
     sf::Clock fireDamageClock;  // Fire tick rate
 
@@ -88,7 +101,7 @@ class Goblin : public Enemy {
 public:
     Goblin(int x, int y);
     void move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) override;
-    void attack() override;
+    void attack(Player* player) override;
     void playDeathAnimation(sf::RenderWindow& window) override;
 };
 
@@ -96,8 +109,23 @@ class Orc : public Enemy {
 public:
     Orc(int x, int y);
     void move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) override;
-    void attack() override;
+    void attack(Player* player) override;
     void playDeathAnimation(sf::RenderWindow& window) override;
 };
 
+class SkeletonArcher : public Enemy {
+public:
+	SkeletonArcher(int x, int y);
+	void move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) override;
+    void attack(Player* player) override;
+    void renderProjectiles(sf::RenderWindow& window, int charSize);
+	void playDeathAnimation(sf::RenderWindow& window) override;
+
+
+private:
+    Projectile* projectile;
+    bool isRetreating;
+    sf::Clock moveCooldownClock;
+    float moveCooldown;
+};
 #endif // ENEMIES_H

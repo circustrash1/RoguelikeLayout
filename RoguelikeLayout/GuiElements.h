@@ -55,4 +55,13 @@ private:
 	sf::Font font;
 };
 
+class ShowStage {
+public:
+	ShowStage();
+	void renderStage(sf::RenderWindow& window, int stage, float x, float y, int charSize, float scaleX, float scaleY);
+
+private:
+	sf::Font font;
+	sf::Text stageText;
+};
 #endif

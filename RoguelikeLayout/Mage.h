@@ -3,6 +3,7 @@
 
 #include "Player.h"
 #include "Enemies.h"
+#include "Projectile.h"
 #include <vector>
 
 class Mage : public Player {
@@ -13,10 +14,7 @@ public:
     void renderProjectile(sf::RenderWindow& window, int charSize);
 
 private:
-    bool isProjectileActive = false;
-    int projectileX, projectileY;
-    int projectileTargetX, projectileTargetY;
-    sf::Clock projectileClock;
+    Projectile* projectile;
 
     float mageAttackCooldown;
 };

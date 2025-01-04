@@ -14,6 +14,7 @@ struct Room;
 
 class EnemyManager {
 public:
+	EnemyManager();
 	~EnemyManager();
 
 	void spawnEnemies(int roomX, int roomY, int roomWidth, int roomHeight, std::vector<std::vector<char>>& map);
@@ -23,8 +24,12 @@ public:
 	bool allEnemiesDead() const;
 	void clearEnemies();
 
+	void incrementScaleFactors();
+
 private:
 	std::vector<Enemy*> enemies;
+	float healthScaleFactor;
+	float damageScaleFactor;
 };
 
 

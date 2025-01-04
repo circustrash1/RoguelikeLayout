@@ -61,7 +61,7 @@ void Upgrade::applyUpgrade(Player& player) const {
 		player.increaseSpeed(5.0f);
 	}
 	else if (name == "Attack Speed Boost") {
-		player.increaseAttackSpeed(0.01f);
+		player.increaseAttackSpeed(0.02f);
 	}
 
 	// Apply elemental damage

@@ -201,6 +201,23 @@ void ShowGold::renderGold(sf::RenderWindow& window, int gold, float x, float y, 
 
 }
 
+ShowStage::ShowStage() {
+	if (!font.loadFromFile("fs-min.ttf")) {
+		std::cerr << "Error loading font!" << std::endl;
+		exit(-1);
+	}
+}
+
+void ShowStage::renderStage(sf::RenderWindow& window, int stage, float x, float y, int charSize, float scaleX, float scaleY) {
+	sf::Text stagetext;
+	stageText.setFont(font);
+	stageText.setCharacterSize(charSize);
+	stageText.setFillColor(sf::Color::White);
+	stageText.setString("Stage: " + std::to_string(stage));
+	stageText.setPosition(x * scaleX, y * scaleY);
+	window.draw(stageText);
+}
+
 
 
 

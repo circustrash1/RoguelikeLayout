@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "EventMaps.h"
 #include "SoundManager.h"
+#include "Enemies.h"
 #include <stack> // Include stack for the DFS algorithm
 #include <queue> // Include queue for flood fill algo
 #include <cstdlib> // Include cstdlib for std::srand and std::rand
@@ -30,7 +31,7 @@ void Map::generate() {
 
 	generationCount++;
 
-	if (generationCount % 2 == 0) {
+	if (generationCount % 100 == 0) {
 		generateBossCorridor();
 		return;
 	}
@@ -66,7 +67,7 @@ void Map::generate() {
 
 		// Convert pre-existing rooms to merchant and event rooms
 		for (size_t i = 0; i < rooms.size(); ++i) {
-			int roomType = std::rand() % 10;
+			int roomType = std::rand() % 15;
 			if (roomType == 0) {
 				EventMaps::convertToMerchantRoom(rooms[i]);
 			}
@@ -184,7 +185,10 @@ void Map::carve(int x, int y) {
 
 	std::default_random_engine rng(static_cast<unsigned int>(std::time(nullptr))); // Create a random number generator
 
-	sf::RenderWindow window(sf::VideoMode(width * 10, height * 10), "Room Generation Debug");
+	sf::RenderWindow* window = nullptr;
+	if (debug) {
+		window = new sf::RenderWindow(sf::VideoMode(width * 10, height * 10), "Room Generation Debug");
+	}
 
 	while (!stack.empty()) { // While there are positions on the stack
 		auto [cx, cy] = stack.top(); // Get the current position from the top of the stack
@@ -198,8 +202,14 @@ void Map::carve(int x, int y) {
 
 		// Debug render after each step
 		if (debug) {
-			debugRender(window, 10);
+			debugRender(*window, 10);
 		}
+	}
+
+	// Close and delete the debug window if it was created
+	if (debug && window) {
+		window->close();
+		delete window;
 	}
 }
 
@@ -472,7 +482,11 @@ void Map::render(sf::RenderWindow& window, int playerX, int playerY, int charSiz
 				else if (!room.enemiesSpawned) {
 					int roomWidth = room.endX - room.startX;
 					int roomHeight = room.endY - room.startY;
-					enemyManager->spawnEnemies(room.startX, room.startY, roomWidth, roomHeight, map);
+					if (playerAdvanced) {
+						enemyManager->spawnEnemies(room.startX, room.startY, roomWidth, roomHeight, map);
+					} else { 
+						enemyManager->spawnEnemies(room.startX, room.startY, roomWidth, roomHeight, map); 
+					}
 					room.enemiesSpawned = true;
 				}
 				updateEnemies(playerX, playerY);
@@ -610,7 +624,10 @@ void Map::floodFill(int x, int y, std::vector<std::vector<bool>>& visited) {
 	queue.push({ x, y });
 	visited[y][x] = true;
 
-	sf::RenderWindow window(sf::VideoMode(width * 10, height * 10), "Flood Fill Debug");
+	sf::RenderWindow* window = nullptr;
+	if (debug) {
+		window = new sf::RenderWindow(sf::VideoMode(width * 10, height * 10), "Flood Fill Debug");
+	}
 
 	while (!queue.empty()) {
 		auto [cx, cy] = queue.front();
@@ -629,8 +646,13 @@ void Map::floodFill(int x, int y, std::vector<std::vector<bool>>& visited) {
 		}
 
 		if (debug) {
-			floodVisualise(window, 10, visited);
+			floodVisualise(*window, 10, visited);
 		}
+	}
+	// Close and delete the debug window if it was created
+	if (debug && window) {
+		window->close();
+		delete window;
 	}
 }
 
@@ -903,11 +925,11 @@ void Map::generateBossRoom() {
 
 }
 
-void Map::advanceToNextLevel(Player* player) {
+void Map::advanceToNextLevel(Player* player, Game* game) {
 	// Check if the player is at the exit
 	if (player->getX() == 61) {
 		firstGeneration = false;
-		if (generationCount % 2 == 0) {
+		if (generationCount % 100 == 0) {
 			generateBossRoom();
 		}
 		else { 
@@ -915,5 +937,13 @@ void Map::advanceToNextLevel(Player* player) {
 		}
 
 		player->setPosition(0, player->getY()); // Move the player to the center of the new map
+		game->clearGoldDrops();
+		game->incrementStageCount();
+
+		playerAdvanced = true;
+
+		enemyManager->incrementScaleFactors();
+
+
 	}
 }

@@ -2,6 +2,8 @@
 #include "Player.h"
 #include <cstdlib>
 
+EnemyManager::EnemyManager() : healthScaleFactor(1.0f), damageScaleFactor(1.0f) {
+}
 
 EnemyManager::~EnemyManager() {
 	for (Enemy* enemy : enemies) {
@@ -18,15 +20,31 @@ void EnemyManager::spawnEnemies(int roomX, int roomY, int roomWidth, int roomHei
 		do {
 			x = roomX + std::rand() % roomWidth;
 			y = roomY + std::rand() % roomHeight;
-
-			if (std::rand() % 2 == 0) {
-				enemies.push_back(new Goblin(x, y));
-			}
-			else {
-				enemies.push_back(new Orc(x, y));
-			}
 		} while (map[y][x] != '.');
+
+		int enemyType = std::rand() % 3;
+		Enemy* enemy = nullptr;
+
+		if (enemyType == 2) {
+			enemy = new Goblin(x, y);
+		}
+		else if (enemyType == 1) {
+			enemy = new Orc(x, y);
+		}
+		else {
+			enemy = new SkeletonArcher(x, y);
+		}
+
+		if (enemy) {
+			enemy->scaleAttributes(healthScaleFactor, damageScaleFactor);
+			enemies.push_back(enemy);
+		}
 	}
+}
+
+void EnemyManager::incrementScaleFactors() {
+	healthScaleFactor += 0.1f; // Increment health scale factor
+	damageScaleFactor += 0.1f; // Increment damage scale factor
 }
 
 void EnemyManager::updateEnemies(const std::vector<std::vector<char>>& map, int playerX, int playerY) {

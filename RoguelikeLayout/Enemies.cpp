@@ -5,9 +5,10 @@
 #include <iostream>
 #include <random>
 
-Enemy::Enemy(int x, int y, char symbol, int enemyHealth)
+Enemy::Enemy(int x, int y, char symbol, int enemyHealth, int attackDamage, float attackCooldown)
 	: x(x), y(y), symbol(symbol), isTakingDamage(false), isTakingFireDamage(false), isDisplayingDamage(false), isDisplayingFireDamage(false),
-	enemyHealth(enemyHealth), maxHealth(enemyHealth), alive(true), isPlayingDeathAnimation(false), fireDamageOverTime(0), goldAmountAdded(false) {
+	enemyHealth(enemyHealth), maxHealth(enemyHealth), attackDamage(attackDamage), attackCooldown(attackCooldown), alive(true), isPlayingDeathAnimation(false),
+	fireDamageOverTime(0), goldAmountAdded(false) {
 }
 
 int Enemy::getX() const {
@@ -258,7 +259,19 @@ void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int play
 	}
 }
 
-Goblin::Goblin(int x, int y) : Enemy(x, y, 'G', 30) {}
+void Enemy::scaleAttributes(float healthFactor, float damageFactor) {
+	maxHealth = static_cast<int>(maxHealth * healthFactor);
+	enemyHealth = maxHealth;	// Reset current health to max health
+	attackDamage = static_cast<int>(attackDamage * damageFactor);
+}
+
+
+
+
+
+// ENEMIES
+
+Goblin::Goblin(int x, int y) : Enemy(x, y, 'G', 30, 1, 3.0f) {}	// Initialize goblin with 30 health, 1 attack damage, and 3 second attack cooldown
 
 void Goblin::move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) {
 	if (!alive) return;
@@ -295,7 +308,7 @@ void Goblin::move(const std::vector<std::vector<char>>& map, int playerX, int pl
 	}
 }
 
-void Goblin::attack() {
+void Goblin::attack(Player* player) {
 	// Implement Goblin-specific attack logic
 }
 
@@ -313,7 +326,7 @@ void Goblin::playDeathAnimation(sf::RenderWindow& window) {
 	}
 }
 
-Orc::Orc(int x, int y) : Enemy(x, y, 'O', 60) {}
+Orc::Orc(int x, int y) : Enemy(x, y, 'O', 60, 2, 5.0f) {}	// Initialize orc with 60 health, 2 attack damage, and 5 second attack cooldown
 
 void Orc::move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) {
 	if (!alive) return;
@@ -350,7 +363,7 @@ void Orc::move(const std::vector<std::vector<char>>& map, int playerX, int playe
 	}
 }
 
-void Orc::attack() {
+void Orc::attack(Player* player) {
 	// Implement Orc-specific attack logic
 }
 
@@ -367,6 +380,101 @@ void Orc::playDeathAnimation(sf::RenderWindow& window) {
 		isPlayingDeathAnimation = false;
 	}
 }
+
+SkeletonArcher::SkeletonArcher(int x, int y)
+	: Enemy(x, y, 'S', 40, 2, 2.0f), projectile(nullptr), isRetreating(false), moveCooldown(0.2f) {
+	moveCooldownClock.restart();
+}
+
+void SkeletonArcher::move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) {
+	if (!alive) return;
+
+	if (moveCooldownClock.getElapsedTime().asSeconds() < moveCooldown) {
+		return;
+	}
+	int dx = 0, dy = 0;
+	int distance = std::abs(playerX - x) + std::abs(playerY - y);
+
+	if (distance < 3) { // If too close to the player, retreat
+		if (x < playerX) dx = -1;
+		else if (x > playerX) dx = 1;
+
+		if (y < playerY) dy = -1;
+		else if (y > playerY) dy = 1;
+
+		isRetreating = true;
+		attackCooldownClock.restart();
+	}
+	else if (distance > 5) { // If too far from the player, approach
+		if (x < playerX) dx = 1;
+		else if (x > playerX) dx = -1;
+
+		if (y < playerY) dy = 1;
+		else if (y > playerY) dy = -1;
+
+		isRetreating = false;
+	}
+	else {
+		isRetreating = false;
+	}
+
+	int newX = x + dx;
+	int newY = y + dy;
+
+	bool collision = false;
+	for (const Enemy* enemy : enemies) {
+		if (enemy != this && enemy->getX() == newX && enemy->getY() == newY) {
+			collision = true;
+			break;
+		}
+	}
+
+	if (!collision && map[newY][newX] == '.') {
+		x = newX;
+		y = newY;
+	}
+
+	moveCooldownClock.restart();
+}
+
+void SkeletonArcher::attack(Player* player) {
+	if (isRetreating || attackCooldownClock.getElapsedTime().asSeconds() < attackCooldown) { // Cooldown between attacks
+		return;
+	}
+
+	int playerX = player->getX();
+	int playerY = player->getY();
+	std::cout << "Skeleton Archer at (" << x << ", " << y << ") fires an arrow at player at (" << playerX << ", " << playerY << ")." << std::endl;
+	projectile = new Projectile(x, y, playerX, playerY, attackDamage, player, sf::Color::Red);
+	attackCooldownClock.restart();
+}
+
+void SkeletonArcher::renderProjectiles(sf::RenderWindow& window, int charSize) {
+	if (projectile != nullptr) {
+		projectile->update();
+		projectile->render(window, charSize);
+		if (!projectile->isActive()) {
+			delete projectile;
+			projectile = nullptr;
+		}
+	}
+}
+
+void SkeletonArcher::playDeathAnimation(sf::RenderWindow& window) {
+	if (deathAnimationClock.getElapsedTime().asSeconds() < 1.0f) {
+		if (static_cast<int>(deathAnimationClock.getElapsedTime().asMilliseconds() / 100) % 2 == 0) {
+			symbol = 'X';
+		}
+		else {
+			symbol = ' ';
+		}
+	}
+	else {
+		isPlayingDeathAnimation = false;
+	}
+}
+
+
 
 void Enemy::updateHealthBar(int charSize) {
 	if (!healthBarNeedsUpdate) return;
@@ -388,4 +496,16 @@ void Enemy::updateHealthBar(int charSize) {
 	healthBarTexture.display();
 
 	healthBarNeedsUpdate = false;
+}
+
+int Enemy::getAttackDamage() const {
+	return attackDamage;
+}
+
+const sf::Clock& Enemy::getAttackCooldownClock() const {
+	return attackCooldownClock;
+}
+
+float Enemy::getAttackCooldown() const {
+	return attackCooldown;
 }

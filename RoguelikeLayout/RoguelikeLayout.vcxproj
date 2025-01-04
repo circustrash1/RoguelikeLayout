@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="DeathScreen.cpp" />
     <ClCompile Include="Enemies.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="EventMaps.cpp" />
@@ -147,14 +148,17 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Stats.cpp" />
+    <ClCompile Include="TitleScreen.cpp" />
     <ClCompile Include="Upgrade.cpp" />
     <ClCompile Include="UpgradeManager.cpp" />
     <ClCompile Include="Warrior.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="DeathScreen.h" />
     <ClInclude Include="ElementalType.h" />
     <ClInclude Include="Enemies.h" />
     <ClInclude Include="EnemyManager.h" />
@@ -164,9 +168,11 @@
     <ClInclude Include="Mage.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="SharedData.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Stats.h" />
+    <ClInclude Include="TitleScreen.h" />
     <ClInclude Include="Upgrade.h" />
     <ClInclude Include="UpgradeManager.h" />
     <ClInclude Include="Warrior.h" />

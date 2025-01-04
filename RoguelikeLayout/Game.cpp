@@ -5,12 +5,14 @@
 #include "Mage.h"
 #include "SoundManager.h"
 #include "EventMaps.h"
+#include "TitleScreen.h"
+#include "DeathScreen.h"
 
 Game::Game()
 	: scaleX(static_cast<float>(sf::VideoMode::getDesktopMode().width) / 640.0f),
 	scaleY(static_cast<float>(sf::VideoMode::getDesktopMode().height) / 360.0f),
 	window(sf::VideoMode(640, 360), "Roguelike Layout"), map(62, 32), player(nullptr), isShaking(false), shakeIntensity(0.1f),
-	healthBar(nullptr), showStats(nullptr), showGold(new ShowGold()) {
+	healthBar(nullptr), showStats(nullptr), showGold(new ShowGold()), showStage(new ShowStage()), stageCount(0) {
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 
 	window.create(desktop, "Roguelike Layout", sf::Style::Fullscreen);
@@ -19,6 +21,11 @@ Game::Game()
 		std::cerr << "Error loading font!" << std::endl;
 		exit(-1);
 	}
+
+	TitleScreen titleScreen(font, scaleX, scaleY);
+	titleScreen.display(window);
+
+
 
 	mainBar.setSize(sf::Vector2f(640 * scaleX, 100 * scaleY));
 	mainBar.setFillColor(sf::Color(50, 50, 50));
@@ -261,6 +268,9 @@ void Game::renderUpgradeOrMerchantWindow(const std::string& titleText, const std
 		showStats->renderPlayerStats(window, *player, 24, scaleX, scaleY, nullptr, "");
 	}
 
+	// Render stage counter
+	showStage->renderStage(window, stageCount, 500, 250, 24, scaleX, scaleY);
+
 	// Render UI total Gold
 	showGold->renderGold(window, player->getGold(), 500, 340, 24, scaleX, scaleY);
 
@@ -361,6 +371,7 @@ Game::~Game() {
 	delete healthBar; // Clean up healthBar
 	delete showStats; // Clean up showStats
 	delete showGold;
+	delete showStage;
 }
 
 void Game::run() {
@@ -419,6 +430,12 @@ void Game::update() {
 	static sf::Clock clock;
 	static sf::Time lastMoveTime = sf::Time::Zero;
 	sf::Time moveDelay = sf::milliseconds(100); // Adjust delay as needed
+
+	// Detect player death
+	if (player->getHealth() <= 0) {
+		DeathScreen deathScreen(font, scaleX, scaleY);
+		deathScreen.display(window, *this);
+	}
 
 	if (clock.getElapsedTime() - lastMoveTime > moveDelay) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
@@ -508,7 +525,7 @@ void Game::update() {
 		}
 	}
 
-	map.advanceToNextLevel(player);
+	map.advanceToNextLevel(player, this);
 }
 
 void Game::render() {
@@ -551,6 +568,13 @@ void Game::render() {
 		}
 	}
 
+	// Render enemy projectiles
+	for (Enemy* enemy : map.getEnemies()) {
+		if (SkeletonArcher* archer = dynamic_cast<SkeletonArcher*>(enemy)) {
+			archer->renderProjectiles(window, 24);
+		}
+	}
+
 	if (healthBar != nullptr) {
 		healthBar->render(window);
 	}
@@ -558,6 +582,9 @@ void Game::render() {
 	if (showStats != nullptr && player != nullptr) {
 		showStats->renderPlayerStats(window, *player, 24, scaleX, scaleY, nullptr, "");
 	}
+
+	// Render stage counter
+	showStage->renderStage(window, stageCount, 500, 250, 24, scaleX, scaleY);
 
 	// Render UI total Gold
 	showGold->renderGold(window, player->getGold(), 500, 340, 24, scaleX, scaleY);
@@ -601,6 +628,18 @@ void Game::renderGoldDrops(sf::RenderWindow& window) {
 		goldSymbol.setPosition(std::get<0>(goldDrop) * 24, std::get<1>(goldDrop) * 24);
 		window.draw(goldSymbol);
 	}
+}
+
+void Game::incrementStageCount() {
+	stageCount++;
+}
+
+int Game::getStageCount() const {
+	return stageCount;
+}
+
+void Game::clearGoldDrops() {
+	goldDrops.clear();
 }
 
 void Game::displayCollectedUpgrades() {
@@ -694,4 +733,27 @@ void Game::initialize() {
 
 	// Play main theme
 	SoundManager::getInstance().playMusic("main");
+}
+
+void Game::restartGame() {
+    // Reset game state
+    delete player;
+    delete healthBar;
+    delete showStats;
+    delete showGold;
+    delete showStage;
+
+    player = nullptr;
+    healthBar = nullptr;
+    showStats = nullptr;
+    showGold = new ShowGold();
+    showStage = new ShowStage();
+    stageCount = 0;
+
+    // Reinitialize game
+    initialize();
+    map.generate();
+    originalView = window.getDefaultView();
+    window.setView(originalView);
+    displayCharacterSelection();
 }

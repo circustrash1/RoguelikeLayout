@@ -12,6 +12,7 @@
 
 class EnemyManager;
 class Player; // Forward declaration of Player class
+class Game; // Forward declaration
 
 // Define the Room struct
 struct Room {
@@ -49,7 +50,7 @@ public:
     void reveal(int x, int y); // Function to reveal a specific position on the map
     void revealArea(int x, int y, int radius); // Function to reveal an area around a specific position
     bool isConnected(); // Function to check if all path tiles are connected
-    void advanceToNextLevel(Player* player); // Function to advance to the next level
+    void advanceToNextLevel(Player* player, Game* game); // Function to advance to the next level
     const std::vector<std::vector<char>>& getMap() const;
     const std::vector<Enemy*>& getEnemies() const;
     std::vector<Room>& getRooms();
@@ -62,6 +63,8 @@ public:
     bool successfulGeneration = false; // Flag to indicate if the map was successfully generated
 
 private:
+    bool playerAdvanced = false;
+
     int width; // Width of the map
     int height; // Height of the map
     int roomCount;  // Number of rooms generated

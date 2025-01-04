@@ -140,7 +140,7 @@ Rarity UpgradeManager::getRandomRarity() const {
 	else if (randomValue < 0.95) {	// 0.8 - 0.95 = rare
 		return Rarity::Rare;	// 15% chance
 	}
-	else if (randomValue < 0.99) {	// 0.95 - 0.99 = epic
+	else if (randomValue < 0.9975) {	// 0.95 - 0.99 = epic
 		return Rarity::Epic;	// 5% chance
 	}
 	else {

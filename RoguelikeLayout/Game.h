@@ -20,7 +20,15 @@ public:
     void initialize();
 
     void renderGoldDrops(sf::RenderWindow& window);
+    void clearGoldDrops();
+
+    int getStageCount() const;
+	void incrementStageCount();
+
     void displayCollectedUpgrades();
+
+
+    void restartGame();
 
     // Cheats
     void modifyPlayerGold(int amount);
@@ -38,6 +46,7 @@ private:
     int playerY;
     float scaleX; // Add scaleX
     float scaleY; // Add scaleY
+    int stageCount;
 
     void displayCharacterSelection();
     Player* createPlayer(const std::string& className);
@@ -45,9 +54,13 @@ private:
     void displayMerchantWindow(Room& room);
     void renderUpgradeOrMerchantWindow(const std::string& titleText, const std::vector<Upgrade>& upgrades, bool isMerchantShop);
     void updateHealth();
+
+
     HealthBar* healthBar;
     ShowStats* showStats;
 	ShowGold* showGold;
+    ShowStage* showStage;
+
     std::vector<std::tuple<int, int, int>> goldDrops;   // Store x, y and gold amount
 
     // Screen shake

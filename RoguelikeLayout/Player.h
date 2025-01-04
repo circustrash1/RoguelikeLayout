@@ -59,7 +59,7 @@ public:
     }
 
 private:
-    sf::Clock damageClock;
+    sf::Clock damageClock;  // How often the player can be attacked, unused as added seperate enemy cooldown clocks
     int gold;
 
 

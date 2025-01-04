@@ -157,7 +157,7 @@ void EventMaps::checkEventInteraction(Room& room, Player& player, sf::RenderWind
 			statValue = player.getStats().wisdom;
 			statName = "WIS";
 			success = skillCheck(statValue, 15);
-			effectDescription = success ? "+1 Wisdom" : "-10 Health";
+			effectDescription = success ? "+10 Health" : "-10 Health";
 		}
 
 		displayDiceRoll(window, roll, statValue, statName, font);
