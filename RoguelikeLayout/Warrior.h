@@ -12,6 +12,7 @@ public:
 	void enableCleave();
 private:
 	bool cleaveEnabled;
+	float warriorAttackCooldown;
 };
 
 #endif // WARRIOR_H

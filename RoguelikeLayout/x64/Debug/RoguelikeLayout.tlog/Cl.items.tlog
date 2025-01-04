@@ -1,12 +1,14 @@
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Button.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\Button.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\Enemies.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\EnemyManager.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\EnemyManager.obj
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\EventMaps.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\EventMaps.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\Game.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\GuiElements.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\GuiElements.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Mage.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\Mage.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\main.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\main.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\Map.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Player.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\Player.obj
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\SoundManager.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\SoundManager.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Stats.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\Stats.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Upgrade.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\Upgrade.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\UpgradeManager.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\UpgradeManager.obj

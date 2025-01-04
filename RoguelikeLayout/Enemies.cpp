@@ -1,11 +1,13 @@
 #include "Enemies.h"
 #include "Player.h"
 #include "ElementalType.h"
+#include "SoundManager.h"
 #include <iostream>
+#include <random>
 
 Enemy::Enemy(int x, int y, char symbol, int enemyHealth)
 	: x(x), y(y), symbol(symbol), isTakingDamage(false), isTakingFireDamage(false), isDisplayingDamage(false), isDisplayingFireDamage(false),
-	enemyHealth(enemyHealth), maxHealth(enemyHealth), alive(true), isPlayingDeathAnimation(false), fireDamageOverTime(0) {
+	enemyHealth(enemyHealth), maxHealth(enemyHealth), alive(true), isPlayingDeathAnimation(false), fireDamageOverTime(0), goldAmountAdded(false) {
 }
 
 int Enemy::getX() const {
@@ -20,6 +22,27 @@ char Enemy::getSymbol() const {
 	return symbol;
 }
 
+
+// Gold system
+int Enemy::dropGold() {
+	std::default_random_engine rng(std::random_device{}());
+	std::uniform_int_distribution<int> dist(1, 5);
+	goldAmount = dist(rng);
+	return goldAmount;
+}
+
+bool Enemy::isGoldDropped() const {
+	return goldDropped;
+}
+
+bool Enemy::isGoldAmountAdded() const {
+	return goldAmountAdded;
+}
+
+void Enemy::setGoldAmountAdded(bool value) {
+	goldAmountAdded = value;
+}
+
 void Enemy::takeDamage(int damage) {
 	if (!alive) return;
 	enemyHealth -= damage;
@@ -28,6 +51,7 @@ void Enemy::takeDamage(int damage) {
 		alive = false;
 		isPlayingDeathAnimation = true;
 		deathAnimationClock.restart();
+		SoundManager::getInstance().playSound("enemy_death");
 	}
 	isTakingDamage = true;
 	isDisplayingDamage = true;
@@ -35,6 +59,12 @@ void Enemy::takeDamage(int damage) {
 	damageDisplayClock.restart();
 	lastDamageAmount = damage;
 	healthBarNeedsUpdate = true;
+	SoundManager::getInstance().playSound("enemy_take_damage");
+
+	if (!alive && !goldDropped) {
+		goldDropped = true;
+		dropGold();
+	}
 }
 
 void Enemy::takeFireDamage(int damage) {
@@ -46,12 +76,14 @@ void Enemy::takeFireDamage(int damage) {
 		alive = false;
 		isPlayingDeathAnimation = true;
 		deathAnimationClock.restart();
+		SoundManager::getInstance().playSound("enemy_death");
 	}
 	isTakingFireDamage = true;
 	isDisplayingFireDamage = true;
 	fireDamageClock.restart();
 	lastFireDamageAmount = damage;
 	healthBarNeedsUpdate = true;
+	SoundManager::getInstance().playSound("burn_damage");
 }
 
 void Enemy::applyFireDamage(int damage) {

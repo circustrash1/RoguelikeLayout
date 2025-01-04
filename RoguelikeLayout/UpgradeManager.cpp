@@ -26,7 +26,7 @@ UpgradeManager::UpgradeManager() {
 			"|  %*'*% #|",
 			"|  |___| Q|",
 			" ~~~~~~~~~ "
-		}, "+10 Move Speed \n-10 Attack Speed", ElementalType::None, 0, ClassType::Universal),
+		}, "+10 Move Speed \n-10 Attack Speed -Doesn't do anything yet", ElementalType::None, 0, ClassType::Universal),
 
 		Upgrade("Defense Boost", Rarity::Rare, 1, {
 			" _________ ",
@@ -38,7 +38,45 @@ UpgradeManager::UpgradeManager() {
 			"|  \\o`o/ +|",
 			"|  |___| Q|",
 			" ~~~~~~~~~ "
-		}, "+5 % Block Chance \n-10 Attack Damage", ElementalType::None, 0, ClassType::Universal),
+		}, "+5 % Block Chance \n-10 Attack Damage -Doesn't do anything yet", ElementalType::None, 0, ClassType::Universal),
+
+		Upgrade("Attack Speed Boost", Rarity::Common, 1, {
+			" _________ ",
+			"|Q |~~~|  |",
+			"|+ /o,o\\  |",
+			"|  \\_-_/  |",
+			"| _-~+_-~ |",
+			"|  /~-~\\  |",
+			"|  \\o`o/ +|",
+			"|  |___| Q|",
+			" ~~~~~~~~~ "
+		}, "+10 Attack Speed", ElementalType::None, 0, ClassType::Universal),
+
+		Upgrade("Attack Speed Boost", Rarity::Common, 1, {
+			" _________ ",
+			"|Q |~~~|  |",
+			"|+ /o,o\\  |",
+			"|  \\_-_/  |",
+			"| _-~+_-~ |",
+			"|  /~-~\\  |",
+			"|  \\o`o/ +|",
+			"|  |___| Q|",
+			" ~~~~~~~~~ "
+		}, "+10 Attack Speed", ElementalType::None, 0, ClassType::Universal),
+
+		Upgrade("Attack Speed Boost", Rarity::Common, 1, {
+			" _________ ",
+			"|Q |~~~|  |",
+			"|+ /o,o\\  |",
+			"|  \\_-_/  |",
+			"| _-~+_-~ |",
+			"|  /~-~\\  |",
+			"|  \\o`o/ +|",
+			"|  |___| Q|",
+			" ~~~~~~~~~ "
+		}, "+10 Attack Speed", ElementalType::None, 0, ClassType::Universal),
+
+
 
 		// WARRIOR SPECIFIC UPGRADES
 
@@ -80,65 +118,7 @@ UpgradeManager::UpgradeManager() {
 			" ~~~~~~~~~ "
 		}, "+5 Fire Damage", ElementalType::Fire, 5, ClassType::Mage),
 
-		Upgrade("Firewhip", Rarity::Common, 1, {
-			" _________ ",
-			"|Q |~~~|  |",
-			"|+ /o,o\\  |",
-			"|  \\_-_/  |",
-			"| _-~+_-~ |",
-			"|  /~-~\\  |",
-			"|  \\o`o/ +|",
-			"|  |___| Q|",
-			" ~~~~~~~~~ "
-		}, "+5 Fire Damage", ElementalType::Fire, 5, ClassType::Universal),
 
-		Upgrade("Firesniff", Rarity::Common, 1, {
-			" _________ ",
-			"|Q |~~~|  |",
-			"|+ /o,o\\  |",
-			"|  \\_-_/  |",
-			"| _-~+_-~ |",
-			"|  /~-~\\  |",
-			"|  \\o`o/ +|",
-			"|  |___| Q|",
-			" ~~~~~~~~~ "
-		}, "+5 Fire Damage", ElementalType::Fire, 5, ClassType::Universal),
-
-		Upgrade("Firesniff", Rarity::Common, 1, {
-			" _________ ",
-			"|Q |~~~|  |",
-			"|+ /o,o\\  |",
-			"|  \\_-_/  |",
-			"| _-~+_-~ |",
-			"|  /~-~\\  |",
-			"|  \\o`o/ +|",
-			"|  |___| Q|",
-			" ~~~~~~~~~ "
-		}, "+5 Fire Damage", ElementalType::Fire, 5, ClassType::Universal),
-
-		Upgrade("Firesniff", Rarity::Common, 1, {
-				" _________ ",
-				"|Q |~~~|  |",
-				"|+ /o,o\\  |",
-				"|  \\_-_/  |",
-				"| _-~+_-~ |",
-				"|  /~-~\\  |",
-				"|  \\o`o/ +|",
-				"|  |___| Q|",
-				" ~~~~~~~~~ "
-		}, "+5 Fire Damage", ElementalType::Fire, 5, ClassType::Universal),
-
-		Upgrade("Firesniff", Rarity::Common, 1, {
-				" _________ ",
-				"|Q |~~~|  |",
-				"|+ /o,o\\  |",
-				"|  \\_-_/  |",
-				"| _-~+_-~ |",
-				"|  /~-~\\  |",
-				"|  \\o`o/ +|",
-				"|  |___| Q|",
-				" ~~~~~~~~~ "
-		}, "+5 Fire Damage", ElementalType::Fire, 5, ClassType::Universal),
 		// Add more upgrades
 	};
 	rng.seed(std::random_device()());

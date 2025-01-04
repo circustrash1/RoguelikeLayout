@@ -5,10 +5,12 @@
 Mage::Mage(int x, int y)
     : Player(x, y, '@', 100, 10, generateRandomStats(0, 0, 0, 3, 3, 0), ClassType::Mage), isProjectileActive(false), 
     projectileX(0), projectileY(0), projectileTargetX(0), projectileTargetY(0) {
+    attackCooldown = 0.50f;
 }
 
 void Mage::attack(std::vector<Enemy*>& enemies) {
-    if (attackCooldownClock.getElapsedTime().asSeconds() < 0.50f) { // Cooldown between attacks
+
+    if (attackCooldownClock.getElapsedTime().asSeconds() < attackCooldown) { // Cooldown between attacks
         return;
     }
 

@@ -1,14 +1,19 @@
 #include "Warrior.h"
+#include "SoundManager.h"
 #include <iostream>
 
 Warrior::Warrior(int x, int y)
-	: Player(x, y, '@', 150, 15, generateRandomStats(3, 0, 3, 0, 0, 0), ClassType::Warrior), cleaveEnabled(false){
+	: Player(x, y, '@', 150, 15, generateRandomStats(3, 0, 3, 0, 0, 0), ClassType::Warrior), cleaveEnabled(false) {
+	attackCooldown = 0.25f;
 }
 
 void Warrior::attack(std::vector<Enemy*>& enemies) {
-	if (attackCooldownClock.getElapsedTime().asSeconds() < 0.25f) {	// Cooldown between melee attacks
+
+	if (attackCooldownClock.getElapsedTime().asSeconds() < attackCooldown) {	// Cooldown between melee attacks
 		return;
 	}
+	
+	bool attacked = false;
 	for (Enemy* enemy : enemies) {
 		int enemyX = enemy->getX();
 		int enemyY = enemy->getY();
@@ -33,9 +38,13 @@ void Warrior::attack(std::vector<Enemy*>& enemies) {
 				}
 				
 			}
-			attackCooldownClock.restart();
+			attacked = true;
 			break;
 		}
+	}
+	if (attacked) {
+		SoundManager::getInstance().playSound("player_attack");
+		attackCooldownClock.restart();
 	}
 }
 

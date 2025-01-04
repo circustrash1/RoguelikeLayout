@@ -46,6 +46,13 @@ public:
     void updateFireDamage();
 
 
+	// Gold system
+    int dropGold();
+    bool isGoldDropped() const;
+    bool isGoldAmountAdded() const;
+    void setGoldAmountAdded(bool value);
+
+
 protected:
     int x, y;
     char symbol;
@@ -62,6 +69,11 @@ protected:
     bool isDisplayingDamage;
 	bool isDisplayingFireDamage;
     bool alive;
+
+    bool goldDropped = false;
+    bool goldAmountAdded = false;
+    int goldAmount = 0;
+
 
     int lastDamageAmount;
     int lastFireDamageAmount;

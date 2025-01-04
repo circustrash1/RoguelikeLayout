@@ -8,7 +8,7 @@
 Upgrade::Upgrade(const std::string& name, Rarity rarity, int level, const std::vector<std::string>& asciiArt, 
 	const std::string& description, ElementalType elementalType, int fireDamage, ClassType classType, bool cleave) 
 	: name(name), rarity(rarity), level(level), asciiArt(asciiArt), description(description), elementalType(elementalType), 
-	fireDamage(fireDamage), classType(classType), cleave(cleave) {}
+	fireDamage(fireDamage), classType(classType), cleave(cleave), purchased(false) {}
 
 std::string Upgrade::getName() const {
 	return name;
@@ -60,6 +60,10 @@ void Upgrade::applyUpgrade(Player& player) const {
 	else if (name == "Speed Boost") {
 		player.increaseSpeed(5.0f);
 	}
+	else if (name == "Attack Speed Boost") {
+		player.increaseAttackSpeed(0.01f);
+	}
+
 	// Apply elemental damage
 	std::cout << "You picked up: " << elementalTypeToString(elementalType) << " elemental.\n";
 	if (elementalType == ElementalType::Fire) {
@@ -115,4 +119,20 @@ ClassType Upgrade::getClassType() const {
 
 bool Upgrade::hasCleave() const {
 	return cleave;
+}
+
+int Upgrade::getCost() const {
+	switch (rarity) {
+	case Rarity::Common:
+		return 10;
+	case Rarity::Uncommon:
+		return 25;
+	case Rarity::Rare:
+		return 50;
+	case Rarity::Epic:
+		return 100;
+	case Rarity::Legendary:
+		return 200;
+
+	}
 }

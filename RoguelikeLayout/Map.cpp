@@ -1,6 +1,8 @@
 #include "Map.h" // Include the Map class header
 #include "EnemyManager.h"
 #include "Player.h"
+#include "EventMaps.h"
+#include "SoundManager.h"
 #include <stack> // Include stack for the DFS algorithm
 #include <queue> // Include queue for flood fill algo
 #include <cstdlib> // Include cstdlib for std::srand and std::rand
@@ -25,6 +27,13 @@ void Map::generate() {
 	std::default_random_engine rng(std::rand());
 
 	bool successfulGeneration = false;
+
+	generationCount++;
+
+	if (generationCount % 2 == 0) {
+		generateBossCorridor();
+		return;
+	}
 
 	do {
 		entryPoints.clear();
@@ -53,6 +62,17 @@ void Map::generate() {
 
 			carveRoom(x, y, rng); // Attempt to carve a room
 			roomAttempts++;
+		}
+
+		// Convert pre-existing rooms to merchant and event rooms
+		for (size_t i = 0; i < rooms.size(); ++i) {
+			int roomType = std::rand() % 15;
+			if (roomType == 0) {
+				EventMaps::convertToMerchantRoom(rooms[i]);
+			}
+			else if (roomType == 1) {
+				EventMaps::convertToEventRoom(rooms[i]);
+			}
 		}
 
 		carve(2, 2); // Start carving paths from position (1, 1)
@@ -197,7 +217,7 @@ void Map::carveRoom(int x, int y, std::default_random_engine& rng) {
 	int endY = startY + roomHeight;
 
 	// Ensure room is within bounds
-	if (startX <= 2 || startY <= 2 || endX >= width - 2 || endY >= height - 2) {
+	if (startX <= 3 || startY <= 2 || endX >= width - 3 || endY >= height - 2) {
 		return; // If out of bounds, do not carve the room
 	}
 
@@ -239,6 +259,10 @@ void Map::wallRooms(bool blockEntries) {
 
 	// Iterate through each room
 	for (const Room& room : rooms) {
+		if (!room.wallOff) {
+			continue;	// Skip if the room is not to be walled off
+		}
+
 		int startX = room.startX;
 		int startY = room.startY;
 		int endX = room.endX;
@@ -439,7 +463,13 @@ void Map::render(sf::RenderWindow& window, int playerX, int playerY, int charSiz
 		wallRooms(true); // Wall off rooms, blocking entries
 		for (Room& room : rooms) {
 			if (playerX >= room.startX && playerX < room.endX && playerY >= room.startY && playerY < room.endY) {
-				if (!room.enemiesSpawned) {
+				if (room.isMerchantRoom) {
+					EventMaps::handleMerchantRoom(room, *player);
+				}
+				else if (room.isEventRoom) {
+					EventMaps::handleEventRoom(room, *player, window, font, charSize);
+				}
+				else if (!room.enemiesSpawned) {
 					int roomWidth = room.endX - room.startX;
 					int roomHeight = room.endY - room.startY;
 					enemyManager->spawnEnemies(room.startX, room.startY, roomWidth, roomHeight, map);
@@ -500,6 +530,36 @@ void Map::render(sf::RenderWindow& window, int playerX, int playerY, int charSiz
 		}
 	}
 
+	// Render the merchant
+	for (Room& room : rooms) {
+		if (room.isMerchantRoom && room.merchantSpawned) {
+			text.setString('$');
+			text.setFillColor(sf::Color::Yellow);
+			text.setPosition(room.merchantPosition.first * charSize, room.merchantPosition.second * charSize);
+			window.draw(text);
+		}
+	}
+
+	// Render the event character
+	for (Room& room : rooms) {
+		if (room.eventCharVisible) {
+			text.setString('?');
+			text.setFillColor(sf::Color::Magenta);
+			text.setPosition(room.eventCharPosition.first * charSize, room.eventCharPosition.second * charSize);
+			window.draw(text);
+		}
+
+		if (room.eventTextClock.getElapsedTime() < room.eventTextDuration) {
+			text.setString(room.eventText);
+			text.setFillColor(sf::Color::White);
+			text.setCharacterSize(24);
+			text.setPosition(450, 400);
+			window.draw(text);
+		}
+
+		EventMaps::renderSkillCheckText(room, *player, window, font, charSize);
+	}
+
 	enemyManager->renderEnemies(window, charSize, playerX, playerY, player);
 }
 
@@ -507,7 +567,7 @@ void Map::updateEnemies(int playerX, int playerY) {
 	enemyManager->updateEnemies(map, playerX, playerY);
 	for (Room& room : rooms) {
 		if (playerX >= room.startX && playerX < room.endX && playerY >= room.startY && playerY < room.endY) {
-			if (!room.upgradeSpawned && !room.upgradeCollected && enemyManager->allEnemiesDead()) {
+			if (!room.upgradeSpawned && !room.upgradeCollected && enemyManager->allEnemiesDead() && !room.isMerchantRoom && !room.isEventRoom) {
 				dropUpgrade(room);
 				room.upgradeSpawned = true;
 			}
@@ -752,10 +812,12 @@ const std::vector<Enemy*>& Map::getEnemies() const {
 }
 
 void Map::dropUpgrade(Room& room) {
-	int centerX = (room.startX + room.endX) / 2;
-	int centerY = (room.startY + room.endY) / 2;	// Drop an upgrade in the center of the room
-	std::cout << "Dropped upgrade: at (" << centerX << ", " << centerY << ")\n";
-	room.upgradePosition = { centerX, centerY };
+	if (!room.isMerchantRoom && !room.isEventRoom) {
+		int centerX = (room.startX + room.endX) / 2;
+		int centerY = (room.startY + room.endY) / 2;	// Drop an upgrade in the center of the room
+		std::cout << "Dropped upgrade: at (" << centerX << ", " << centerY << ")\n";
+		room.upgradePosition = { centerX, centerY };
+	}
 }
 
 UpgradeManager& Map::upgradeManager() {
@@ -766,11 +828,92 @@ std::vector<Room>& Map::getRooms() {
 	return rooms;
 }
 
+void Map::generateBossCorridor() {
+	// Reset relevant variables
+	entryPoints.clear();
+	exitPoints.clear();
+	rooms.clear();
+	roomUpgrades.clear();
+	enemyManager->clearEnemies();
+	revealed.assign(height, std::vector<bool>(width, false)); // Reset the revealed array
+
+	// Reset the map to walls
+	for (int y = 0; y < height; ++y) {
+		for (int x = 0; x < width; ++x) {
+			map[y][x] = '#';
+		}
+	}
+
+	// Set the map dimensions for the corridor
+	width = 62;
+	height = 32;
+
+	// Define the corridor boundaries
+	int corridorY = height / 2;
+
+	// Create walls and path tiles
+	for (int x = 0; x < width; ++x) {
+		for (int y = corridorY - 1; y <= corridorY + 1; ++y) {
+			map[y][x] = '.'; // Path tile
+		}
+	}
+
+	// Create entry and exit points
+	entryPoints.push_back({ 0, corridorY });
+	exitPoints.push_back({ width - 1, corridorY });
+
+	// Create a merchant room in the corridor
+	int merchantX = width / 2;
+	int merchantY = corridorY;
+	Room merchantRoom = { merchantX - 6, merchantY - 1, merchantX + 6, merchantY + 2 };
+	merchantRoom.isMerchantRoom = true;
+	merchantRoom.merchantSpawned = true;
+	merchantRoom.merchantPosition = { merchantX, merchantY };
+	merchantRoom.wallOff = false;
+	rooms.push_back(merchantRoom);
+
+	// Mark the merchant position on the map
+	map[merchantY][merchantX] = '$';
+}
+
+void Map::generateBossRoom() {
+	// Reset relevant variables
+	entryPoints.clear();
+	exitPoints.clear();
+	rooms.clear();
+	roomUpgrades.clear();
+	enemyManager->clearEnemies();
+	revealed.assign(height, std::vector<bool>(width, false)); // Reset the revealed array
+
+	// Reset the map to paths
+	for (int y = 0; y < height; ++y) {
+		for (int x = 0; x < width; ++x) {
+			map[y][x] = '.';
+		}
+	}
+
+	// Create a 2-wall border around the map
+	for (int y = 0; y < height; ++y) {
+		for (int x = 0; x < width; ++x) {
+			if (y < 2 || y >= height - 2 || x < 2 || x >= width - 2) {
+				map[y][x] = '#';
+			}
+		}
+	}
+
+}
+
 void Map::advanceToNextLevel(Player* player) {
 	// Check if the player is at the exit
 	if (player->getX() == 61) {
 		firstGeneration = false;
-		generate(); // Generate a new level
+		if (generationCount % 2 == 0) {
+			generateBossRoom();
+		}
+		else { 
+		generate(); 
+		}
+
 		player->setPosition(0, player->getY()); // Move the player to the center of the new map
 	}
 }

@@ -1,5 +1,6 @@
 // Player.cpp
 #include "Player.h"
+#include "Map.h"
 #include <iostream>
 
 Player::Player(int x, int y, char symbol, int health, int attackDmg, const Stat& stats, ClassType classType)
@@ -31,7 +32,19 @@ void Player::loseHealth(int amount) {
 	}
 }
 
-void Player::move(char direction, const std::vector<std::vector<char>>& map, const std::vector<Enemy*>& enemies) {
+int Player::getGold() const {
+	return gold;
+}
+
+void Player::addGold(int amount) {
+	gold += amount;
+}
+
+void Player::spendGold(int amount) {
+	gold -= amount;
+}
+
+void Player::move(char direction, const std::vector<std::vector<char>>& map, const std::vector<Enemy*>& enemies, const std::vector<Room>& rooms) {
 	int newX = x, newY = y;
 
 	switch (direction) {
@@ -45,6 +58,20 @@ void Player::move(char direction, const std::vector<std::vector<char>>& map, con
 	for (const Enemy* enemy : enemies) {
 		if (enemy->getX() == newX && enemy->getY() == newY && enemy->isAlive()) {
 			return; // Collision detected, do not move
+		}
+	}
+
+	// Check for collision with merchant and eventChar
+	for (const Room& room : rooms) {
+		if (room.isMerchantRoom && room.merchantSpawned) {
+			if (room.merchantPosition.first == newX && room.merchantPosition.second == newY) {
+				return;
+			}
+		}
+		if (room.eventCharVisible) {
+			if (room.eventCharPosition.first == newX && room.eventCharPosition.second == newY) {
+				return;
+			}
 		}
 	}
 
@@ -73,6 +100,10 @@ void Player::increaseSpeed(float amount) {
 	speed += amount;
 }
 
+void Player::increaseAttackSpeed(float amount) {
+	float diminishingFactor = 1.0f / (1.0f + std::exp(attackCooldown - 1.0f));
+	attackCooldown -= amount * diminishingFactor;
+}
 
 void Player::setElementalDamage(ElementalType type, int damage) {
 	elementalDamage = type;
@@ -100,7 +131,7 @@ void Player::update(const std::vector<Enemy*>& enemies) {
 			int enemyX = enemy->getX();
 			int enemyY = enemy->getY();
 			if ((std::abs(enemyX - x) <= 1 && enemyY == y) || (std::abs(enemyY - y) <= 1 && enemyX == x)) {
-				loseHealth(1);
+				loseHealth(2);
 				break;
 			}
 		}
@@ -113,6 +144,10 @@ void Player::update(const std::vector<Enemy*>& enemies) {
 }
 
 const Stat& Player::getStats() const {
+	return stats;
+}
+
+Stat& Player::getMutableStats() {
 	return stats;
 }
 
@@ -133,4 +168,13 @@ void Player::render(sf::RenderWindow& window, int charSize) const {
 
 ClassType Player::getClassType() const {
 	return classType;
+}
+
+bool Player::isInMerchantRoom(const std::vector<Room>& rooms) const {
+	for (const Room& room : rooms) {
+		if (room.isMerchantRoom && x >= room.startX && x <= room.endX && y >= room.startY && y <= room.endY) {
+			return true;
+		}
+	}
+	return false;
 }

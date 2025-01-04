@@ -11,7 +11,7 @@ EnemyManager::~EnemyManager() {
 }
 
 void EnemyManager::spawnEnemies(int roomX, int roomY, int roomWidth, int roomHeight, std::vector<std::vector<char>>& map) {
-	int numEnemies = std::rand() % 5 + 40;
+	int numEnemies = std::rand() % 5 + 5;
 
 	for (int i = 0; i < numEnemies; ++i) {
 		int x = 0, y = 0;

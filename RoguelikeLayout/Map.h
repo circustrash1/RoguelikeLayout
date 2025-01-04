@@ -3,6 +3,7 @@
 
 #include "EnemyManager.h" // Include the EnemyManager class header
 #include "UpgradeManager.h"
+#include "EventMaps.h"
 #include <vector> // Include vector for storing the map layout
 #include <stack> // Include stack for the DFS algorithm
 #include <random> // Include random for std::default_random_engine
@@ -20,6 +21,19 @@ struct Room {
     bool upgradeSpawned = false;
     bool upgradeCollected = false;
     std::pair<int, int> upgradePosition;
+    bool isMerchantRoom = false;
+    bool merchantSpawned = false;
+    std::pair<int, int> merchantPosition;
+    bool isEventRoom = false;
+    bool eventTriggered = false;
+    bool eventResolved = false;
+    std::string eventText;
+    bool eventCharVisible = false;
+	std::pair<int, int> eventCharPosition;
+    sf::Clock eventTextClock;
+    sf::Time eventTextDuration;
+    std::vector<Upgrade> merchantUpgrades;  // Retain upgrades in shop for each room merchant
+    bool wallOff = true;
 };
 
 class Map {
@@ -76,6 +90,11 @@ private:
     void chooseCarveExits(); // Function to choose and carve initial exits
     void carveExits(); // Function to carve exits on condition
     bool firstGeneration = true;
+
+    // Boss rooms
+    int generationCount = 0;
+    void generateBossCorridor();
+    void generateBossRoom();
 
     bool debug = false; // Debug flag
 };

@@ -54,6 +54,12 @@
     <ClCompile Include="Stats.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EventMaps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GuiElements.h">
@@ -93,6 +99,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ElementalType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventMaps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

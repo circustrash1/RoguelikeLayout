@@ -3,403 +3,695 @@
 #include "Player.h"
 #include "Warrior.h"
 #include "Mage.h"
+#include "SoundManager.h"
+#include "EventMaps.h"
 
 Game::Game()
-    : scaleX(static_cast<float>(sf::VideoMode::getDesktopMode().width) / 640.0f),
-    scaleY(static_cast<float>(sf::VideoMode::getDesktopMode().height) / 360.0f),
-    window(sf::VideoMode(640, 360), "Roguelike Layout"), map(62, 32), player(nullptr), isShaking(false), shakeIntensity(0.1f), 
-    healthBar(nullptr), showStats(nullptr) {
+	: scaleX(static_cast<float>(sf::VideoMode::getDesktopMode().width) / 640.0f),
+	scaleY(static_cast<float>(sf::VideoMode::getDesktopMode().height) / 360.0f),
+	window(sf::VideoMode(640, 360), "Roguelike Layout"), map(62, 32), player(nullptr), isShaking(false), shakeIntensity(0.1f),
+	healthBar(nullptr), showStats(nullptr), showGold(new ShowGold()) {
+	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 
-    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+	window.create(desktop, "Roguelike Layout", sf::Style::Fullscreen);
 
+	if (!font.loadFromFile("fs-min.ttf")) {
+		std::cerr << "Error loading font!" << std::endl;
+		exit(-1);
+	}
 
-    window.create(desktop, "Roguelike Layout", sf::Style::Fullscreen);
+	mainBar.setSize(sf::Vector2f(640 * scaleX, 100 * scaleY));
+	mainBar.setFillColor(sf::Color(50, 50, 50));
+	mainBar.setPosition(0, 260 * scaleY);
 
-    if (!font.loadFromFile("fs-min.ttf")) {
-        std::cerr << "Error loading font!" << std::endl;
-        exit(-1);
-    }
+	sideBar.setSize(sf::Vector2f(140 * scaleX, 260 * scaleY));
+	sideBar.setFillColor(sf::Color(70, 70, 70));
+	sideBar.setPosition(500 * scaleX, 0);
 
-    mainBar.setSize(sf::Vector2f(640 * scaleX, 100 * scaleY));
-    mainBar.setFillColor(sf::Color(50, 50, 50));
-    mainBar.setPosition(0, 260 * scaleY);
+	healthText.setFont(font);
+	healthText.setString("Health: ");
+	healthText.setCharacterSize(static_cast<unsigned int>(12 * scaleY));
+	healthText.setFillColor(sf::Color::White);
+	healthText.setPosition(20 * scaleX, 280 * scaleY);
 
-    sideBar.setSize(sf::Vector2f(140 * scaleX, 260 * scaleY));
-    sideBar.setFillColor(sf::Color(70, 70, 70));
-    sideBar.setPosition(500 * scaleX, 0);
+	// NOW UNUSED UPGRADE / SELL BUTTONS
+	// MAYBE TURN INTO SETTINGS ETC.
+	//Button* upgradeButton = new Button(60 * scaleX, 15 * scaleY, 515 * scaleX, 25 * scaleY, "Upgrade", font, 8 * scaleY);
+	//upgradeButton->setColor(sf::Color::Green);
+	//buttons.push_back(upgradeButton);
 
-    healthText.setFont(font);
-    healthText.setString("Health: ");
-    healthText.setCharacterSize(static_cast<unsigned int>(12 * scaleY));
-    healthText.setFillColor(sf::Color::White);
-    healthText.setPosition(20 * scaleX, 280 * scaleY);
+	//Button* sellButton = new Button(60 * scaleX, 15 * scaleY, 515 * scaleX, 50 * scaleY, "Sell", font, 8 * scaleY);
+	//sellButton->setColor(sf::Color::Red);
+	//buttons.push_back(sellButton);
 
-    Button* upgradeButton = new Button(60 * scaleX, 15 * scaleY, 515 * scaleX, 25 * scaleY, "Upgrade", font, 8 * scaleY);
-    upgradeButton->setColor(sf::Color::Green);
-    buttons.push_back(upgradeButton);
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));  // Random seed for sound pitch randomize
+	initialize();   // Init sounds + music
 
-    Button* sellButton = new Button(60 * scaleX, 15 * scaleY, 515 * scaleX, 50 * scaleY, "Sell", font, 8 * scaleY);
-    sellButton->setColor(sf::Color::Red);
-    buttons.push_back(sellButton);
+	map.generate();
+	originalView = window.getDefaultView(); // Store the original view
+	window.setView(originalView); // Set the view to the original view
 
-    map.generate();
-    originalView = window.getDefaultView(); // Store the original view
-    window.setView(originalView); // Set the view to the original view
-
-    displayCharacterSelection();
+	displayCharacterSelection();
 }
 
 Player* Game::createPlayer(const std::string& className) {
-    if (className == "Warrior") {
-        return new Warrior(62 / 2, 32 / 2);
-    }
-    else if (className == "Mage") {
-        return new Mage(62 / 2, 32 / 2);
-    }
-    else {
-        return nullptr;
-    }
+	if (className == "Warrior") {
+		return new Warrior(62 / 2, 32 / 2);
+	}
+	else if (className == "Mage") {
+		return new Mage(62 / 2, 32 / 2);
+	}
+	else {
+		return nullptr;
+	}
 }
 
 void Game::displayCharacterSelection() {
-    window.clear(sf::Color::Black);
+	window.clear(sf::Color::Black);
 
-    sf::Text title;
-    title.setFont(font);
-    title.setCharacterSize(12 * scaleY);
-    title.setFillColor(sf::Color::White);
-    title.setString("Select your character");
-    title.setPosition(200 * scaleX, 50 * scaleY);
-    window.draw(title);
+	sf::Text title;
+	title.setFont(font);
+	title.setCharacterSize(12 * scaleY);
+	title.setFillColor(sf::Color::White);
+	title.setString("Select your character");
+	title.setPosition(200 * scaleX, 50 * scaleY);
+	window.draw(title);
 
-    sf::Text warriorText;
-    warriorText.setFont(font);
-    warriorText.setCharacterSize(10 * scaleY);
-    warriorText.setFillColor(sf::Color::White);
-    warriorText.setString("1. Warrior\nHealth: 150\nAttack: 15");
-    warriorText.setPosition(200 * scaleX, 100 * scaleY);
-    window.draw(warriorText);
+	sf::Text warriorText;
+	warriorText.setFont(font);
+	warriorText.setCharacterSize(10 * scaleY);
+	warriorText.setFillColor(sf::Color::White);
+	warriorText.setString("1. Warrior\nHealth: 150\nAttack: 15");
+	warriorText.setPosition(200 * scaleX, 100 * scaleY);
+	window.draw(warriorText);
 
-    sf::Text mageText;
-    mageText.setFont(font);
-    mageText.setCharacterSize(10 * scaleY);
-    mageText.setFillColor(sf::Color::White);
-    mageText.setString("2. Mage\nHealth: 100\nAttack: 10");
-    mageText.setPosition(350 * scaleX, 100 * scaleY);
-    window.draw(mageText);
+	sf::Text mageText;
+	mageText.setFont(font);
+	mageText.setCharacterSize(10 * scaleY);
+	mageText.setFillColor(sf::Color::White);
+	mageText.setString("2. Mage\nHealth: 100\nAttack: 10");
+	mageText.setPosition(350 * scaleX, 100 * scaleY);
+	window.draw(mageText);
 
-    // MORE CHARACTER SELECTION HERE
+	// MORE CHARACTER SELECTION HERE
 
-    window.display();
+	window.display();
 
-    bool characterSelected = false;
-    while (!characterSelected) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
-                window.close();
-                return;
-            }
-            if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Num1) {
-                    player = createPlayer("Warrior");
-                    healthBar = new HealthBar(20, 300, 12, 150, scaleX, scaleY); // Initialize HealthBar for Warrior
-                    showStats = new ShowStats(*player); // Initialize ShowStats for Warrior
-                    characterSelected = true;
-                }
-                else if (event.key.code == sf::Keyboard::Num2) {
-                    player = createPlayer("Mage");
-                    healthBar = new HealthBar(20, 300, 12, 100, scaleX, scaleY); // Initialize HealthBar for Mage
-                    showStats = new ShowStats(*player); // Initialize ShowStats for Mage
-                    characterSelected = true;
-                }
-                if (player != nullptr) {
-                    healthText.setString("Health: " + std::to_string(player->getHealth()));
-                }
-                else {
-                    std::cerr << "Error: Player creation failed!" << std::endl;
-                }
-            }
-        }
-    }
+	bool characterSelected = false;
+	while (!characterSelected) {
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
+				window.close();
+				return;
+			}
+			if (event.type == sf::Event::KeyPressed) {
+				if (event.key.code == sf::Keyboard::Num1) {
+					player = createPlayer("Warrior");
+					healthBar = new HealthBar(20, 300, 12, 150, scaleX, scaleY); // Initialize HealthBar for Warrior
+					showStats = new ShowStats(*player); // Initialize ShowStats for Warrior
+					characterSelected = true;
+				}
+				else if (event.key.code == sf::Keyboard::Num2) {
+					player = createPlayer("Mage");
+					healthBar = new HealthBar(20, 300, 12, 100, scaleX, scaleY); // Initialize HealthBar for Mage
+					showStats = new ShowStats(*player); // Initialize ShowStats for Mage
+					characterSelected = true;
+				}
+				if (player != nullptr) {
+					healthText.setString("Health: " + std::to_string(player->getHealth()));
+				}
+				else {
+					std::cerr << "Error: Player creation failed!" << std::endl;
+				}
+			}
+		}
+	}
 
-    // Cleanup
-    window.clear(sf::Color::Black);
-    window.display();
+	// Cleanup
+	window.clear(sf::Color::Black);
+	window.display();
+}
+
+void Game::renderUpgradeOrMerchantWindow(const std::string& titleText, const std::vector<Upgrade>& upgrades, bool isMerchantShop) {
+	window.clear(sf::Color::Black);
+	// Title
+	sf::Text title;
+	title.setFont(font);
+	title.setCharacterSize(12 * scaleY);
+	title.setFillColor(sf::Color::White);
+	title.setString(titleText);
+	title.setPosition(145 * scaleX, 10 * scaleY);
+	if (isMerchantShop) {
+		title.setPosition(180 * scaleX, 10 * scaleY);
+	}
+	window.draw(title);
+
+	// Calculate card positions
+	float cardWidth = 60 * scaleX;
+	float cardHeight = 100 * scaleY;
+	float spaceBetweenCards = 80 * scaleX;
+	float totalWidth = 3 * cardWidth + 2 * spaceBetweenCards;
+	float startX = (window.getSize().x - totalWidth) / 2 - 280;
+	float startY = 50 * scaleY - 50;
+
+	// Render ASCII cards
+	for (size_t i = 0; i < upgrades.size(); ++i) {
+		const std::vector<std::string>& asciiArt = upgrades[i].getAsciiArt();
+		sf::Text cardArt;
+		sf::Text cardName;
+		sf::Text cardPositiveEffects;
+		sf::Text cardNegativeEffects;
+		sf::Text cardCost;
+		cardArt.setFont(font);
+		cardArt.setCharacterSize(10 * scaleY);
+		cardArt.setFillColor(upgrades[i].getColor());
+		cardArt.setLineSpacing(1.6f);
+		std::string cardString;
+		for (const std::string& line : asciiArt) {
+			cardString += line + "\n";
+		}
+		cardArt.setString(cardString);
+		cardArt.setPosition(startX + i * (cardWidth + spaceBetweenCards), startY);
+
+		// Render card names
+		cardName.setFont(font);
+		cardName.setCharacterSize(10 * scaleY);
+		cardName.setFillColor(upgrades[i].getColor());
+		cardName.setString(upgrades[i].getName());
+		cardName.setPosition(startX + i * (cardWidth + spaceBetweenCards) - 40, startY + cardHeight + 250);
+
+		// Render positive effects
+		cardPositiveEffects.setFont(font);
+		cardPositiveEffects.setCharacterSize(6 * scaleY);
+		cardPositiveEffects.setFillColor(sf::Color::Green);
+		cardPositiveEffects.setString(wrapText(upgrades[i].getPositiveEffects(), font, 6 * scaleY, cardWidth));
+		cardPositiveEffects.setPosition(startX + i * (cardWidth + spaceBetweenCards) - 40, startY + cardHeight + 300);
+
+		// Render negative effects
+		cardNegativeEffects.setFont(font);
+		cardNegativeEffects.setCharacterSize(6 * scaleY);
+		cardNegativeEffects.setFillColor(sf::Color::Red);
+		cardNegativeEffects.setString("\n\n" + wrapText(upgrades[i].getNegativeEffects(), font, 6 * scaleY, cardWidth));
+		cardNegativeEffects.setPosition(startX + i * (cardWidth + spaceBetweenCards) - 40, startY + cardHeight + 300);
+
+		if (isMerchantShop) {
+			// Render exit shop text
+			sf::Text exitShopText;
+			exitShopText.setFont(font);
+			exitShopText.setCharacterSize(6 * scaleY);
+			exitShopText.setFillColor(sf::Color::White);
+			exitShopText.setString("Press 'E' to exit shop");
+			exitShopText.setPosition(190 * scaleX, 25 * scaleY);
+			window.draw(exitShopText);
+
+			// Render card cost
+			cardCost.setFont(font);
+			cardCost.setCharacterSize(6 * scaleY);
+			cardCost.setFillColor(sf::Color::Yellow);
+			cardCost.setString("Cost: " + std::to_string(upgrades[i].getCost()));
+			cardCost.setPosition(startX + i * (cardWidth + spaceBetweenCards) - 40, startY + cardHeight + 300);
+		}
+
+		if (upgrades[i].isPurchased()) {
+			sf::Color greyColor(128, 128, 128);
+			cardArt.setFillColor(greyColor);
+			cardName.setFillColor(greyColor);
+			cardPositiveEffects.setFillColor(greyColor);
+			cardNegativeEffects.setFillColor(greyColor);
+			cardCost.setFillColor(greyColor);
+		}
+		else if (isMerchantShop && player->getGold() < upgrades[i].getCost()) {
+			sf::Color color = cardArt.getFillColor();
+			color.a = 50; // Lower opacity
+			cardArt.setFillColor(color);
+			cardName.setFillColor(color);
+
+			cardPositiveEffects.setFillColor(sf::Color(0, 255, 0, 50));
+			cardNegativeEffects.setFillColor(sf::Color(255, 0, 0, 50));
+		}
+
+		// Calculate column positions
+		float columnX = startX + i * (cardWidth + spaceBetweenCards);
+		float columnY = startY;
+
+		alignCards(cardName, cardArt, cardPositiveEffects, cardNegativeEffects, cardCost, 5.0f, columnX);
+
+		window.draw(cardName);
+		window.draw(cardArt);
+		window.draw(cardPositiveEffects);
+		window.draw(cardNegativeEffects);
+		window.draw(cardCost);
+	}
+
+	window.draw(mainBar);
+	window.draw(sideBar);
+	window.draw(healthText);
+
+	// NOW UNUSED BUTTONS
+	//for (Button* button : buttons) {
+	//	button->draw(window);
+	//}
+
+	if (healthBar != nullptr) {
+		healthBar->render(window);
+	}
+
+	if (showStats != nullptr && player != nullptr) {
+		showStats->renderPlayerStats(window, *player, 24, scaleX, scaleY, nullptr, "");
+	}
+
+	// Render UI total Gold
+	showGold->renderGold(window, player->getGold(), 500, 340, 24, scaleX, scaleY);
+
+	window.display();
 }
 
 void Game::displayUpgradeSelection() {
-    window.clear(sf::Color::Black);
+	renderUpgradeOrMerchantWindow("Select an upgrade", availableUpgrades, false);
 
-    // Title
-    sf::Text title;
-    title.setFont(font);
-    title.setCharacterSize(12 * scaleY);
-    title.setFillColor(sf::Color::White);
-    title.setString("Select an upgrade");
-    title.setPosition(145 * scaleX, 10 * scaleY);
-    window.draw(title);
-
-    // Calculate card positions
-    float cardWidth = 60 * scaleX;
-    float cardHeight = 100 * scaleY;
-    float spaceBetweenCards = 80 * scaleX;
-    float totalWidth = 3 * cardWidth + 2 * spaceBetweenCards;
-    float startX = (window.getSize().x - totalWidth) / 2 - 280;
-    float startY = 50 * scaleY - 50;
-
-    // Render ASCII cards
-    for (size_t i = 0; i < availableUpgrades.size(); ++i) {
-        const std::vector<std::string>& asciiArt = availableUpgrades[i].getAsciiArt();
-        sf::Text cardArt;
-		sf::Text cardName;
-        sf::Text cardPositiveEffects;
-        sf::Text cardNegativeEffects;
-        cardArt.setFont(font);
-        cardArt.setCharacterSize(10 * scaleY);
-		cardArt.setFillColor(availableUpgrades[i].getColor());
-        cardArt.setLineSpacing(1.6f);
-        std::string cardString;
-        for (const std::string& line : asciiArt) {
-            cardString += line + "\n";
-        }
-        cardArt.setString(cardString);
-		cardArt.setPosition(startX + i * (cardWidth + spaceBetweenCards), startY);
-
-        // Render card names
-		cardName.setFont(font);
-		cardName.setCharacterSize(10 * scaleY);
-		cardName.setFillColor(availableUpgrades[i].getColor());
-		cardName.setString(availableUpgrades[i].getName());
-		cardName.setPosition(startX + i * (cardWidth + spaceBetweenCards) - 40, startY + cardHeight + 250);
-
-        // Render positive effects
-        cardPositiveEffects.setFont(font);
-		cardPositiveEffects.setCharacterSize(6 * scaleY);
-        cardPositiveEffects.setFillColor(sf::Color::Green);
-		cardPositiveEffects.setString(availableUpgrades[i].getPositiveEffects());
-		cardPositiveEffects.setPosition(startX + i * (cardWidth + spaceBetweenCards) - 40, startY + cardHeight + 300);
-
-        // Render negative effects
-        cardNegativeEffects.setFont(font);
-        cardNegativeEffects.setCharacterSize(6 * scaleY);
-        cardNegativeEffects.setFillColor(sf::Color::Red);
-        cardNegativeEffects.setString(availableUpgrades[i].getNegativeEffects());
-        cardNegativeEffects.setPosition(startX + i * (cardWidth + spaceBetweenCards) - 40, startY + cardHeight + 300);
-
-        // Calculate column positions
-        float columnX = startX + i * (cardWidth + spaceBetweenCards);
-        float columnY = startY;
-
-		alignCards(cardName, cardArt, cardPositiveEffects, cardNegativeEffects, 5.0f, columnX);
-        std::cout << i;
-
-        window.draw(cardName);
-        window.draw(cardArt);
-        window.draw(cardPositiveEffects);
-        window.draw(cardNegativeEffects);
-    }
-
-    window.draw(mainBar);
-    window.draw(sideBar);
-    window.draw(healthText);
-
-    for (Button* button : buttons) {
-        button->draw(window);
-    }
-
-    if (healthBar != nullptr) {
-        healthBar->render(window);
-    }
-
-    if (showStats != nullptr && player != nullptr) {
-        showStats->renderPlayerStats(window, *player, 24, scaleX, scaleY);
-    }
-
-    window.display();
-    bool upgradeSelected = false;
-    while (!upgradeSelected) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
-                window.close();
-                return;
-            }
-            if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Num1 && availableUpgrades.size() >= 1) {
-                    std::cout << "Player picked up: " << availableUpgrades[0].getName() << std::endl;
-                    player->applyUpgrade(availableUpgrades[0]);
-                    upgradeSelected = true;
-                }
-                else if (event.key.code == sf::Keyboard::Num2 && availableUpgrades.size() >= 2) {
-                    std::cout << "Player picked up: " << availableUpgrades[1].getName() << std::endl;
-                    player->applyUpgrade(availableUpgrades[1]);
-                    upgradeSelected = true;
-                }
-                else if (event.key.code == sf::Keyboard::Num3 && availableUpgrades.size() >= 3) {
-                    player->applyUpgrade(availableUpgrades[2]);
+	bool upgradeSelected = false;
+	while (!upgradeSelected) {
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
+				window.close();
+				return;
+			}
+			if (event.type == sf::Event::KeyPressed) {
+				if (event.key.code == sf::Keyboard::Num1 && availableUpgrades.size() >= 1) {
+					std::cout << "Player picked up: " << availableUpgrades[0].getName() << std::endl;
+					player->applyUpgrade(availableUpgrades[0]);
+					upgradeSelected = true;
+					SoundManager::getInstance().playSound("upgrade_choice");
+				}
+				else if (event.key.code == sf::Keyboard::Num2 && availableUpgrades.size() >= 2) {
+					std::cout << "Player picked up: " << availableUpgrades[1].getName() << std::endl;
+					player->applyUpgrade(availableUpgrades[1]);
+					upgradeSelected = true;
+					SoundManager::getInstance().playSound("upgrade_choice");
+				}
+				else if (event.key.code == sf::Keyboard::Num3 && availableUpgrades.size() >= 3) {
+					player->applyUpgrade(availableUpgrades[2]);
 					std::cout << "Player picked up: " << availableUpgrades[2].getName() << std::endl;
-                    upgradeSelected = true;
-                }
-            }
-        }
-    }
+					upgradeSelected = true;
+					SoundManager::getInstance().playSound("upgrade_choice");
+				}
+			}
+		}
+	}
 
-    // Cleanup
-    window.clear(sf::Color::Black);
-    window.display();
+	// Cleanup
+	window.clear(sf::Color::Black);
+	window.display();
+}
 
+void Game::displayMerchantWindow(Room& room) {
+	bool upgradeSelected = false;
+	while (!upgradeSelected) {
+		renderUpgradeOrMerchantWindow("Merchant Shop", room.merchantUpgrades, true);
+
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
+				window.close();
+				return;
+			}
+			if (event.type == sf::Event::KeyPressed) {
+				if (event.key.code == sf::Keyboard::Num1 && room.merchantUpgrades.size() >= 1 && player->getGold() >= room.merchantUpgrades[0].getCost() && !room.merchantUpgrades[0].isPurchased()) {
+					player->spendGold(room.merchantUpgrades[0].getCost());
+					player->applyUpgrade(room.merchantUpgrades[0]);
+					room.merchantUpgrades[0].setPurchased(true);
+					SoundManager::getInstance().playSound("upgrade_choice");
+				}
+				else if (event.key.code == sf::Keyboard::Num2 && room.merchantUpgrades.size() >= 2 && player->getGold() >= room.merchantUpgrades[1].getCost() && !room.merchantUpgrades[1].isPurchased()) {
+					player->spendGold(room.merchantUpgrades[1].getCost());
+					player->applyUpgrade(room.merchantUpgrades[1]);
+					room.merchantUpgrades[1].setPurchased(true);
+					SoundManager::getInstance().playSound("upgrade_choice");
+				}
+				else if (event.key.code == sf::Keyboard::Num3 && room.merchantUpgrades.size() >= 3 && player->getGold() >= room.merchantUpgrades[2].getCost() && !room.merchantUpgrades[2].isPurchased()) {
+					player->spendGold(room.merchantUpgrades[2].getCost());
+					player->applyUpgrade(room.merchantUpgrades[2]);
+					room.merchantUpgrades[2].setPurchased(true);
+					SoundManager::getInstance().playSound("upgrade_choice");
+				}
+				else if (event.key.code == sf::Keyboard::E) {
+					upgradeSelected = true; // Press E to exit shop
+				}
+			}
+		}
+
+		// Update the window to reflect changes
+		window.clear(sf::Color::Black);
+		renderUpgradeOrMerchantWindow("Merchant Shop", room.merchantUpgrades, true);
+		window.display();
+	}
+
+	// Cleanup
+	window.clear(sf::Color::Black);
+	window.display();
 }
 
 Game::~Game() {
-    for (Button* button : buttons) {
-        delete button;
-    }
-    delete player;
-    delete healthBar; // Clean up healthBar
-    delete showStats; // Clean up showStats
+	for (Button* button : buttons) {
+		delete button;
+	}
+	delete player;
+	delete healthBar; // Clean up healthBar
+	delete showStats; // Clean up showStats
+	delete showGold;
 }
 
 void Game::run() {
-    while (window.isOpen()) {
-        processEvents();
-        update();
-        render();
-    }
+	while (window.isOpen()) {
+		processEvents();
+		update();
+		SoundManager::getInstance().updateCrossfade();  // Update crossfade effect
+		render();
+	}
 }
 
 void Game::processEvents() {
-    sf::Event event;
-    while (window.pollEvent(event)) {
-        if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
-            window.close();
-        }
+	sf::Event event;
+	while (window.pollEvent(event)) {
+		if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
+			window.close();
+		}
 
-        if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            for (Button* button : buttons) {
-                if (button->isClicked(mousePos)) {
-                    std::cout << button->getText().getString().toAnsiString() << " button clicked!" << std::endl;
-                }
-            }
-        }
-    }
+		// NOW UNUSED BUTTON CLICK DETECTION
+		// REWORK FOR SETTINGS BUTTON
+		//if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+		//	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+		//	for (Button* button : buttons) {
+		//		if (button->isClicked(mousePos)) {
+		//			std::cout << button->getText().getString().toAnsiString() << " button clicked!" << std::endl;
+		//		}
+		//	}
+		//}
+
+		// Debug keys to modify player gold
+		if (event.type == sf::Event::KeyPressed) {
+			if (event.key.code == sf::Keyboard::G) {
+				modifyPlayerGold(100); // Add 100 gold
+			}
+			else if (event.key.code == sf::Keyboard::H) {
+				modifyPlayerGold(-100); // Subtract 100 gold
+			}
+		}
+	}
+}
+
+// Cheats
+void Game::modifyPlayerGold(int amount) {
+	if (player != nullptr) {
+		player->addGold(amount);
+		std::cout << "Player gold modified by " << amount << ". New total: " << player->getGold() << std::endl;
+	}
 }
 
 void Game::updateHealth() {
-    healthText.setString("Health: " + std::to_string(player->getHealth()));
-    healthBar->update(player->getHealth());
+	healthText.setString("Health: " + std::to_string(player->getHealth()));
+	healthBar->update(player->getHealth());
 }
 
 void Game::update() {
-    static sf::Clock clock;
-    static sf::Time lastMoveTime = sf::Time::Zero;
-    sf::Time moveDelay = sf::milliseconds(100); // Adjust delay as needed
+	static sf::Clock clock;
+	static sf::Time lastMoveTime = sf::Time::Zero;
+	sf::Time moveDelay = sf::milliseconds(100); // Adjust delay as needed
 
-    if (clock.getElapsedTime() - lastMoveTime > moveDelay) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            player->move('w', map.getMap(), map.getEnemies());
-        }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            player->move('s', map.getMap(), map.getEnemies());
-        }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            player->move('a', map.getMap(), map.getEnemies());
-        }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            player->move('d', map.getMap(), map.getEnemies());
-        }
-        lastMoveTime = clock.getElapsedTime();
-    }
+	if (clock.getElapsedTime() - lastMoveTime > moveDelay) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+			player->move('w', map.getMap(), map.getEnemies(), map.getRooms());
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			player->move('s', map.getMap(), map.getEnemies(), map.getRooms());
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+			player->move('a', map.getMap(), map.getEnemies(), map.getRooms());
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			player->move('d', map.getMap(), map.getEnemies(), map.getRooms());
+		}
+		lastMoveTime = clock.getElapsedTime();
+	}
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
-        screenShake(5.0f, 0.5f);
-    }
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+		screenShake(5.0f, 0.5f);
+	}
 
-    player->update(map.getEnemies());
-    updateHealth();
+	player->update(map.getEnemies());
+	updateHealth();
 
-    // Check for upgrade pickup
-    for (Room& room : map.getRooms()) {
-        if (room.upgradeSpawned && player->getX() == room.upgradePosition.first && player->getY() == room.upgradePosition.second) {
-            room.upgradeSpawned = false;
-            room.upgradeCollected = true;
-            handleUpgradePickup();
-            break;
-        }
-    }
+	// Check for upgrade pickup
+	for (Room& room : map.getRooms()) {
+		if (room.upgradeSpawned && player->getX() == room.upgradePosition.first && player->getY() == room.upgradePosition.second) {
+			room.upgradeSpawned = false;
+			room.upgradeCollected = true;
+			SoundManager::getInstance().playSound("upgrade_pickup");
+			handleUpgradePickup();
+			break;
+		}
+	}
 
-    map.advanceToNextLevel(player);
+	// Check for event room interaction
+	for (Room& room : map.getRooms()) {
+		if (room.isEventRoom) {
+			EventMaps::checkEventInteraction(room, *player, window, font, 24);
+		}
+	}
+
+	// Check for merchant room interaction
+	for (Room& room : map.getRooms()) {
+		if (room.isMerchantRoom) {
+			if (EventMaps::checkMerchantInteraction(room, *player)) {
+				if (room.merchantUpgrades.empty()) {
+					room.merchantUpgrades = map.upgradeManager().generateUpgrades(3, player->getClassType());
+					availableUpgrades = room.merchantUpgrades;
+				}
+
+				displayMerchantWindow(room);
+				break;
+			}
+		}
+	}
+
+	// Crossfader for music
+	static bool inMerchantRoom = false;
+	bool currentlyInMerchantRoom = player->isInMerchantRoom(map.getRooms());
+	if (currentlyInMerchantRoom && !inMerchantRoom) {
+		SoundManager::getInstance().crossfadeMusic("main", "shop", 3.0f);
+		inMerchantRoom = true;
+	}
+	else if (!currentlyInMerchantRoom && inMerchantRoom) {
+		SoundManager::getInstance().crossfadeMusic("shop", "main", 3.0f);
+		inMerchantRoom = false;
+	}
+
+	// Check for gold drops
+	for (Enemy* enemy : map.getEnemies()) {
+		if (enemy->isGoldDropped() && !enemy->isGoldAmountAdded()) {
+			goldDrops.push_back(std::make_tuple(enemy->getX(), enemy->getY(), enemy->dropGold()));
+			enemy->setGoldAmountAdded(true);
+		}
+	}
+
+	// Check for gold pickup
+	for (auto it = goldDrops.begin(); it != goldDrops.end();) {
+		if (player->getX() == std::get<0>(*it) && player->getY() == std::get<1>(*it)) {
+			SoundManager::getInstance().playSound("gold_pickup");
+			player->addGold(std::get<2>(*it)); // Add gold to player
+			it = goldDrops.erase(it); // Remove gold drop
+		}
+		else {
+			++it;
+		}
+	}
+
+	map.advanceToNextLevel(player);
 }
 
 void Game::render() {
-    window.clear(sf::Color::Black);
+	window.clear(sf::Color::Black);
 
-    if (isShaking) {
-        float elapsed = shakeClock.getElapsedTime().asSeconds();
-        if (elapsed < 0.5f) { // Shake duration
-            float offsetX = (std::rand() % 3 - 1) * shakeIntensity;
-            float offsetY = (std::rand() % 3 - 1) * shakeIntensity;
-            sf::View view = originalView;
-            view.move(offsetX, offsetY);
-            window.setView(view);
-        }
-        else {
-            isShaking = false;
-            window.setView(originalView);
-        }
-    }
-    else {
-        window.setView(originalView); // Ensure the view is reset to the original view
-    }
+	if (isShaking) {
+		float elapsed = shakeClock.getElapsedTime().asSeconds();
+		if (elapsed < 0.5f) { // Shake duration
+			float offsetX = (std::rand() % 3 - 1) * shakeIntensity;
+			float offsetY = (std::rand() % 3 - 1) * shakeIntensity;
+			sf::View view = originalView;
+			view.move(offsetX, offsetY);
+			window.setView(view);
+		}
+		else {
+			isShaking = false;
+			window.setView(originalView);
+		}
+	}
+	else {
+		window.setView(originalView); // Ensure the view is reset to the original view
+	}
 
-    window.draw(mainBar);
-    window.draw(sideBar);
-    window.draw(healthText);
+	window.draw(mainBar);
+	window.draw(sideBar);
+	window.draw(healthText);
 
-    for (Button* button : buttons) {
-        button->draw(window);
-    }
+	// NOW UNUSED BUTTONS
+	//for (Button* button : buttons) {
+	//	button->draw(window);
+	//}
 
-    if (player != nullptr) {
-        map.render(window, player->getX(), player->getY(), 24, player);
-        player->render(window, 24); // Render the player
+	if (player != nullptr) {
+		map.render(window, player->getX(), player->getY(), 24, player);
+		player->render(window, 24); // Render the player
 
-        // Render Mage's projectile
-        if (Mage* mage = dynamic_cast<Mage*>(player)) {
-            mage->renderProjectile(window, 24);
-        }
-    }
+		// Render Mage's projectile
+		if (Mage* mage = dynamic_cast<Mage*>(player)) {
+			mage->renderProjectile(window, 24);
+		}
+	}
 
-    if (healthBar != nullptr) {
-        healthBar->render(window);
-    }
+	if (healthBar != nullptr) {
+		healthBar->render(window);
+	}
 
-    if (showStats != nullptr && player != nullptr) {
-        showStats->renderPlayerStats(window, *player, 24, scaleX, scaleY);
-    }
+	if (showStats != nullptr && player != nullptr) {
+		showStats->renderPlayerStats(window, *player, 24, scaleX, scaleY, nullptr, "");
+	}
 
-    window.display();
+	// Render UI total Gold
+	showGold->renderGold(window, player->getGold(), 500, 340, 24, scaleX, scaleY);
+
+	// Render gold drops
+	renderGoldDrops(window);
+
+	// Render collected upgrades
+	displayCollectedUpgrades();
+
+	window.display();
 }
 
 void Game::handleUpgradePickup() {
-    availableUpgrades = map.upgradeManager().generateUpgrades(3, player->getClassType());
-    // Display available upgrades and allow player to choose
-    // Apply the chosen upgrade to the player
+	availableUpgrades = map.upgradeManager().generateUpgrades(3, player->getClassType());
+	// Display available upgrades and allow player to choose
+	// Apply the chosen upgrade to the player
 
 	displayUpgradeSelection();
 
-    // EXAMPLE
-    /*if (!availableUpgrades.empty()) {
-        player->applyUpgrade(availableUpgrades[0]);
-        std::cout << "Player picked up: " << availableUpgrades[0].getName() << std::endl;
-    }*/
+	// EXAMPLE
+	/*if (!availableUpgrades.empty()) {
+		player->applyUpgrade(availableUpgrades[0]);
+		std::cout << "Player picked up: " << availableUpgrades[0].getName() << std::endl;
+	}*/
 }
 
 void Game::screenShake(float intensity, float duration) {
-    isShaking = true;
-    shakeIntensity = intensity;
-    shakeClock.restart();
+	isShaking = true;
+	shakeIntensity = intensity;
+	shakeClock.restart();
 }
 
+void Game::renderGoldDrops(sf::RenderWindow& window) {
+	for (const auto& goldDrop : goldDrops) {
+		sf::Text goldSymbol;
+		goldSymbol.setFont(font);
+		goldSymbol.setString(".");
+		goldSymbol.setCharacterSize(24);
+		goldSymbol.setFillColor(sf::Color::Yellow);
+		goldSymbol.setPosition(std::get<0>(goldDrop) * 24, std::get<1>(goldDrop) * 24);
+		window.draw(goldSymbol);
+	}
+}
 
+void Game::displayCollectedUpgrades() {
+	if (player == nullptr) {
+		return;
+	}
+
+	const std::vector<Upgrade>& upgrades = player->getCollectedUpgrades();
+	std::map<std::string, int> upgradeCount;
+
+	// Count the number of each upgrade
+	for (const Upgrade& upgrade : upgrades) {
+		upgradeCount[upgrade.getName()]++;
+	}
+
+	float startX = 515 * scaleX;
+	float startY = 25 * scaleY;
+	float offsetY = 20 * scaleY;
+	float maxWidth = 60 * scaleX;
+
+	for (const auto& pair : upgradeCount) {
+		const std::string& upgradeName = pair.first;
+		int count = pair.second;
+
+		sf::Text upgradeText;
+		upgradeText.setFont(font);
+		upgradeText.setCharacterSize(8 * scaleY);
+		std::string displayText = upgradeName + " x" + std::to_string(count);
+		upgradeText.setString(wrapText(displayText, font, 8 * scaleY, maxWidth));
+
+		// Set the color based on rarity
+		sf::Color color;
+		for (const Upgrade& upgrade : upgrades) {
+			if (upgrade.getName() == upgradeName) {
+				color = upgrade.getColor();
+				break;
+			}
+		}
+		upgradeText.setFillColor(color);
+
+		upgradeText.setPosition(startX, startY);
+		window.draw(upgradeText);
+
+		startY += offsetY;
+	}
+
+
+}
+
+void Game::initialize() {
+	// Load sounds
+	//SoundManager::getInstance().loadSound("enemy_attack", "sounds/enemy_attack.wav");
+	SoundManager::getInstance().loadSound("player_attack", "sounds/player_attack.wav");
+	SoundManager::getInstance().loadSound("enemy_take_damage", "sounds/enemy_take_damage.ogg");
+	SoundManager::getInstance().loadSound("burn_damage", "sounds/burn_damage.ogg");
+	SoundManager::getInstance().loadSound("enemy_death", "sounds/enemy_death.wav");
+	SoundManager::getInstance().loadSound("room_exit_close", "sounds/room_exit_close.wav");
+	SoundManager::getInstance().loadSound("upgrade_pickup", "sounds/upgrade_pickup.wav");
+	SoundManager::getInstance().loadSound("upgrade_choice", "sounds/upgrade_choice.wav");
+	SoundManager::getInstance().loadSound("gold_pickup", "sounds/gold_pickup.wav");
+
+	// Set volumes for sounds
+	//SoundManager::getInstance().setSoundVolume("enemy_attack", 100.0f);
+	SoundManager::getInstance().setSoundVolume("player_attack", 100.0f);
+	SoundManager::getInstance().setSoundVolume("enemy_take_damage", 10.0f);
+	SoundManager::getInstance().setSoundVolume("burn_damage", 100.0f);
+	SoundManager::getInstance().setSoundVolume("enemy_death", 100.0f);
+	SoundManager::getInstance().setSoundVolume("room_exit_close", 100.0f);
+	SoundManager::getInstance().setSoundVolume("upgrade_pickup", 15.0f);
+	SoundManager::getInstance().setSoundVolume("upgrade_choice", 10.0f);
+	SoundManager::getInstance().setSoundVolume("gold_pickup", 30.0f);
+
+	// Randomize pitch
+	//SoundManager::getInstance().setRandomizedPitch("enemy_attack", true);
+	SoundManager::getInstance().setRandomizedPitch("player_attack", true);
+	SoundManager::getInstance().setRandomizedPitch("enemy_take_damage", true);
+	SoundManager::getInstance().setRandomizedPitch("burn_damage", true);
+	SoundManager::getInstance().setRandomizedPitch("enemy_death", true);
+	SoundManager::getInstance().setRandomizedPitch("room_exit_close", true);
+	SoundManager::getInstance().setRandomizedPitch("upgrade_pickup", true);
+	SoundManager::getInstance().setRandomizedPitch("upgrade_choice", true);
+	SoundManager::getInstance().setRandomizedPitch("gold_pickup", true);
+
+	// Load music
+	SoundManager::getInstance().loadMusic("main", "music/main.wav");
+	SoundManager::getInstance().loadMusic("shop", "music/shop.wav");
+
+	// Set volumes for music
+	SoundManager::getInstance().setMusicVolume("main", 10.0f);
+	SoundManager::getInstance().setMusicVolume("shop", 10.0f);
+
+	// Play main theme
+	SoundManager::getInstance().playMusic("main");
+}

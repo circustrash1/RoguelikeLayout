@@ -9,16 +9,17 @@
 #include "Upgrade.h"
 #include "ElementalType.h"
 
-
-class Enemy; // Forward declaration of Enemy class
+// Forward declarations
+class Enemy;
 class Upgrade;
 enum class ClassType;
+struct Room;
 
 class Player {
 public:
     Player(int x, int y, char symbol, int health, int attackDmg, const Stat& stats, ClassType classType);
     virtual ~Player() = default;
-    virtual void move(char direction, const std::vector<std::vector<char>>& map, const std::vector<Enemy*>& enemies);
+    virtual void move(char direction, const std::vector<std::vector<char>>& map, const std::vector<Enemy*>& enemies, const std::vector<Room>& rooms);
     virtual void attack(std::vector<Enemy*>& enemies) = 0;
     virtual void update(const std::vector<Enemy*>& enemies);
     virtual void render(sf::RenderWindow& window, int charSize) const;
@@ -29,12 +30,17 @@ public:
     void loseHealth(int amount);
     sf::Clock attackCooldownClock;
     const Stat& getStats() const;
+    Stat& getMutableStats();
+
     ClassType getClassType() const;
+
+    bool isInMerchantRoom(const std::vector<Room>& rooms) const;
 
     // Upgrades
     void applyUpgrade(const Upgrade& upgrade);
     void increaseAttackDamage(int amount);
     void increaseSpeed(float amount);
+	void increaseAttackSpeed(float amount);
 
 
     // Elemental
@@ -42,8 +48,19 @@ public:
     int getTotalFireDamage() const;
     int attackCounter;
 
+    // Gold system
+    int getGold() const;
+    void addGold(int amount);
+    void spendGold(int amount);
+
+    // Display upgrades
+    const std::vector<Upgrade>& getCollectedUpgrades() const {
+        return appliedUpgrades;
+    }
+
 private:
     sf::Clock damageClock;
+    int gold;
 
 
 protected:
@@ -52,6 +69,7 @@ protected:
     int health;
     int attackDmg;
     float speed;
+    float attackCooldown = 0;
     Stat stats;
     ClassType classType;
 

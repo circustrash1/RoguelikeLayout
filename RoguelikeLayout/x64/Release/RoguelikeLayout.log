@@ -1,17 +1,21 @@
 ﻿  Map.cpp
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(123,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(123,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(152,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(152,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(481,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(481,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(490,47): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(490,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(498,88): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(498,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(143,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(143,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(172,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(172,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(511,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(511,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(520,47): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(520,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(528,88): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(528,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(538,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(538,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(548,92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(548,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Generating code
-  2 of 1306 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  4 of 2197 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    93 functions had inline decision re-evaluated but remain unchanged
+    5 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   RoguelikeLayout.vcxproj -> C:\Code\C++\RoguelikeLayout\x64\Release\RoguelikeLayout.exe

@@ -9,6 +9,7 @@
 #include "Mage.h"
 #include "GuiElements.h"
 #include <vector>
+#include <iostream>
 
 class Game {
 public:
@@ -16,6 +17,13 @@ public:
     ~Game();
     void run();
     void handleUpgradePickup();
+    void initialize();
+
+    void renderGoldDrops(sf::RenderWindow& window);
+    void displayCollectedUpgrades();
+
+    // Cheats
+    void modifyPlayerGold(int amount);
 
 private:
     sf::RenderWindow window;
@@ -34,9 +42,13 @@ private:
     void displayCharacterSelection();
     Player* createPlayer(const std::string& className);
     void displayUpgradeSelection();
+    void displayMerchantWindow(Room& room);
+    void renderUpgradeOrMerchantWindow(const std::string& titleText, const std::vector<Upgrade>& upgrades, bool isMerchantShop);
     void updateHealth();
     HealthBar* healthBar;
     ShowStats* showStats;
+	ShowGold* showGold;
+    std::vector<std::tuple<int, int, int>> goldDrops;   // Store x, y and gold amount
 
     // Screen shake
     void screenShake(float intensity, float duration);
@@ -51,5 +63,8 @@ private:
     void update();
     void render();
 };
+
+
+
 
 #endif // GAME_H

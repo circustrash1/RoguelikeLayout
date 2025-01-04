@@ -17,6 +17,8 @@ private:
     int projectileX, projectileY;
     int projectileTargetX, projectileTargetY;
     sf::Clock projectileClock;
+
+    float mageAttackCooldown;
 };
 
 #endif // MAGE_H
