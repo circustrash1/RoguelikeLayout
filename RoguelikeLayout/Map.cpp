@@ -66,7 +66,7 @@ void Map::generate() {
 
 		// Convert pre-existing rooms to merchant and event rooms
 		for (size_t i = 0; i < rooms.size(); ++i) {
-			int roomType = std::rand() % 15;
+			int roomType = std::rand() % 10;
 			if (roomType == 0) {
 				EventMaps::convertToMerchantRoom(rooms[i]);
 			}
