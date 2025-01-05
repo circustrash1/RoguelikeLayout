@@ -21,6 +21,7 @@ void Projectile::update() {
 
         // Check for collision with the player if player reference is provided
         if (player && currentX == player->getX() && currentY == player->getY()) {
+            SoundManager::getInstance().playSound("skeleton_hit");
             player->loseHealth(damage);
             active = false;
         }

@@ -1,4 +1,5 @@
 #include "Stats.h"
+#include "Player.h"
 #include <cstdlib>
 #include <ctime>
 #include <random>
@@ -12,15 +13,17 @@ bool skillCheck(int stat, int difficulty) {
 	return (roll + stat) >= difficulty;
 }
 
-void modifyStat(Stat& stats, const std::string& statName, int amount) {
+void modifyStat(Stat& stats, const std::string& statName, int amount, Player& player) {
 	if (statName == "strength") {
 		stats.strength += amount;
+		player.updateAttackDamage();
 	}
 	else if (statName == "dexterity") {
 		stats.dexterity += amount;
 	}
 	else if (statName == "constitution") {
 		stats.constitution += amount;
+		player.updateHealth();
 	}
 	else if (statName == "intelligence") {
 		stats.intelligence += amount;

@@ -1,91 +1,47 @@
-﻿  EnemyManager.cpp
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.h(52,45): error C2061: syntax error: identifier 'Game'
-  (compiling source file 'EnemyManager.cpp')
-  
-  EventMaps.cpp
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.h(52,45): error C2061: syntax error: identifier 'Game'
-  (compiling source file 'EventMaps.cpp')
-  
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\EventMaps.cpp(102,59): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\EventMaps.cpp(102,59): warning C4267:         with
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\EventMaps.cpp(102,59): warning C4267:         [
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\EventMaps.cpp(102,59): warning C4267:             _Ty=int
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\EventMaps.cpp(102,59): warning C4267:         ]
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\EventMaps.cpp(236,66): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\EventMaps.cpp(236,47): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  Enemies.cpp
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(125,16): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(144,16): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(154,66): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(154,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(237,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(237,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(249,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(249,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(486,73): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(486,73): warning C4244:         with
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(486,73): warning C4244:         [
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(486,73): warning C4244:             T=float
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(486,73): warning C4244:         ]
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(486,54): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(486,54): warning C4244:         with
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(486,54): warning C4244:         [
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(486,54): warning C4244:             T=float
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(486,54): warning C4244:         ]
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(491,82): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(491,82): warning C4244:         with
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(491,82): warning C4244:         [
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(491,82): warning C4244:             T=float
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp(491,82): warning C4244:         ]
   Game.cpp
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.h(52,45): error C2061: syntax error: identifier 'Game'
-  (compiling source file 'Game.cpp')
-  
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(78,28): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(86,34): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(94,31): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(145,28): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(171,31): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(183,32): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(190,42): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(192,84): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(197,42): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(199,93): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(206,36): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(214,32): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(515,6): error C2660: 'Map::advanceToNextLevel': function does not take 2 arguments
-      C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.h(52,10):
-      see declaration of 'Map::advanceToNextLevel'
-      C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(515,6):
-      while trying to match the argument list '(Player *, Game *)'
-  
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(605,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(605,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(638,34): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(640,55): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-  GuiElements.cpp
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.h(52,45): error C2061: syntax error: identifier 'Game'
-  (compiling source file 'GuiElements.cpp')
-  
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\GuiElements.cpp(86,35): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-  main.cpp
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.h(52,45): error C2061: syntax error: identifier 'Game'
-  (compiling source file 'main.cpp')
-  
-  Map.cpp
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.h(52,45): error C2061: syntax error: identifier 'Game'
-  (compiling source file 'Map.cpp')
-  
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(143,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(143,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(172,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(172,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(511,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(511,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(520,47): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(520,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(528,88): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(528,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(538,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(538,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(548,92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(548,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(906,11): error C2511: 'void Map::advanceToNextLevel(Player *,Game *)': overloaded member function not found in 'Map'
-      C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.h(39,7):
-      see declaration of 'Map'
-  
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(909,3): error C2597: illegal reference to non-static member 'Map::firstGeneration'
-      C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.h(92,10):
-      see declaration of 'Map::firstGeneration'
-  
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(910,7): error C2597: illegal reference to non-static member 'Map::generationCount'
-      C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(910,7):
-      see declaration of 'Map::generationCount'
-  
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(910,7): error C3867: 'Map::generationCount': non-standard syntax; use '&' to create a pointer to member
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(910,7): error C2568: '%': unable to resolve function overload
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(911,4): error C2352: 'Map::generateBossRoom': a call of a non-static member function requires an object
-      C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(879,11):
-      see declaration of 'Map::generateBossRoom'
-  
-C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(914,3): error C2352: 'Map::generate': a call of a non-static member function requires an object
-      C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp(25,11):
-      see declaration of 'Map::generate'
-  
-  Player.cpp
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(79,28): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(87,34): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(95,31): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(146,28): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(172,31): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(184,32): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(191,42): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(193,84): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(198,42): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(200,93): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(207,36): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(215,32): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(636,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(636,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(677,34): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp(679,55): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  Generating code
+  4 of 2251 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    10 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  RoguelikeLayout.vcxproj -> C:\Code\C++\RoguelikeLayout\x64\Release\RoguelikeLayout.exe

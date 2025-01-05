@@ -43,8 +43,8 @@ void EnemyManager::spawnEnemies(int roomX, int roomY, int roomWidth, int roomHei
 }
 
 void EnemyManager::incrementScaleFactors() {
-	healthScaleFactor += 0.1f; // Increment health scale factor
-	damageScaleFactor += 0.1f; // Increment damage scale factor
+	healthScaleFactor += 0.5f; // Increment health scale factor
+	damageScaleFactor += 0.5f; // Increment damage scale factor
 }
 
 void EnemyManager::updateEnemies(const std::vector<std::vector<char>>& map, int playerX, int playerY) {

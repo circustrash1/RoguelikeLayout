@@ -4,6 +4,7 @@
 #include "EventMaps.h"
 #include "SoundManager.h"
 #include "Enemies.h"
+#include "StatManager.h"
 #include <stack> // Include stack for the DFS algorithm
 #include <queue> // Include queue for flood fill algo
 #include <cstdlib> // Include cstdlib for std::srand and std::rand
@@ -428,7 +429,7 @@ void Map::chooseCarveExits() {
 void Map::carveExits() {
 	// Define the condition to check (e.g., a specific key press or a game event)
 
-	if (enemyManager->allEnemiesDead() || (sf::Keyboard::isKeyPressed(sf::Keyboard::E))) {
+	if (enemyManager->allEnemiesDead() || (sf::Keyboard::isKeyPressed(sf::Keyboard::R))) {
 		if (entryPoints.empty()) {
 			std::cout << "No entry points to carve." << std::endl; // Debug output
 		}
@@ -462,7 +463,7 @@ void Map::carveCorridor(int cx, int cy, std::default_random_engine& rng, std::st
 }
 
 void Map::render(sf::RenderWindow& window, int playerX, int playerY, int charSize, Player* player) {
-	revealArea(playerX, playerY, 60); // Reveal an area around the player
+	revealArea(playerX, playerY, player->getStatManager().getViewDistance() - (player->getStats().wisdom * 1.75) + 5); // Reveal an area around the player
 
 	sf::Font font; // Create a font object
 	if (!font.loadFromFile("fs-min.ttf")) { // Load the font
@@ -484,8 +485,9 @@ void Map::render(sf::RenderWindow& window, int playerX, int playerY, int charSiz
 					int roomHeight = room.endY - room.startY;
 					if (playerAdvanced) {
 						enemyManager->spawnEnemies(room.startX, room.startY, roomWidth, roomHeight, map);
-					} else { 
-						enemyManager->spawnEnemies(room.startX, room.startY, roomWidth, roomHeight, map); 
+					}
+					else {
+						enemyManager->spawnEnemies(room.startX, room.startY, roomWidth, roomHeight, map);
 					}
 					room.enemiesSpawned = true;
 				}
@@ -501,21 +503,33 @@ void Map::render(sf::RenderWindow& window, int playerX, int playerY, int charSiz
 	text.setFont(font); // Set the font for the text
 	text.setCharacterSize(charSize); // Set the character size
 
-	const int maxRadius = 5; // Maximum radius for the torch effect
+	const int maxRadius = player->getStatManager().getViewDistance() - (player->getStats().wisdom * 1.75) + 5; // Maximum radius for the torch effect
 	const int maxBrightness = 255; // Maximum brightness level
-	const int minBrightness = 0; // Minimum brightness level for walls
-	const float fadeOut = 0.5f; // Fade out factor for the torch effect
+	const int minBrightness = 50; // Minimum brightness level for walls
+	const float fadeOut = 0.25f; // Fade out factor for the torch effect
 
 	for (int y = 0; y < height; ++y) { // For each row in the map
 		for (int x = 0; x < width; ++x) { // For each column in the map
 			if (revealed[y][x]) { // If the position is revealed
-				int distance = std::abs(playerX - x) + std::abs(playerY - y); // Calculate Manhattan distance from the player
+				// Calculate Euclidean distance from the player to create a circular radius effect
+				float distance = std::sqrt(std::pow(playerX - x, 2) + std::pow(playerY - y, 2)); // Euclidean distance
 
 				if (distance <= maxRadius) { // If within the torch radius
-					float brightness = maxBrightness * std::exp(-fadeOut * distance); // Calculate exponential brightness
+					// Calculate exponential brightness fading based on distance from the player
+					float brightness = maxBrightness * std::exp(-fadeOut * distance);
 					brightness = std::max(static_cast<float>(minBrightness), brightness); // Ensure brightness doesn't go below minimum
 
-					text.setFillColor(sf::Color(static_cast<sf::Uint8>(brightness), 0, 0)); // Set color with the calculated brightness
+					// Calculate the red intensity based on distance
+					float redIntensity = brightness;  // Directly use brightness for red
+
+					// Calculate the green and blue intensity, which will be lower to give the red "torch" effect
+					float greenBlueIntensity = minBrightness + (brightness - minBrightness) * 0.2f; // Slightly higher green/blue values as it fades
+
+					// Red stays dominant, while green and blue components fade out gradually
+					sf::Uint8 red = static_cast<sf::Uint8>(redIntensity);
+					sf::Uint8 greenBlue = static_cast<sf::Uint8>(greenBlueIntensity);
+
+					text.setFillColor(sf::Color(red, greenBlue, greenBlue)); // Set color for torchlight effect
 				}
 				else {
 					text.setFillColor(sf::Color(50, 50, 50, 80)); // Set color to grey for characters outside the max radius
@@ -612,8 +626,13 @@ void Map::reveal(int x, int y) {
 void Map::revealArea(int x, int y, int radius) {
 	for (int dy = -radius; dy <= radius; ++dy) { // For each row in the radius
 		for (int dx = -radius; dx <= radius; ++dx) { // For each column in the radius
-			if (x + dx >= 0 && y + dy >= 0 && x + dx < width && y + dy < height) { // If the position is within bounds
-				revealed[y + dy][x + dx] = true; // Mark the position as revealed
+			// Calculate the Euclidean distance from the center (x, y) to (x+dx, y+dy)
+			float distance = std::sqrt(dx * dx + dy * dy);
+
+			if (distance <= radius) { // If the point is within the circle's radius
+				if (x + dx >= 0 && y + dy >= 0 && x + dx < width && y + dy < height) { // Ensure within bounds
+					revealed[y + dy][x + dx] = true; // Mark the position as revealed
+				}
 			}
 		}
 	}
@@ -922,7 +941,6 @@ void Map::generateBossRoom() {
 			}
 		}
 	}
-
 }
 
 void Map::advanceToNextLevel(Player* player, Game* game) {
@@ -932,8 +950,8 @@ void Map::advanceToNextLevel(Player* player, Game* game) {
 		if (generationCount % 100 == 0) {
 			generateBossRoom();
 		}
-		else { 
-		generate(); 
+		else {
+			generate();
 		}
 
 		player->setPosition(0, player->getY()); // Move the player to the center of the new map
@@ -943,7 +961,5 @@ void Map::advanceToNextLevel(Player* player, Game* game) {
 		playerAdvanced = true;
 
 		enemyManager->incrementScaleFactors();
-
-
 	}
 }

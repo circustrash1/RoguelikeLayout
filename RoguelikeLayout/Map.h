@@ -2,6 +2,7 @@
 #define MAP_H
 
 #include "EnemyManager.h" // Include the EnemyManager class header
+#include "Player.h"
 #include "UpgradeManager.h"
 #include "EventMaps.h"
 #include <vector> // Include vector for storing the map layout

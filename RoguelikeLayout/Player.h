@@ -8,6 +8,7 @@
 #include "Stats.h"
 #include "Upgrade.h"
 #include "ElementalType.h"
+#include "StatManager.h"
 
 // Forward declarations
 class Enemy;
@@ -28,6 +29,9 @@ public:
     void setPosition(int newX, int newY);
     int getHealth() const;
     void loseHealth(int amount);
+    void updateHealth();
+    void updateAttackDamage();
+    bool attemptDodge() const;
     sf::Clock attackCooldownClock;
     const Stat& getStats() const;
     Stat& getMutableStats();
@@ -58,6 +62,9 @@ public:
         return appliedUpgrades;
     }
 
+    // StatManager
+    StatManager& getStatManager();
+
 private:
     sf::Clock damageClock;  // How often the player can be attacked, unused as added seperate enemy cooldown clocks
     int gold;
@@ -72,6 +79,7 @@ protected:
     float attackCooldown = 0;
     Stat stats;
     ClassType classType;
+	StatManager statManager;
 
     // Elemental damage
     ElementalType elementalDamage;

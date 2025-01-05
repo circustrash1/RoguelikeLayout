@@ -132,7 +132,7 @@ void EventMaps::checkEventInteraction(Room& room, Player& player, sf::RenderWind
 
 	bool isNearEventChar = ((std::abs(playerX - charX) == 1 && playerY == charY) || (std::abs(playerY - charY) == 1 && playerX == charX));
 
-	if (isNearEventChar && (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))) {
+	if (isNearEventChar && (sf::Keyboard::isKeyPressed(sf::Keyboard::E))) {
 		window.clear();
 
 		bool success = false;
@@ -165,10 +165,10 @@ void EventMaps::checkEventInteraction(Room& room, Player& player, sf::RenderWind
 
 		if (success) {
 			if (room.eventText == "You found a locked chest!") {
-				modifyStat(player.getMutableStats(), "dexterity", 1);
+				modifyStat(player.getMutableStats(), "dexterity", 1, player);
 			}
 			else if (room.eventText == "You found an ancient library!") {
-				modifyStat(player.getMutableStats(), "intelligence", 1);
+				modifyStat(player.getMutableStats(), "intelligence", 1, player);
 			}
 			else if (room.eventText == "You found a mystical fountain!") {
 				player.loseHealth(-10);
@@ -206,7 +206,7 @@ bool EventMaps::checkMerchantInteraction(Room& room, Player& player) {
 	int merchantX = room.merchantPosition.first;
 	int merchantY = room.merchantPosition.second;
 	bool isNearMerchant = ((std::abs(playerX - merchantX) == 1 && playerY == merchantY) || (std::abs(playerY - merchantY) == 1 && playerX == merchantX));
-	if (isNearMerchant && (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))) {
+	if (isNearMerchant && (sf::Keyboard::isKeyPressed(sf::Keyboard::E))) {
 		return true;
 	}
 	return false;

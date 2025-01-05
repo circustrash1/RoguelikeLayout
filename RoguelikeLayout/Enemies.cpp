@@ -445,6 +445,7 @@ void SkeletonArcher::attack(Player* player) {
 	int playerX = player->getX();
 	int playerY = player->getY();
 	std::cout << "Skeleton Archer at (" << x << ", " << y << ") fires an arrow at player at (" << playerX << ", " << playerY << ")." << std::endl;
+	SoundManager::getInstance().playSound("skeleton_attack");
 	projectile = new Projectile(x, y, playerX, playerY, attackDamage, player, sf::Color::Red);
 	attackCooldownClock.restart();
 }

@@ -1,11 +1,28 @@
 // Player.cpp
 #include "Player.h"
 #include "Map.h"
+#include "SoundManager.h""
 #include <iostream>
 
 Player::Player(int x, int y, char symbol, int health, int attackDmg, const Stat& stats, ClassType classType)
 	: x(x), y(y), symbol(symbol), health(health), attackDmg(attackDmg), classType(classType),
-	stats(stats), elementalDamage(ElementalType::None) {
+	stats(stats), elementalDamage(ElementalType::None), statManager(*this) {}
+
+void Player::updateHealth() {
+	health = statManager.getMaxHealth();
+}
+
+void Player::updateAttackDamage() {
+	attackDmg = statManager.getAttackDamage();
+}
+
+bool Player::attemptDodge() const {
+	float dodgeChance = statManager.getDodgeChance();
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+	std::cout << "Dodge chance: " << dodgeChance << std::endl;
+	return dis(gen) < dodgeChance;
 }
 
 int Player::getX() const {
@@ -26,6 +43,12 @@ int Player::getHealth() const {
 }
 
 void Player::loseHealth(int amount) {
+	if (attemptDodge()) {
+		std::cout << "Dodge successful!" << std::endl;
+		SoundManager::getInstance().playSound("player_dodge");
+		return;
+	}
+	SoundManager::getInstance().playSound("player_damage");
 	health -= amount;
 	if (health < 0) {
 		health = 0;
@@ -123,12 +146,15 @@ int Player::getTotalFireDamage() const {
 	return totalFireDamage;
 }
 
+
+
 void Player::update(const std::vector<Enemy*>& enemies) {
 	for (Enemy* enemy : enemies) {
 		if (enemy->getAttackCooldownClock().getElapsedTime().asSeconds() >= enemy->getAttackCooldown()) {
 			int enemyX = enemy->getX();
 			int enemyY = enemy->getY();
 			if ((std::abs(enemyX - x) <= 1 && std::abs(enemyY - y) <= 1)) {
+				SoundManager::getInstance().playSound("goblin_attack");
 				loseHealth(enemy->getAttackDamage());
 				const_cast<sf::Clock&>(enemy->getAttackCooldownClock()).restart();
 				break;
@@ -180,4 +206,8 @@ bool Player::isInMerchantRoom(const std::vector<Room>& rooms) const {
 		}
 	}
 	return false;
+}
+
+StatManager& Player::getStatManager() {
+	return statManager;
 }

@@ -25,8 +25,6 @@ Game::Game()
 	TitleScreen titleScreen(font, scaleX, scaleY);
 	titleScreen.display(window);
 
-
-
 	mainBar.setSize(sf::Vector2f(640 * scaleX, 100 * scaleY));
 	mainBar.setFillColor(sf::Color(50, 50, 50));
 	mainBar.setPosition(0, 260 * scaleY);
@@ -216,7 +214,7 @@ void Game::renderUpgradeOrMerchantWindow(const std::string& titleText, const std
 			cardCost.setFont(font);
 			cardCost.setCharacterSize(6 * scaleY);
 			cardCost.setFillColor(sf::Color::Yellow);
-			cardCost.setString("Cost: " + std::to_string(upgrades[i].getCost()));
+			cardCost.setString("Cost: " + std::to_string(static_cast<int>(upgrades[i].getCost() * player->getStatManager().getMerchantPriceModifier())));
 			cardCost.setPosition(startX + i * (cardWidth + spaceBetweenCards) - 40, startY + cardHeight + 300);
 		}
 
@@ -323,30 +321,30 @@ void Game::displayMerchantWindow(Room& room) {
 
 		sf::Event event;
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
+			if (event.type == sf::Event::Closed) {
 				window.close();
 				return;
 			}
 			if (event.type == sf::Event::KeyPressed) {
-				if (event.key.code == sf::Keyboard::Num1 && room.merchantUpgrades.size() >= 1 && player->getGold() >= room.merchantUpgrades[0].getCost() && !room.merchantUpgrades[0].isPurchased()) {
-					player->spendGold(room.merchantUpgrades[0].getCost());
+				if (event.key.code == sf::Keyboard::Num1 && room.merchantUpgrades.size() >= 1 && player->getGold() >= room.merchantUpgrades[0].getCost() * player->getStatManager().getMerchantPriceModifier() && !room.merchantUpgrades[0].isPurchased()) {
+					player->spendGold(static_cast<int>(room.merchantUpgrades[0].getCost() * player->getStatManager().getMerchantPriceModifier()));
 					player->applyUpgrade(room.merchantUpgrades[0]);
 					room.merchantUpgrades[0].setPurchased(true);
 					SoundManager::getInstance().playSound("upgrade_choice");
 				}
-				else if (event.key.code == sf::Keyboard::Num2 && room.merchantUpgrades.size() >= 2 && player->getGold() >= room.merchantUpgrades[1].getCost() && !room.merchantUpgrades[1].isPurchased()) {
-					player->spendGold(room.merchantUpgrades[1].getCost());
+				else if (event.key.code == sf::Keyboard::Num2 && room.merchantUpgrades.size() >= 2 && player->getGold() >= room.merchantUpgrades[1].getCost() * player->getStatManager().getMerchantPriceModifier() && !room.merchantUpgrades[1].isPurchased()) {
+					player->spendGold(static_cast<int>(room.merchantUpgrades[1].getCost() * player->getStatManager().getMerchantPriceModifier()));
 					player->applyUpgrade(room.merchantUpgrades[1]);
 					room.merchantUpgrades[1].setPurchased(true);
 					SoundManager::getInstance().playSound("upgrade_choice");
 				}
-				else if (event.key.code == sf::Keyboard::Num3 && room.merchantUpgrades.size() >= 3 && player->getGold() >= room.merchantUpgrades[2].getCost() && !room.merchantUpgrades[2].isPurchased()) {
-					player->spendGold(room.merchantUpgrades[2].getCost());
+				else if (event.key.code == sf::Keyboard::Num3 && room.merchantUpgrades.size() >= 3 && player->getGold() >= room.merchantUpgrades[2].getCost() * player->getStatManager().getMerchantPriceModifier() && !room.merchantUpgrades[2].isPurchased()) {
+					player->spendGold(static_cast<int>(room.merchantUpgrades[2].getCost() * player->getStatManager().getMerchantPriceModifier()));
 					player->applyUpgrade(room.merchantUpgrades[2]);
 					room.merchantUpgrades[2].setPurchased(true);
 					SoundManager::getInstance().playSound("upgrade_choice");
 				}
-				else if (event.key.code == sf::Keyboard::E) {
+				else if (event.key.code == sf::Keyboard::E || event.key.code == sf::Keyboard::Escape) {
 					upgradeSelected = true; // Press E to exit shop
 				}
 			}
@@ -361,6 +359,7 @@ void Game::displayMerchantWindow(Room& room) {
 	// Cleanup
 	window.clear(sf::Color::Black);
 	window.display();
+	shopCloseClock.restart();
 }
 
 Game::~Game() {
@@ -410,8 +409,17 @@ void Game::processEvents() {
 				modifyPlayerGold(-100); // Subtract 100 gold
 			}
 		}
+		if (event.type == sf::Event::KeyPressed) {
+			if (event.key.code == sf::Keyboard::V) {
+				modifyStat(player->getMutableStats(), "wisdom", 1, *player);
+			}
+			else if (event.key.code == sf::Keyboard::C) {
+				modifyStat(player->getMutableStats(), "dexterity", 1, *player);
+			}
+		}
 	}
 }
+
 
 // Cheats
 void Game::modifyPlayerGold(int amount) {
@@ -438,16 +446,16 @@ void Game::update() {
 	}
 
 	if (clock.getElapsedTime() - lastMoveTime > moveDelay) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 			player->move('w', map.getMap(), map.getEnemies(), map.getRooms());
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 			player->move('s', map.getMap(), map.getEnemies(), map.getRooms());
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 			player->move('a', map.getMap(), map.getEnemies(), map.getRooms());
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 			player->move('d', map.getMap(), map.getEnemies(), map.getRooms());
 		}
 		lastMoveTime = clock.getElapsedTime();
@@ -480,7 +488,7 @@ void Game::update() {
 
 	// Check for merchant room interaction
 	for (Room& room : map.getRooms()) {
-		if (room.isMerchantRoom) {
+		if (room.isMerchantRoom && shopCloseClock.getElapsedTime().asSeconds() > 0.25f) {
 			if (EventMaps::checkMerchantInteraction(room, *player)) {
 				if (room.merchantUpgrades.empty()) {
 					room.merchantUpgrades = map.upgradeManager().generateUpgrades(3, player->getClassType());
@@ -685,14 +693,16 @@ void Game::displayCollectedUpgrades() {
 
 		startY += offsetY;
 	}
-
-
 }
 
 void Game::initialize() {
 	// Load sounds
-	//SoundManager::getInstance().loadSound("enemy_attack", "sounds/enemy_attack.wav");
+	SoundManager::getInstance().loadSound("goblin_attack", "sounds/goblin_attack.wav");
+	SoundManager::getInstance().loadSound("skeleton_attack", "sounds/skeleton_attack.wav");
+	SoundManager::getInstance().loadSound("skeleton_hit", "sounds/skeleton_hit.wav");
 	SoundManager::getInstance().loadSound("player_attack", "sounds/player_attack.wav");
+	SoundManager::getInstance().loadSound("player_damage", "sounds/player_damage.wav");
+	SoundManager::getInstance().loadSound("player_dodge", "sounds/player_dodge.wav");
 	SoundManager::getInstance().loadSound("enemy_take_damage", "sounds/enemy_take_damage.ogg");
 	SoundManager::getInstance().loadSound("burn_damage", "sounds/burn_damage.ogg");
 	SoundManager::getInstance().loadSound("enemy_death", "sounds/enemy_death.wav");
@@ -702,8 +712,12 @@ void Game::initialize() {
 	SoundManager::getInstance().loadSound("gold_pickup", "sounds/gold_pickup.wav");
 
 	// Set volumes for sounds
-	//SoundManager::getInstance().setSoundVolume("enemy_attack", 100.0f);
+	SoundManager::getInstance().setSoundVolume("goblin_attack", 20.0f);
+	SoundManager::getInstance().setSoundVolume("skeleton_attack", 20.0f);
+	SoundManager::getInstance().setSoundVolume("skeleton_hit", 10.0f);
 	SoundManager::getInstance().setSoundVolume("player_attack", 100.0f);
+	SoundManager::getInstance().setSoundVolume("player_damage", 50.0f);
+	SoundManager::getInstance().setSoundVolume("player_dodge", 100.0f);
 	SoundManager::getInstance().setSoundVolume("enemy_take_damage", 10.0f);
 	SoundManager::getInstance().setSoundVolume("burn_damage", 100.0f);
 	SoundManager::getInstance().setSoundVolume("enemy_death", 100.0f);
@@ -713,8 +727,12 @@ void Game::initialize() {
 	SoundManager::getInstance().setSoundVolume("gold_pickup", 30.0f);
 
 	// Randomize pitch
-	//SoundManager::getInstance().setRandomizedPitch("enemy_attack", true);
+	SoundManager::getInstance().setRandomizedPitch("goblin_attack", true);
+	SoundManager::getInstance().setRandomizedPitch("skeleton_attack", true);
+	SoundManager::getInstance().setRandomizedPitch("skeleton_hit", true);
 	SoundManager::getInstance().setRandomizedPitch("player_attack", true);
+	SoundManager::getInstance().setRandomizedPitch("player_damage", true);
+	SoundManager::getInstance().setRandomizedPitch("player_dodge", true);
 	SoundManager::getInstance().setRandomizedPitch("enemy_take_damage", true);
 	SoundManager::getInstance().setRandomizedPitch("burn_damage", true);
 	SoundManager::getInstance().setRandomizedPitch("enemy_death", true);
@@ -736,24 +754,24 @@ void Game::initialize() {
 }
 
 void Game::restartGame() {
-    // Reset game state
-    delete player;
-    delete healthBar;
-    delete showStats;
-    delete showGold;
-    delete showStage;
+	// Reset game state
+	delete player;
+	delete healthBar;
+	delete showStats;
+	delete showGold;
+	delete showStage;
 
-    player = nullptr;
-    healthBar = nullptr;
-    showStats = nullptr;
-    showGold = new ShowGold();
-    showStage = new ShowStage();
-    stageCount = 0;
+	player = nullptr;
+	healthBar = nullptr;
+	showStats = nullptr;
+	showGold = new ShowGold();
+	showStage = new ShowStage();
+	stageCount = 0;
 
-    // Reinitialize game
-    initialize();
-    map.generate();
-    originalView = window.getDefaultView();
-    window.setView(originalView);
-    displayCharacterSelection();
+	// Reinitialize game
+	initialize();
+	map.generate();
+	originalView = window.getDefaultView();
+	window.setView(originalView);
+	displayCharacterSelection();
 }

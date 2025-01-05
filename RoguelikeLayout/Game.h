@@ -27,6 +27,8 @@ public:
 
     void displayCollectedUpgrades();
 
+    sf::Clock shopCloseClock;
+    bool isShopWindowOpen;
 
     void restartGame();
 

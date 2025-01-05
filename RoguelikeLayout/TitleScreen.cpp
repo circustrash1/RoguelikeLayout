@@ -10,7 +10,7 @@ TitleScreen::TitleScreen(const sf::Font& font, float scaleX, float scaleY) {
 	titleText.setPosition(100 * scaleX, 50 * scaleY);
 
 	controlsText.setFont(font);
-	controlsText.setString("Controls: \n - Move: WASD\n - Attack: Spacebar\n - Interact: E\n - Pause: P");
+	controlsText.setString("Controls: \n - Move: WASD or Arrow Keys\n - Attack: Spacebar\n - Interact: E\n - Pause: P");
 	controlsText.setCharacterSize(16 * scaleY);
 	controlsText.setFillColor(sf::Color::White);
 	controlsText.setStyle(sf::Text::Bold);
