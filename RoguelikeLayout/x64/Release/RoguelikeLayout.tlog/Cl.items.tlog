@@ -1,8 +1,11 @@
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Boss.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\Boss.obj
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\BossRoom.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\BossRoom.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Button.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\Button.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\DeathScreen.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\DeathScreen.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\Enemies.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\EnemyManager.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\EnemyManager.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\EventMaps.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\EventMaps.obj
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\FontManager.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\FontManager.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\Game.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\GuiElements.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\GuiElements.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Mage.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\Mage.obj
@@ -13,6 +16,7 @@ C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Projectile.cpp;C:\Code\C++\Roguelike
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\SoundManager.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\SoundManager.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\StatManager.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\StatManager.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Stats.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\Stats.obj
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\TextBox.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\TextBox.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\TitleScreen.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\TitleScreen.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Upgrade.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\Upgrade.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\UpgradeManager.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Release\UpgradeManager.obj

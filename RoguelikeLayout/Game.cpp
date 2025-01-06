@@ -374,9 +374,11 @@ Game::~Game() {
 }
 
 void Game::run() {
+	sf::Clock clock;
 	while (window.isOpen()) {
+		float deltaTime = clock.restart().asSeconds();
 		processEvents();
-		update();
+		update(deltaTime);
 		SoundManager::getInstance().updateCrossfade();  // Update crossfade effect
 		render();
 	}
@@ -417,9 +419,11 @@ void Game::processEvents() {
 				modifyStat(player->getMutableStats(), "dexterity", 1, *player);
 			}
 		}
+		else if (event.key.code == sf::Keyboard::Space) {
+			std::cout << "Space bar pressed" << std::endl;
+		}
 	}
 }
-
 
 // Cheats
 void Game::modifyPlayerGold(int amount) {
@@ -434,7 +438,7 @@ void Game::updateHealth() {
 	healthBar->update(player->getHealth());
 }
 
-void Game::update() {
+void Game::update(float deltaTime) {
 	static sf::Clock clock;
 	static sf::Time lastMoveTime = sf::Time::Zero;
 	sf::Time moveDelay = sf::milliseconds(100); // Adjust delay as needed
@@ -446,7 +450,19 @@ void Game::update() {
 	}
 
 	if (clock.getElapsedTime() - lastMoveTime > moveDelay) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+			player->move('q', map.getMap(), map.getEnemies(), map.getRooms());
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			player->move('e', map.getMap(), map.getEnemies(), map.getRooms());
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+			player->move('z', map.getMap(), map.getEnemies(), map.getRooms());
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			player->move('c', map.getMap(), map.getEnemies(), map.getRooms());
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 			player->move('w', map.getMap(), map.getEnemies(), map.getRooms());
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
@@ -533,6 +549,39 @@ void Game::update() {
 		}
 	}
 
+
+	// Handle boss room
+	for (Room& room : map.getRooms()) {
+		if (room.isBossRoom && !room.bossRoomEntered && player->getX() == room.startX + 2) {
+			std::cout << "Player entered boss room" << std::endl;
+			enterBossRoom();
+			room.bossRoomEntered = true;
+			break;
+		}
+	}
+
+
+	// Set bossRoomEntered flag to false when the stage counter is 1 past a boss room (multiple of 5)
+	if (stageCount % 1 == 1) {
+		for (Room& room : map.getRooms()) {
+			if (room.isBossRoom) {
+				room.bossRoomEntered = false;
+			}
+		}
+	}
+
+	// Update BossRoom 
+	if (!bossRoom.isTextComplete()) {
+		bossRoom.update(deltaTime);
+	}
+
+
+	// Check if boss defeated and unblock exit
+	if (map.isBossDefeated()) {
+		map.unblockExit();
+	}
+	
+
 	map.advanceToNextLevel(player, this);
 }
 
@@ -602,6 +651,18 @@ void Game::render() {
 
 	// Render collected upgrades
 	displayCollectedUpgrades();
+
+	// Render boss text
+	if (!bossRoom.isTextComplete()) {
+		bossRoom.render(window);
+	}
+
+	// Render boss health bar if boss is present
+	for (Enemy* enemy : map.getEnemies()) {
+		if (Boss* boss = dynamic_cast<Boss*>(enemy)) {
+			boss->renderBossHealthBar(window, 24, scaleX, scaleY);
+		}
+	}
 
 	window.display();
 }
@@ -695,6 +756,11 @@ void Game::displayCollectedUpgrades() {
 	}
 }
 
+void Game::enterBossRoom() {
+	bossRoom.enter();
+	//player->disableMovement();
+}
+
 void Game::initialize() {
 	// Load sounds
 	SoundManager::getInstance().loadSound("goblin_attack", "sounds/goblin_attack.wav");
@@ -711,6 +777,9 @@ void Game::initialize() {
 	SoundManager::getInstance().loadSound("upgrade_choice", "sounds/upgrade_choice.wav");
 	SoundManager::getInstance().loadSound("gold_pickup", "sounds/gold_pickup.wav");
 
+	SoundManager::getInstance().loadSound("havok_charging", "sounds/havok_charging.wav");
+	SoundManager::getInstance().loadSound("havok_stun", "sounds/havok_stun.wav");
+
 	// Set volumes for sounds
 	SoundManager::getInstance().setSoundVolume("goblin_attack", 20.0f);
 	SoundManager::getInstance().setSoundVolume("skeleton_attack", 20.0f);
@@ -726,6 +795,9 @@ void Game::initialize() {
 	SoundManager::getInstance().setSoundVolume("upgrade_choice", 10.0f);
 	SoundManager::getInstance().setSoundVolume("gold_pickup", 30.0f);
 
+	SoundManager::getInstance().setSoundVolume("havok_charging", 40.0f);
+	SoundManager::getInstance().setSoundVolume("havok_stun", 30.0f);
+
 	// Randomize pitch
 	SoundManager::getInstance().setRandomizedPitch("goblin_attack", true);
 	SoundManager::getInstance().setRandomizedPitch("skeleton_attack", true);
@@ -740,6 +812,9 @@ void Game::initialize() {
 	SoundManager::getInstance().setRandomizedPitch("upgrade_pickup", true);
 	SoundManager::getInstance().setRandomizedPitch("upgrade_choice", true);
 	SoundManager::getInstance().setRandomizedPitch("gold_pickup", true);
+
+	SoundManager::getInstance().setRandomizedPitch("havok_charging", false);
+	SoundManager::getInstance().setRandomizedPitch("havok_stun", true);
 
 	// Load music
 	SoundManager::getInstance().loadMusic("main", "music/main.wav");
@@ -767,6 +842,9 @@ void Game::restartGame() {
 	showGold = new ShowGold();
 	showStage = new ShowStage();
 	stageCount = 0;
+
+	// Reset enemy scaling
+	map.getEnemyManager()->resetScaleFactors();
 
 	// Reinitialize game
 	initialize();

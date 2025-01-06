@@ -6,7 +6,8 @@
 
 Player::Player(int x, int y, char symbol, int health, int attackDmg, const Stat& stats, ClassType classType)
 	: x(x), y(y), symbol(symbol), health(health), attackDmg(attackDmg), classType(classType),
-	stats(stats), elementalDamage(ElementalType::None), statManager(*this) {}
+	stats(stats), elementalDamage(ElementalType::None), statManager(*this), isTakingDamage(false) {
+}
 
 void Player::updateHealth() {
 	health = statManager.getMaxHealth();
@@ -53,6 +54,12 @@ void Player::loseHealth(int amount) {
 	if (health < 0) {
 		health = 0;
 	}
+	isTakingDamage = true;
+	damageClock.restart();
+}
+
+void Player::gainHealth(int amount) {
+	health += amount;
 }
 
 int Player::getGold() const {
@@ -68,13 +75,41 @@ void Player::spendGold(int amount) {
 }
 
 void Player::move(char direction, const std::vector<std::vector<char>>& map, const std::vector<Enemy*>& enemies, const std::vector<Room>& rooms) {
+
+	
 	int newX = x, newY = y;
 
 	switch (direction) {
-	case 'w': newY -= 1; break; // Move up
-	case 's': newY += 1; break; // Move down
-	case 'a': newX -= 1; break; // Move left
-	case 'd': newX += 1; break; // Move right
+	case 'w': // Up
+		newY--;
+		break;
+	case 's': // Down
+		newY++;
+		break;
+	case 'a': // Left
+		newX--;
+		break;
+	case 'd': // Right
+		newX++;
+		break;
+	case 'q': // Up-Left
+		newX--;
+		newY--;
+		break;
+	case 'e': // Up-Right
+		newX++;
+		newY--;
+		break;
+	case 'z': // Down-Left
+		newX--;
+		newY++;
+		break;
+	case 'c': // Down-Right
+		newX++;
+		newY++;
+		break;
+	default:
+		break;
 	}
 
 	// Check for collision with enemies
@@ -82,6 +117,12 @@ void Player::move(char direction, const std::vector<std::vector<char>>& map, con
 		if (enemy->getX() == newX && enemy->getY() == newY && enemy->isAlive()) {
 			return; // Collision detected, do not move
 		}
+	}
+
+
+	// Check for collisions with the boss
+	if (isCollidingWithBoss(newX, newY, enemies)) {
+		return;
 	}
 
 	// Check for collision with merchant and eventChar
@@ -98,12 +139,27 @@ void Player::move(char direction, const std::vector<std::vector<char>>& map, con
 		}
 	}
 
-	// Check if the new position is within bounds and walkable
-	if (newX >= 0 && newY >= 0 && newX < map[0].size() && newY < map.size() && map[newY][newX] == '.') {
+	// Check for wall collisions
+	if (newX >= 0 && newX < map[0].size() && newY >= 0 && newY < map.size() //&& map[newY][newX] == '.'
+		) {
 		x = newX;
 		y = newY;
 	}
 }
+
+bool Player::isCollidingWithBoss(int newX, int newY, const std::vector<Enemy*>& enemies) const {
+	for (const auto& enemy : enemies) {
+		if (const Boss* boss = dynamic_cast<const Boss*>(enemy)) {
+			for (const auto& part : boss->getBodyParts()) {
+				if (part.first == newX && part.second == newY) {
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
 
 // UPGRADES GO HERE
 
@@ -126,6 +182,13 @@ void Player::increaseAttackSpeed(float amount) {
 	attackCooldown -= amount * diminishingFactor;
 }
 
+//void Player::lifesteal(float amount) {
+//	health += amount;
+//	if (health > maxHealth) {
+//		health = maxHealth;
+//	}
+//}
+
 void Player::setElementalDamage(ElementalType type, int damage) {
 	elementalDamage = type;
 	if (type == ElementalType::Fire) {
@@ -145,8 +208,6 @@ int Player::getTotalFireDamage() const {
 	}
 	return totalFireDamage;
 }
-
-
 
 void Player::update(const std::vector<Enemy*>& enemies) {
 	for (Enemy* enemy : enemies) {
@@ -180,7 +241,7 @@ Stat& Player::getMutableStats() {
 	return stats;
 }
 
-void Player::render(sf::RenderWindow& window, int charSize) const {
+void Player::render(sf::RenderWindow& window, int charSize) {
 	sf::Font font;
 	if (!font.loadFromFile("fs-min.ttf")) {
 		return;
@@ -189,7 +250,15 @@ void Player::render(sf::RenderWindow& window, int charSize) const {
 	sf::Text text;
 	text.setFont(font);
 	text.setCharacterSize(charSize);
-	text.setFillColor(sf::Color::White);
+
+	if (isTakingDamage && damageClock.getElapsedTime().asSeconds() < 0.1f) {
+		text.setFillColor(sf::Color::White);
+	}
+	else {
+		text.setFillColor(sf::Color::Blue);
+		isTakingDamage = false;
+	}
+
 	text.setString(symbol);
 	text.setPosition(x * charSize, y * charSize);
 	window.draw(text);

@@ -1,6 +1,5 @@
 #include "TitleScreen.h"
 
-
 TitleScreen::TitleScreen(const sf::Font& font, float scaleX, float scaleY) {
 	titleText.setFont(font);
 	titleText.setString("Roguelike Game");

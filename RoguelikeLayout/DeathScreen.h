@@ -15,5 +15,4 @@ private:
 	sf::Text restartText;
 };
 
-
 #endif // DEATHSCREEN_H

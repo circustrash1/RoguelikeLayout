@@ -198,7 +198,6 @@ void ShowGold::renderGold(sf::RenderWindow& window, int gold, float x, float y, 
 	goldText.setString("Gold : " + std::to_string(gold));
 	goldText.setPosition(x * scaleX, y * scaleY);
 	window.draw(goldText);
-
 }
 
 ShowStage::ShowStage() {
@@ -217,14 +216,3 @@ void ShowStage::renderStage(sf::RenderWindow& window, int stage, float x, float 
 	stageText.setPosition(x * scaleX, y * scaleY);
 	window.draw(stageText);
 }
-
-
-
-
-
-
-
-
-
-
-

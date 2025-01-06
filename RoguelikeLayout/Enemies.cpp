@@ -2,13 +2,14 @@
 #include "Player.h"
 #include "ElementalType.h"
 #include "SoundManager.h"
+#include "Boss.h"
 #include <iostream>
 #include <random>
 
-Enemy::Enemy(int x, int y, char symbol, int enemyHealth, int attackDamage, float attackCooldown)
+Enemy::Enemy(int x, int y, char symbol, int enemyHealth, int attackDamage, float attackCooldown, const sf::Color& color)
 	: x(x), y(y), symbol(symbol), isTakingDamage(false), isTakingFireDamage(false), isDisplayingDamage(false), isDisplayingFireDamage(false),
 	enemyHealth(enemyHealth), maxHealth(enemyHealth), attackDamage(attackDamage), attackCooldown(attackCooldown), alive(true), isPlayingDeathAnimation(false),
-	fireDamageOverTime(0), goldAmountAdded(false) {
+	fireDamageOverTime(0), goldAmountAdded(false), color(color) {
 }
 
 int Enemy::getX() const {
@@ -23,6 +24,9 @@ char Enemy::getSymbol() const {
 	return symbol;
 }
 
+int Enemy::getHealth() const {
+	return enemyHealth;
+}
 
 // Gold system
 int Enemy::dropGold() {
@@ -125,6 +129,11 @@ void Enemy::displayDamage(sf::RenderWindow& window, int charSize) {
 	float offsetY = charSize / 2;
 
 	text.setPosition((x * charSize - 5) + offsetX, (y * charSize) - offsetY);
+
+	if (dynamic_cast<const Boss*>(this) != nullptr) {	// Render damage numbers above boss
+		text.setPosition((x * charSize - 5) + offsetX, (y * charSize) - offsetY - 170);
+	}
+
 	window.draw(text);
 }
 
@@ -144,19 +153,27 @@ void Enemy::displayFireDamage(sf::RenderWindow& window, int charSize) {
 	float offsetY = charSize / 2;
 
 	text.setPosition((x * charSize - 5) + offsetX, (y * charSize) - offsetY - 10);
+
+	if (dynamic_cast<const Boss*>(this) != nullptr) {	// Render damage numbers above boss
+		text.setPosition((x * charSize - 5) + offsetX, (y * charSize) - offsetY - 180);
+	}
+
 	window.draw(text);
 }
 
 void Enemy::renderHealthBar(sf::RenderWindow& window, int charSize) const {
-    if (!alive || isPlayingDeathAnimation) return;
+	if (dynamic_cast<const Boss*>(this) != nullptr) {	// Dont render small health bar if enemy is boss
+		return;
+	}
 
-    sf::Sprite healthBarSprite(healthBarTexture.getTexture());
-    healthBarSprite.setPosition(x * charSize - 3, (y * charSize) + 30);
-    window.draw(healthBarSprite);
+	if (!alive || isPlayingDeathAnimation) return;
+
+	sf::Sprite healthBarSprite(healthBarTexture.getTexture());
+	healthBarSprite.setPosition(x * charSize - 3, (y * charSize) + 30);
+	window.draw(healthBarSprite);
 }
 
 void Enemy::playDeathAnimation(sf::RenderWindow& window) {
-	std::cout << "Running death animation for enemy at (" << x << ", " << y << ")." << std::endl;
 	if (deathAnimationClock.getElapsedTime().asSeconds() < 1.0f) {
 		if (static_cast<int>(deathAnimationClock.getElapsedTime().asMilliseconds() / 100) % 2 == 0) {
 			symbol = '!';
@@ -175,7 +192,7 @@ bool Enemy::isDeathAnimationComplete() const {
 }
 
 
-void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int playerY, Player* player, const std::vector<Enemy*>& enemies) {
+void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int playerY, Player* player, const std::vector<Enemy*>& enemies, const std::vector<std::vector<char>>& map) {
 	static sf::Font font;
 	static bool fontLoaded = false;
 	if (!fontLoaded) {
@@ -190,20 +207,21 @@ void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int play
 	text.setCharacterSize(charSize);
 	text.setString(this->symbol);
 
-	int distance = std::abs(playerX - x) + std::abs(playerY - y);
-	int maxDistance = 10;
+	int viewDistance = player->getStatManager().getViewDistance() - (player->getStats().wisdom * 1.75) + 5;
+	float distance = std::sqrt(std::pow(playerX - x, 2) + std::pow(playerY - y, 2));
 	int minOpacity = 0;
 	int maxOpacity = 255;
 
-	int opacity = maxOpacity - (distance * (maxOpacity - minOpacity) / maxDistance);
-	if (opacity < minOpacity) {
-		opacity = minOpacity;
+	int opacity = maxOpacity - (distance * (maxOpacity - minOpacity) / viewDistance);
+	if (distance > viewDistance) {
+		opacity = minOpacity; // Set opacity to 0 if outside view distance
 	}
 
-	if (isAlive()) {
-		text.setFillColor(sf::Color(255, 0, 0, opacity));
+	if (isAlive() && distance <= viewDistance) {
+		text.setFillColor(sf::Color(color.r, color.g, color.b, opacity));
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			std::cout << "Space bar pressed. Attacking enemy at (" << x << ", " << y << ")." << std::endl;
 			player->attack(const_cast<std::vector<Enemy*>&>(enemies));
 		}
 
@@ -211,7 +229,7 @@ void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int play
 			text.setFillColor(sf::Color(255, 255, 255, opacity));
 		}
 		else {
-			text.setFillColor(sf::Color(0, 255, 0, opacity));
+			text.setFillColor(sf::Color(color.r, color.g, color.b, opacity));
 			isTakingDamage = false;
 		}
 
@@ -232,17 +250,14 @@ void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int play
 			isDisplayingFireDamage = false;
 		}
 
-		// Only draw text if the enemy is within a certain distance from the player
-		if (distance <= maxDistance) {
-			text.setPosition(x * charSize, y * charSize);
-			updateHealthBar(charSize);
-			renderHealthBar(window, charSize);
-			window.draw(text);
-		}
+		// Only draw text if the enemy is within the view distance from the player
+		text.setPosition(x * charSize, y * charSize);
+		updateHealthBar(charSize);
+		renderHealthBar(window, charSize);
+		window.draw(text);
 	}
 	else if (isPlayingDeathAnimation) {
-		std::cout << "Playing death animation for enemy at (" << x << ", " << y << ")." << std::endl;
-		text.setFillColor(sf::Color(0, 255, 0, opacity));
+		text.setFillColor(sf::Color(color.r, color.g, color.b, opacity));
 		playDeathAnimation(window);
 
 		// Draw the death animation text
@@ -259,19 +274,17 @@ void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int play
 	}
 }
 
+
+
 void Enemy::scaleAttributes(float healthFactor, float damageFactor) {
 	maxHealth = static_cast<int>(maxHealth * healthFactor);
 	enemyHealth = maxHealth;	// Reset current health to max health
 	attackDamage = static_cast<int>(attackDamage * damageFactor);
 }
 
-
-
-
-
 // ENEMIES
 
-Goblin::Goblin(int x, int y) : Enemy(x, y, 'G', 30, 1, 3.0f) {}	// Initialize goblin with 30 health, 1 attack damage, and 3 second attack cooldown
+Goblin::Goblin(int x, int y) : Enemy(x, y, 'G', 30, 1, 3.0f, sf::Color::Green) {}	// Initialize goblin with 30 health, 1 attack damage, and 3 second attack cooldown, green
 
 void Goblin::move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) {
 	if (!alive) return;
@@ -326,7 +339,7 @@ void Goblin::playDeathAnimation(sf::RenderWindow& window) {
 	}
 }
 
-Orc::Orc(int x, int y) : Enemy(x, y, 'O', 60, 2, 5.0f) {}	// Initialize orc with 60 health, 2 attack damage, and 5 second attack cooldown
+Orc::Orc(int x, int y) : Enemy(x, y, 'O', 60, 2, 5.0f, sf::Color(2, 48, 32)) {}	// Initialize orc with 60 health, 2 attack damage, and 5 second attack cooldown, dark green
 
 void Orc::move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) {
 	if (!alive) return;
@@ -382,7 +395,7 @@ void Orc::playDeathAnimation(sf::RenderWindow& window) {
 }
 
 SkeletonArcher::SkeletonArcher(int x, int y)
-	: Enemy(x, y, 'S', 40, 2, 2.0f), projectile(nullptr), isRetreating(false), moveCooldown(0.2f) {
+	: Enemy(x, y, 'S', 40, 2, 2.0f, sf::Color(169, 169, 169)), projectile(nullptr), isRetreating(false), moveCooldown(0.2f) {
 	moveCooldownClock.restart();
 }
 
@@ -444,7 +457,6 @@ void SkeletonArcher::attack(Player* player) {
 
 	int playerX = player->getX();
 	int playerY = player->getY();
-	std::cout << "Skeleton Archer at (" << x << ", " << y << ") fires an arrow at player at (" << playerX << ", " << playerY << ")." << std::endl;
 	SoundManager::getInstance().playSound("skeleton_attack");
 	projectile = new Projectile(x, y, playerX, playerY, attackDamage, player, sf::Color::Red);
 	attackCooldownClock.restart();
@@ -464,7 +476,7 @@ void SkeletonArcher::renderProjectiles(sf::RenderWindow& window, int charSize) {
 void SkeletonArcher::playDeathAnimation(sf::RenderWindow& window) {
 	if (deathAnimationClock.getElapsedTime().asSeconds() < 1.0f) {
 		if (static_cast<int>(deathAnimationClock.getElapsedTime().asMilliseconds() / 100) % 2 == 0) {
-			symbol = 'X';
+			symbol = '!';
 		}
 		else {
 			symbol = ' ';
@@ -474,8 +486,6 @@ void SkeletonArcher::playDeathAnimation(sf::RenderWindow& window) {
 		isPlayingDeathAnimation = false;
 	}
 }
-
-
 
 void Enemy::updateHealthBar(int charSize) {
 	if (!healthBarNeedsUpdate) return;

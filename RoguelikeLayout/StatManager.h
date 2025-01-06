@@ -7,25 +7,25 @@ class Player;
 
 class StatManager {
 public:
-    StatManager(Player& player);
+	StatManager(Player& player);
 
-    void updateStats();
+	void updateStats();
 
-    int getAttackDamage() const;
-    float getDodgeChance() const;
-    int getMaxHealth() const;
-    float getSpellModifier() const;
-    int getViewDistance() const;
-    float getMerchantPriceModifier() const;
+	int getAttackDamage() const;
+	float getDodgeChance() const;
+	int getMaxHealth() const;
+	float getSpellModifier() const;
+	int getViewDistance() const;
+	float getMerchantPriceModifier() const;
 
 private:
-    Player& player;
-    int attackDamage;
-    float dodgeChance;
-    int maxHealth;
-    float spellModifier;
-    int viewDistance;
-    float merchantPriceModifier;
+	Player& player;
+	int attackDamage;
+	float dodgeChance;
+	int maxHealth;
+	float spellModifier;
+	int viewDistance;
+	float merchantPriceModifier;
 };
 
 #endif // STATMANAGER_H

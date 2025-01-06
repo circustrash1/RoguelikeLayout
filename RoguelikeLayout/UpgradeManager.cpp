@@ -64,7 +64,7 @@ UpgradeManager::UpgradeManager() {
 			" ~~~~~~~~~ "
 		}, "+10 Attack Speed", ElementalType::None, 0, ClassType::Universal),
 
-		Upgrade("Attack Speed Boost", Rarity::Common, 1, {
+		Upgrade("Life Leech", Rarity::Common, 1, {
 			" _________ ",
 			"|Q |~~~|  |",
 			"|+ /o,o\\  |",
@@ -74,52 +74,49 @@ UpgradeManager::UpgradeManager() {
 			"|  \\o`o/ +|",
 			"|  |___| Q|",
 			" ~~~~~~~~~ "
-		}, "+10 Attack Speed", ElementalType::None, 0, ClassType::Universal),
+		}, "+10% chance to lifesteal 1HP on attack", ElementalType::None, 0, ClassType::Universal),
 
+			// WARRIOR SPECIFIC UPGRADES
 
+			Upgrade("Fire Sword", Rarity::Uncommon, 1, {
+				" _________ ",
+				"|Q |~~~|  |",
+				"|+ /o,o\\  |",
+				"|  \\_-_/  |",
+				"| _-~+_-~ |",
+				"|  /~-~\\  |",
+				"|  \\o`o/ +|",
+				"|  |___| Q|",
+				" ~~~~~~~~~ "
+			}, "+1 Fire Damage", ElementalType::Fire, 1, ClassType::Warrior),
 
-		// WARRIOR SPECIFIC UPGRADES
+			Upgrade("Cleave", Rarity::Uncommon, 1, {
+				" _________ ",
+				"|Q |~~~|  |",
+				"|+ /o,o\\  |",
+				"|  \\_-_/  |",
+				"| _-~+_-~ |",
+				"|  /~-~\\  |",
+				"|  \\o`o/ +|",
+				"|  |___| Q|",
+				" ~~~~~~~~~ "
+			}, "+50% damage to adjacent units", ElementalType::None, 0, ClassType::Warrior, true), // Enabling cleave for this upgrade
 
-		Upgrade("Fire Sword", Rarity::Uncommon, 1, {
-			" _________ ",
-			"|Q |~~~|  |",
-			"|+ /o,o\\  |",
-			"|  \\_-_/  |",
-			"| _-~+_-~ |",
-			"|  /~-~\\  |",
-			"|  \\o`o/ +|",
-			"|  |___| Q|",
-			" ~~~~~~~~~ "
-		}, "+5 Fire Damage", ElementalType::Fire, 5, ClassType::Warrior),
+			// MAGE SPECIFIC UPGRADES
 
-		Upgrade("Cleave", Rarity::Uncommon, 1, {
-			" _________ ",
-			"|Q |~~~|  |",
-			"|+ /o,o\\  |",
-			"|  \\_-_/  |",
-			"| _-~+_-~ |",
-			"|  /~-~\\  |",
-			"|  \\o`o/ +|",
-			"|  |___| Q|",
-			" ~~~~~~~~~ "
-		}, "+50% damage to adjacent units", ElementalType::None, 0, ClassType::Warrior, true), // Enabling cleave for this upgrade
+			Upgrade("Fireball", Rarity::Common, 1, {
+				" _________ ",
+				"|Q |~~~|  |",
+				"|+ /o,o\\  |",
+				"|  \\_-_/  |",
+				"| _-~+_-~ |",
+				"|  /~-~\\  |",
+				"|  \\o`o/ +|",
+				"|  |___| Q|",
+				" ~~~~~~~~~ "
+			}, "+1 Fire Damage", ElementalType::Fire, 1, ClassType::Mage),
 
-		// MAGE SPECIFIC UPGRADES
-
-		Upgrade("Fireball", Rarity::Common, 1, {
-			" _________ ",
-			"|Q |~~~|  |",
-			"|+ /o,o\\  |",
-			"|  \\_-_/  |",
-			"| _-~+_-~ |",
-			"|  /~-~\\  |",
-			"|  \\o`o/ +|",
-			"|  |___| Q|",
-			" ~~~~~~~~~ "
-		}, "+5 Fire Damage", ElementalType::Fire, 5, ClassType::Mage),
-
-
-		// Add more upgrades
+			// Add more upgrades
 	};
 	rng.seed(std::random_device()());
 }
@@ -145,7 +142,6 @@ Rarity UpgradeManager::getRandomRarity() const {
 	}
 	else {
 		return Rarity::Legendary;	// 1% chance
-
 	}
 }
 

@@ -49,7 +49,7 @@ class ShowGold {
 public:
 	ShowGold();
 	void renderGold(sf::RenderWindow& window, int gold, float x, float y, int charSize, float scaleX, float scaleY);
-	
+
 private:
 	sf::Text goldText;
 	sf::Font font;

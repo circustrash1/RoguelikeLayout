@@ -5,10 +5,11 @@
 #include <sstream>
 #include <iostream>
 
-Upgrade::Upgrade(const std::string& name, Rarity rarity, int level, const std::vector<std::string>& asciiArt, 
-	const std::string& description, ElementalType elementalType, int fireDamage, ClassType classType, bool cleave) 
-	: name(name), rarity(rarity), level(level), asciiArt(asciiArt), description(description), elementalType(elementalType), 
-	fireDamage(fireDamage), classType(classType), cleave(cleave), purchased(false) {}
+Upgrade::Upgrade(const std::string& name, Rarity rarity, int level, const std::vector<std::string>& asciiArt,
+	const std::string& description, ElementalType elementalType, int fireDamage, ClassType classType, bool cleave)
+	: name(name), rarity(rarity), level(level), asciiArt(asciiArt), description(description), elementalType(elementalType),
+	fireDamage(fireDamage), classType(classType), cleave(cleave), purchased(false) {
+}
 
 std::string Upgrade::getName() const {
 	return name;
@@ -41,7 +42,6 @@ sf::Color Upgrade::getColor() const {
 	}
 }
 
-
 std::string elementalTypeToString(ElementalType type) {
 	switch (type) {
 	case ElementalType::None:
@@ -63,6 +63,9 @@ void Upgrade::applyUpgrade(Player& player) const {
 	else if (name == "Attack Speed Boost") {
 		player.increaseAttackSpeed(0.02f);
 	}
+	//else if (name == "Life Leech") {
+	//	player.lifesteal();
+	//}
 
 	// Apply elemental damage
 	std::cout << "You picked up: " << elementalTypeToString(elementalType) << " elemental.\n";
@@ -74,7 +77,6 @@ void Upgrade::applyUpgrade(Player& player) const {
 	if (cleave) {
 		static_cast<Warrior&>(player).enableCleave();
 	}
-
 }
 
 const std::vector<std::string>& Upgrade::getAsciiArt() const {
@@ -133,6 +135,5 @@ int Upgrade::getCost() const {
 		return 100;
 	case Rarity::Legendary:
 		return 200;
-
 	}
 }

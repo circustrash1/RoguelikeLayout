@@ -1,0 +1,106 @@
+69 [8972] INFO perfrun.launcher <> - Launcher main begin
+74 [8972] INFO perfrun.launcher <> - MessageCatalogInit finished
+75 [8972] INFO perfrun.launcher <> - Launcher instance created
+75 [8972] INFO perfrun.launcher <> - argc = 7; cmdline = C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin64\amplxe-runss.exe --ui-output-format xml --ui-output-fd 1048 --option-file C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Intel® VTune™ Profiler Results\RoguelikeLayout\r000hs\config\runss.options 
+90 [8972] INFO perfrun.launcher <> - New signal handler callback was added
+169 [8972] INFO perfrun.perfcollector <> - SEP tool path: C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin64\sep.exe
+185 [8972] INFO perfrun.launcher <> - create msngr2::ICliToolContext
+186 [8972] INFO perfrun.launcher <> - create file finder object
+186 [8972] INFO perfrun.launcher <> - create a result directory: pattern = C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Intel® VTune™ Profiler Results\RoguelikeLayout\r000hs pid = 4294967295
+192 [8972] INFO perfrun.launcher <> - create data directory = C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Intel® VTune™ Profiler Results\RoguelikeLayout\r000hs\data.0
+194 [8972] INFO perfrun.launcher <> - Creating the master collection flag
+201 [8972] INFO perfrun.launcher <> - Done creating the master collection flag
+201 [5868] INFO perfrun.launcher <> - plugin [remoteplug] was disabled because it doesn't support the given collection type.
+201 [5868] INFO perfrun.sdk <> - Allocating TMU :C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Intel® VTune™ Profiler Results\RoguelikeLayout\r000hs\data.0\systemcollector-18384-DESKTOP-VEE4862.sc
+202 [5868] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+205 [5868] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+205 [5868] INFO perfrun.launcher <> - plugin [gpu] was disabled because it doesn't support the given collection type.
+205 [5868] INFO perfrun.launcher <> - plugin [etw.kernel] was disabled because it doesn't support the given collection type.
+205 [5868] INFO perfrun.launcher <> - plugin [etw.dx] was disabled because it doesn't support the given collection type.
+205 [5868] INFO perfrun.launcher <> - plugin [etw.wsa] was disabled because it doesn't support the given collection type.
+205 [5868] INFO perfrun.mrte <> - system-wide mode is 0
+206 [5868] INFO perfrun.mrte <> - Getting  mrte profiling environment ...
+282 [5868] INFO perfrun.mrte <> - INTEL_MRTE_DATA_DIR=C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Intel® VTune™ Profiler Results\RoguelikeLayout\r000hs\data.0
+282 [5868] INFO perfrun.mrte <> - INTEL_MRTE_HOST_NAME=DESKTOP-VEE4862
+282 [5868] INFO perfrun.mrte <> - JAVA_TOOL_OPTIONS=-agentlib:amplxe_samplingmrte_javaprof_1.0
+282 [5868] INFO perfrun.mrte <> - PATH=C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin32\runtime;C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin64\runtime;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\CMake\bin;F:\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Jack\scoop\shims;C:\Users\Jack\AppData\Local\Programs\Python\Python313\Scripts\;C:\Users\Jack\AppData\Local\Programs\Python\Python313\;C:\Users\Jack\AppData\Local\Programs\Python\Launcher\;C:\Users\Jack\AppData\Local\Microsoft\WindowsApps;C:\Users\Jack\AppData\Local\spicetify;F:\Users\Jack\AppData\Local\Programs\Microsoft VS Code\bin;c:\users\jack\.local\bin;c:\users\jack\appdata\roaming\python\python313\scripts;c:\users\jack\appdata\local\microsoft\visualstudio\17.0_4df53626\extensions\3lmh3jyb.lvf;C:\Users\Jack\AppData\Local\GitHubDesktop\bin
+283 [5868] INFO perfrun.mrte <> - COR_ENABLE_PROFILING=1
+283 [5868] INFO perfrun.mrte <> - COR_PROFILER={AA5E4821-E3B1-479c-B7FF-5AD047D22CED}
+283 [5868] INFO perfrun.mrte <> - COMPLUS_ProfAPI_ProfilerCompatibilitySetting=EnableV2Profiler
+283 [5868] INFO perfrun.mrte <> - CORECLR_ENABLE_PROFILING=1
+283 [5868] INFO perfrun.mrte <> - CORECLR_PROFILER={AA5E4821-E3B1-479c-B7FF-5AD047D22CED}
+283 [5868] INFO perfrun.mrte <> - CORECLR_PROFILER_PATH=C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin64/amplxe_samplingmrte_clrprof_1.0.dll
+283 [5868] INFO perfrun.mrte <> - INTEL_MRTE_PROFILER_MODE=mixed
+283 [5868] INFO perfrun.mrte <> - Data directory: C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Intel® VTune™ Profiler Results\RoguelikeLayout\r000hs\data.0
+283 [5868] INFO perfrun.mrte <> - Mrte plugin is initialized
+283 [5868] INFO perfrun.launcher <> - plugin [emon] was disabled because it doesn't support the given collection type.
+283 [5868] INFO perfrun.launcher <> - plugin [cuscol] was disabled because it doesn't support the given collection type.
+283 [5868] INFO perfrun.launcher <> - plugin [stdsrc] was disabled because it doesn't support the given collection type.
+283 [5868] INFO perfrun.launcher <> - plugin [sep] was disabled because it doesn't support the given collection type.
+283 [5868] INFO perfrun.launcher <> - plugin [vtsspp] was disabled because it doesn't support the given collection type.
+283 [5868] INFO perfrun.launcher <> - plugin [perf] was disabled because it doesn't support the given collection type.
+283 [5868] INFO perfrun.launcher <> - plugin [aoclprofile] was disabled because it doesn't support the given collection type.
+283 [5868] INFO perfrun.tpss <> - initialize tpss controller
+283 [5868] INFO perfrun.tpss <> - configure collection mode: value = cpu:counters:nostack
+283 [5868] INFO perfrun.tpss <> - configure collection mode: value = cpu:stack
+284 [5868] INFO perfrun.tpss <> - default obj-size-min=1024
+284 [5868] INFO perfrun.tpss <> - default hash-table-size=0
+284 [5868] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+284 [5868] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+284 [5868] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+284 [5868] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+284 [5868] INFO perfrun.launcher <> - plugin [power] was disabled because it doesn't support the given collection type.
+284 [5868] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+284 [5868] INFO perfrun.launcher <> - plugin [ipmwatch] was disabled because it doesn't support the given collection type.
+284 [5868] INFO perfrun.launcher <> - plugin [os_counters] was disabled because it doesn't support the given collection type.
+284 [5868] INFO perfrun.launcher <> - plugin [l0_metrics] was disabled because it doesn't support the given collection type.
+284 [8972] INFO perfrun.launcher <> - set environment variable: PATH = C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin32\runtime;C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin64\runtime;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\CMake\bin;F:\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Jack\scoop\shims;C:\Users\Jack\AppData\Local\Programs\Python\Python313\Scripts\;C:\Users\Jack\AppData\Local\Programs\Python\Python313\;C:\Users\Jack\AppData\Local\Programs\Python\Launcher\;C:\Users\Jack\AppData\Local\Microsoft\WindowsApps;C:\Users\Jack\AppData\Local\spicetify;F:\Users\Jack\AppData\Local\Programs\Microsoft VS Code\bin;c:\users\jack\.local\bin;c:\users\jack\appdata\roaming\python\python313\scripts;c:\users\jack\appdata\local\microsoft\visualstudio\17.0_4df53626\extensions\3lmh3jyb.lvf;C:\Users\Jack\AppData\Local\GitHubDesktop\bin
+284 [8972] INFO perfrun.launcher <> - set environment variable: INTEL_LIBITTNOTIFY32 = C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin32\runtime\ittnotify_collector.dll
+284 [8972] INFO perfrun.launcher <> - set environment variable: INTEL_LIBITTNOTIFY64 = C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin64\runtime\ittnotify_collector.dll
+284 [8972] INFO perfrun.launcher <> - set environment variable: INTEL_ITTNOTIFY_GROUPS = 
+285 [8972] INFO perfrun.launcher <> - set environment variable: INTEL_JIT_PROFILER32 = C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin32\runtime\ittnotify_collector.dll
+285 [8972] INFO perfrun.launcher <> - set environment variable: INTEL_JIT_PROFILER64 = C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin64\runtime\ittnotify_collector.dll
+285 [8972] INFO perfrun.launcher <> - set environment variable: CCL_ITT_LEVEL = 1
+285 [8972] INFO perfrun.launcher <> - set environment variable: ENABLE_JITPROFILING = 1
+285 [8972] INFO perfrun.launcher <> - set environment variable: CL_CONFIG_USE_VTUNE = True
+285 [8972] INFO perfrun.launcher <> - set environment variable: KMP_FORKJOIN_FRAMES = 0
+285 [8972] INFO perfrun.launcher <> - set environment variable: KMP_FORKJOIN_FRAMES_MODE = 0
+285 [8972] INFO perfrun.launcher <> - set environment variable: INTEL_MRTE_DATA_DIR = C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Intel® VTune™ Profiler Results\RoguelikeLayout\r000hs\data.0
+285 [8972] INFO perfrun.launcher <> - set environment variable: INTEL_MRTE_HOST_NAME = DESKTOP-VEE4862
+285 [8972] INFO perfrun.launcher <> - set environment variable: JAVA_TOOL_OPTIONS = -agentlib:amplxe_samplingmrte_javaprof_1.0
+285 [8972] INFO perfrun.launcher <> - set environment variable: PATH = C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin32\runtime;C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin64\runtime;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\CMake\bin;F:\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Jack\scoop\shims;C:\Users\Jack\AppData\Local\Programs\Python\Python313\Scripts\;C:\Users\Jack\AppData\Local\Programs\Python\Python313\;C:\Users\Jack\AppData\Local\Programs\Python\Launcher\;C:\Users\Jack\AppData\Local\Microsoft\WindowsApps;C:\Users\Jack\AppData\Local\spicetify;F:\Users\Jack\AppData\Local\Programs\Microsoft VS Code\bin;c:\users\jack\.local\bin;c:\users\jack\appdata\roaming\python\python313\scripts;c:\users\jack\appdata\local\microsoft\visualstudio\17.0_4df53626\extensions\3lmh3jyb.lvf;C:\Users\Jack\AppData\Local\GitHubDesktop\bin
+285 [8972] INFO perfrun.launcher <> - set environment variable: COR_ENABLE_PROFILING = 1
+285 [8972] INFO perfrun.launcher <> - set environment variable: COR_PROFILER = {AA5E4821-E3B1-479c-B7FF-5AD047D22CED}
+285 [8972] INFO perfrun.launcher <> - set environment variable: COMPLUS_ProfAPI_ProfilerCompatibilitySetting = EnableV2Profiler
+285 [8972] INFO perfrun.launcher <> - set environment variable: CORECLR_ENABLE_PROFILING = 1
+285 [8972] INFO perfrun.launcher <> - set environment variable: CORECLR_PROFILER = {AA5E4821-E3B1-479c-B7FF-5AD047D22CED}
+285 [8972] INFO perfrun.launcher <> - set environment variable: CORECLR_PROFILER_PATH = C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin64/amplxe_samplingmrte_clrprof_1.0.dll
+285 [8972] INFO perfrun.launcher <> - set environment variable: INTEL_MRTE_PROFILER_MODE = mixed
+286 [8972] INFO perfrun.launcher <> - RpcServer: run RPC server to handle requests
+292 [8972] INFO perfrun.sdk <> - IProcessUtil: the given executable 'C:\Code\C++\RoguelikeLayout\x64\Release\RoguelikeLayout.exe' is valid.
+292 [8972] INFO perfrun.launcher <> - Launcher: command line to start before modification = C:\Code\C++\RoguelikeLayout\x64\Release\RoguelikeLayout.exe
+298 [8972] INFO perfrun.launcher <> - Launcher: command line to start after modification = C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin64\pin.exe -error_file C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Intel® VTune™ Profiler Results\RoguelikeLayout\r000hs\data.0\pinerr.tpsslog -detach_reattach -probe -follow_execv -p32 C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin32\pin.exe -p64 C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin64\pin.exe -t64 C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin64\tpsstool.dll -t C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0\bin32\tpsstool.dll -server_name tpss_ipc.18384 -prd_dir C:\Program Files (x86)\Intel\oneAPI\vtune\2025.0 -- C:\Code\C++\RoguelikeLayout\x64\Release\RoguelikeLayout.exe
+298 [8972] INFO perfrun.launcher <> - ProcessCreator object was created
+302 [8972] INFO perfrun.launcher <> - Launcher: the process was started in suspend mode
+302 [5868] INFO perfrun.itt <> - start itt controller for pid #9932
+303 [5868] INFO perfrun.tpss <> - start tpss controller for pid #9932
+356 [8972] INFO perfrun.launcher <> - Launcher: all plugins were started
+356 [8972] INFO perfrun.launcher <> - DirectoryMonitor object was created
+356 [8972] INFO perfrun.launcher <> - DirectoryMonitor: a callback was added
+356 [8972] INFO perfrun.launcher <> - DirectoryMonitor was started with pingTime = 1000
+356 [8972] INFO perfrun.launcher <> - DeadlineTimer is going to be constructed
+356 [8972] INFO perfrun.launcher <> - DeadlineTimer: a callback was added
+365 [8972] INFO perfrun.launcher <> - Launcher: resume the profiled application and  wait its termination or stop command
+12590 [8972] INFO perfrun.launcher <> - Launcher: the profiled application was terminated  with exit code = 0
+12608 [5868] INFO perfrun.itt <> - detach itt controller
+12608 [5868] INFO perfrun.itt <> - detach itt controller done
+12608 [5868] INFO perfrun.tpss <> - stop tpss controller
+12610 [5868] INFO perfrun.sdk <> - De-allocating TMU: C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Intel® VTune™ Profiler Results\RoguelikeLayout\r000hs\data.0\systemcollector-18384-DESKTOP-VEE4862.sc
+12626 [5868] INFO perfrun.system <> - closed the system trace file: C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Intel® VTune™ Profiler Results\RoguelikeLayout\r000hs\data.0\systemcollector-18384-DESKTOP-VEE4862.sc
+12626 [8972] INFO perfrun.launcher <> - Launcher: all plugins were stopped.
+12626 [8972] INFO perfrun.launcher <> - DeadlineTimer is going to be destroyed
+12627 [8972] INFO perfrun.launcher <> - DeadlineTimer was destroyed
+12627 [8972] INFO perfrun.launcher <> - DirectoryMonitor object was destroyed
+12627 [8972] WARN perfrun.launcher <> - Stop command is ignored because it is received when collection is already stopped, at file: vcs\perfrun1\launcher\src\command_handler.cpp:226
+12628 [8972] INFO perfrun.launcher <> - Application exit code: 0
+12628 [8972] INFO perfrun.launcher <> - Exit code: 0

@@ -59,7 +59,6 @@ void displayDiceRoll(sf::RenderWindow& window, int roll, int statValue, const st
 		window.display();
 		sf::sleep(sf::seconds(1));
 	}
-
 }
 
 void displayResult(sf::RenderWindow& window, bool success, const std::string& effectDescription, const sf::Font& font) {
@@ -171,7 +170,7 @@ void EventMaps::checkEventInteraction(Room& room, Player& player, sf::RenderWind
 				modifyStat(player.getMutableStats(), "intelligence", 1, player);
 			}
 			else if (room.eventText == "You found a mystical fountain!") {
-				player.loseHealth(-10);
+				player.gainHealth(10);
 			}
 		}
 		else {
@@ -211,7 +210,6 @@ bool EventMaps::checkMerchantInteraction(Room& room, Player& player) {
 	}
 	return false;
 }
-
 
 void EventMaps::renderSkillCheckText(Room& room, Player& player, sf::RenderWindow& window, const sf::Font& font, int charSize) {
 	if (!room.eventTriggered || room.eventResolved) {

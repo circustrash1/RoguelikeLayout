@@ -8,38 +8,39 @@
 
 class SoundManager {
 public:
-    static SoundManager& getInstance();
+	static SoundManager& getInstance();
 
-    void loadSound(const std::string& name, const std::string& filename);
-    void playSound(const std::string& name);
-    void loadMusic(const std::string& name, const std::string& filename);
-    void playMusic(const std::string& name, bool loop = true);
-    void stopMusic();
-    void setRandomizedPitch(const std::string& name, bool randomized);
-    void crossfadeMusic(const std::string& from, const std::string& to, float duration);
-    void updateCrossfade();
+	void loadSound(const std::string& name, const std::string& filename);
+	void playSound(const std::string& name);
+	void loadMusic(const std::string& name, const std::string& filename);
+	void playMusic(const std::string& name, bool loop = true);
+	void stopMusic();
+	void setRandomizedPitch(const std::string& name, bool randomized);
+	void setSoundPitch(const std::string& name, float pitch);
+	void crossfadeMusic(const std::string& from, const std::string& to, float duration);
+	void updateCrossfade();
 
-    void setMusicVolume(const std::string& name, float volume);
-    void setSoundVolume(const std::string& name, float volume);
+	void setMusicVolume(const std::string& name, float volume);
+	void setSoundVolume(const std::string& name, float volume);
+	float getSoundDuration(const std::string& name) const; // New method to get sound duration
 
 private:
-    SoundManager() = default;
-    std::unordered_map<std::string, sf::SoundBuffer> soundBuffers;
-    std::unordered_map<std::string, sf::Sound> sounds;
-    std::unordered_map<std::string, sf::Music> music;
-    std::unordered_set<std::string> randomizedPitchSounds;
-    std::unordered_map<std::string, float> musicVolumes; // Store target volume levels
+	SoundManager() = default;
+	std::unordered_map<std::string, sf::SoundBuffer> soundBuffers;
+	std::unordered_map<std::string, sf::Sound> sounds;
+	std::unordered_map<std::string, sf::Music> music;
+	std::unordered_set<std::string> randomizedPitchSounds;
+	std::unordered_map<std::string, float> musicVolumes; // Store target volume levels
 
-    sf::Clock crossfadeClock;
-    std::string crossfadeFrom;
-    std::string crossfadeTo;
+	sf::Clock crossfadeClock;
+	std::string crossfadeFrom;
+	std::string crossfadeTo;
 
-    float crossfadeDuration;
-    bool isCrossfading = false;
-    std::string currentMusic; // Track current music state
+	float crossfadeDuration;
+	bool isCrossfading = false;
+	std::string currentMusic; // Track current music state
 
-    std::unordered_map<std::string, float> lastPlayingOffsets;
+	std::unordered_map<std::string, float> lastPlayingOffsets;
 };
 
 #endif // SOUNDMANAGER_H
-

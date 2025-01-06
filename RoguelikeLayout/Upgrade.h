@@ -1,7 +1,6 @@
 #ifndef UPGRADE_H
 #define UPGRADE_H
 
-
 #include "ElementalType.h"
 #include "Player.h"
 #include <vector>
@@ -68,7 +67,5 @@ private:
 	bool purchased;
 	// Add more attributes for different effects
 };
-
-
 
 #endif // UPGRADE_H

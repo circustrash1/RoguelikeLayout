@@ -14,7 +14,7 @@
 #include <iostream>
 #include "Game.h"
 
-Map::Map(int width, int height) : width(width), height(height), roomCount(0), firstGeneration(true) {
+Map::Map(int width, int height) : width(width), height(height), roomCount(0), firstGeneration(true), enemyManager(new EnemyManager()) {
 	map.resize(height, std::vector<char>(width, '#')); // Initialize the map with walls ('#')
 	revealed.resize(height, std::vector<bool>(width, false)); // Initialize the revealed array with false
 	enemyManager = new EnemyManager();
@@ -32,7 +32,7 @@ void Map::generate() {
 
 	generationCount++;
 
-	if (generationCount % 100 == 0) {
+	if (generationCount % 5 == 0) {
 		generateBossCorridor();
 		return;
 	}
@@ -270,8 +270,8 @@ void Map::wallRooms(bool blockEntries) {
 
 	// Iterate through each room
 	for (const Room& room : rooms) {
-		if (!room.wallOff) {
-			continue;	// Skip if the room is not to be walled off
+		if (!room.wallOff || room.isBossRoom) {
+			continue;	// Skip if the room is not to be walled off or a boss room
 		}
 
 		int startX = room.startX;
@@ -314,6 +314,9 @@ void Map::wallRooms(bool blockEntries) {
 void Map::chooseCarveExits() {
 	// Iterate through each room
 	for (Room& room : rooms) {
+		if (room.isBossRoom) {
+			continue; // Skip if the room is a boss room
+		}
 		int startX = room.startX;
 		int startY = room.startY;
 		int endX = room.endX;
@@ -406,13 +409,22 @@ void Map::chooseCarveExits() {
 		}
 	}
 
-	// Create an exit room at the border of the map
+	// Create an exit room at the border of the map - right side
 	int exitX = width - 3;
 	int exitY = height / 2;
 	for (int i = -1; i <= 1; ++i) {
 		map[exitY + i][exitX] = '.'; // Create a large opening in the border
 		map[exitY + i][exitX + 1] = '.';
 		map[exitY + i][exitX + 2] = '.';
+	}
+
+	for (Room& room : rooms) {		// Wall off exit if boss room
+		if (room.isBossRoom) {
+			for (int i = -1; i <= 1; ++i) {
+				map[exitY + i][exitX + 1] = '#';
+				map[exitY + i][exitX + 2] = '#';
+			}
+		}
 	}
 
 	// Create a symmetrical exit on the left side of the map
@@ -480,18 +492,17 @@ void Map::render(sf::RenderWindow& window, int playerX, int playerY, int charSiz
 				else if (room.isEventRoom) {
 					EventMaps::handleEventRoom(room, *player, window, font, charSize);
 				}
-				else if (!room.enemiesSpawned) {
+				else if (!room.enemiesSpawned && !room.isBossRoom) {
 					int roomWidth = room.endX - room.startX;
 					int roomHeight = room.endY - room.startY;
-					if (playerAdvanced) {
-						enemyManager->spawnEnemies(room.startX, room.startY, roomWidth, roomHeight, map);
-					}
-					else {
-						enemyManager->spawnEnemies(room.startX, room.startY, roomWidth, roomHeight, map);
-					}
+
+					enemyManager->spawnEnemies(room.startX, room.startY, roomWidth, roomHeight, map, room);
+
+					enemyManager->spawnEnemies(room.startX, room.startY, roomWidth, roomHeight, map, room);
+
 					room.enemiesSpawned = true;
 				}
-				updateEnemies(playerX, playerY);
+				updateEnemies(playerX, playerY, player);
 				break;
 			}
 		}
@@ -588,11 +599,11 @@ void Map::render(sf::RenderWindow& window, int playerX, int playerY, int charSiz
 		EventMaps::renderSkillCheckText(room, *player, window, font, charSize);
 	}
 
-	enemyManager->renderEnemies(window, charSize, playerX, playerY, player);
+	enemyManager->renderEnemies(window, charSize, playerX, playerY, player, map);
 }
 
-void Map::updateEnemies(int playerX, int playerY) {
-	enemyManager->updateEnemies(map, playerX, playerY);
+void Map::updateEnemies(int playerX, int playerY, Player* player) {
+	enemyManager->updateEnemies(map, playerX, playerY, player);
 	for (Room& room : rooms) {
 		if (playerX >= room.startX && playerX < room.endX && playerY >= room.startY && playerY < room.endY) {
 			if (!room.upgradeSpawned && !room.upgradeCollected && enemyManager->allEnemiesDead() && !room.isMerchantRoom && !room.isEventRoom) {
@@ -600,6 +611,15 @@ void Map::updateEnemies(int playerX, int playerY) {
 				room.upgradeSpawned = true;
 			}
 			break;
+		}
+	}
+
+	// Check if the boss is defeated
+	for (Enemy* enemy : enemyManager->getEnemies()) {
+		if (Boss* boss = dynamic_cast<Boss*>(enemy)) {
+			if (boss->getHealth() <= 0) {
+				setBossDefeated(true);
+			}
 		}
 	}
 }
@@ -941,14 +961,47 @@ void Map::generateBossRoom() {
 			}
 		}
 	}
+
+	// Define the boss room boundaries
+	int bossRoomWidth = width;
+	int bossRoomHeight = height;
+
+	// Create boss room
+	Room bossRoom = { 0, 0, bossRoomWidth, bossRoomHeight };
+	bossRoom.isBossRoom = true;
+	rooms.push_back(bossRoom);
+
+	enemyManager->spawnRandomBoss(bossRoomWidth / 2, bossRoomHeight / 2);
+}
+
+EnemyManager* Map::getEnemyManager() {
+	return enemyManager;
+}
+
+void Map::setBossDefeated(bool defeated) {
+	bossDefeated = defeated;
+}
+
+bool Map::isBossDefeated() const {
+	return bossDefeated;
+}
+
+void Map::unblockExit() {
+	int exitX = width - 3;
+	int exitY = height / 2;
+	for (int i = -1; i <= 1; ++i) {
+		map[exitY + i][exitX + 1] = '.';
+		map[exitY + i][exitX + 2] = '.';
+	}
 }
 
 void Map::advanceToNextLevel(Player* player, Game* game) {
 	// Check if the player is at the exit
 	if (player->getX() == 61) {
 		firstGeneration = false;
-		if (generationCount % 100 == 0) {
+		if (generationCount % 5 == 0) {
 			generateBossRoom();
+			chooseCarveExits();
 		}
 		else {
 			generate();

@@ -1,7 +1,6 @@
 #include "DeathScreen.h"
 #include "Game.h"
 
-
 DeathScreen::DeathScreen(const sf::Font& font, float scaleX, float scaleY) {
 	deathText.setFont(font);
 	deathText.setString("You are dead.");
@@ -16,7 +15,6 @@ DeathScreen::DeathScreen(const sf::Font& font, float scaleX, float scaleY) {
 	restartText.setFillColor(sf::Color::White);
 	restartText.setStyle(sf::Text::Bold);
 	restartText.setPosition(100 * scaleX, 100 * scaleY);
-
 }
 
 void DeathScreen::display(sf::RenderWindow& window, Game& game) const {

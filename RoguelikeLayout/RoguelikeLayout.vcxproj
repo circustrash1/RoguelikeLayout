@@ -137,11 +137,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="BossRoom.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="DeathScreen.cpp" />
     <ClCompile Include="Enemies.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="EventMaps.cpp" />
+    <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GuiElements.cpp" />
     <ClCompile Include="Mage.cpp" />
@@ -152,12 +155,15 @@
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="StatManager.cpp" />
     <ClCompile Include="Stats.cpp" />
+    <ClCompile Include="TextBox.cpp" />
     <ClCompile Include="TitleScreen.cpp" />
     <ClCompile Include="Upgrade.cpp" />
     <ClCompile Include="UpgradeManager.cpp" />
     <ClCompile Include="Warrior.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Boss.h" />
+    <ClInclude Include="BossRoom.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="DeathScreen.h" />
     <ClInclude Include="ElementalType.h" />
@@ -166,6 +172,7 @@
     <ClInclude Include="EventMaps.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GuiElements.h" />
+    <ClInclude Include="FontManager.h" />
     <ClInclude Include="Mage.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Player.h" />
@@ -174,6 +181,7 @@
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="StatManager.h" />
     <ClInclude Include="Stats.h" />
+    <ClInclude Include="TextBox.h" />
     <ClInclude Include="TitleScreen.h" />
     <ClInclude Include="Upgrade.h" />
     <ClInclude Include="UpgradeManager.h" />
