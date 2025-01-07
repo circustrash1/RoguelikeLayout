@@ -98,7 +98,7 @@ void EnemyManager::updateEnemies(const std::vector<std::vector<char>>& map, int 
 		}
 		else {
 			enemy->move(map, playerX, playerY, enemies);
-			enemy->attack(player);
+			enemy->attack(player, map);
 			++it;
 		}
 	}
@@ -115,7 +115,7 @@ bool EnemyManager::allEnemiesDead() const {
 	return enemies.empty();
 }
 
-const std::vector<Enemy*>& EnemyManager::getEnemies() const {
+std::vector<Enemy*>& EnemyManager::getEnemies() {
 	return enemies;
 }
 

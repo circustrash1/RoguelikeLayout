@@ -2,6 +2,7 @@
 #define BOSS_H
 
 #include "Enemies.h"
+#include "Map.h"
 #include <vector>
 #include <string>
 
@@ -9,12 +10,13 @@ class Boss : public Enemy {
 public:
 	Boss(int x, int y, int enemyHealth, int attackDamage, float attackCooldown, const sf::Color& color = sf::Color::Red);
 	void move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) override;
-	void attack(Player* player) override;
+	void attack(Player* player, const std::vector<std::vector<char>>& map) override;
 	void playDeathAnimation(sf::RenderWindow& window) override;
 	void render(sf::RenderWindow& window, int charSize, int playerX, int playerY, Player* player, const std::vector<Enemy*>& enemies, const std::vector<std::vector<char>>& map) override;
 	void renderBossHealthBar(sf::RenderWindow& window, int charSize, float scaleX, float scaleY) const;
 	const std::vector<std::pair<int, int>>& getBodyParts() const { return bodyParts; }
 	bool checkCollision(const Player& player) const;
+	void updateBodyParts(int deltaX, int deltaY);
 
 protected:
 	void initBodyParts(int x, int y);
@@ -30,9 +32,10 @@ class Havok : public Boss { // Bruiser style boss
 public:
 	Havok(int x, int y);
 	void move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) override;
-	void attack(Player* player) override;
+	void attack(Player* player, const std::vector<std::vector<char>>& map) override;
 	void playDeathAnimation(sf::RenderWindow& window) override;
 	void render(sf::RenderWindow& window, int charSize, int playerX, int playerY, Player* player, const std::vector<Enemy*>& enemies, const std::vector<std::vector<char>>& map) override;
+
 
 private:
 	bool isPlayerInRange(int playerX, int playerY) const;
@@ -62,7 +65,7 @@ class Infernos : public Boss { // Fire style boss
 public:
 	Infernos(int x, int y);
 	void move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) override;
-	void attack(Player* player) override;
+	void attack(Player* player, const std::vector<std::vector<char>>& map) override;
 	void playDeathAnimation(sf::RenderWindow& window) override;
 	void render(sf::RenderWindow& window, int charSize, int playerX, int playerY, Player* player, const std::vector<Enemy*>& enemies, const std::vector<std::vector<char>>& map) override;
 };

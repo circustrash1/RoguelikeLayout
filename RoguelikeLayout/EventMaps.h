@@ -7,6 +7,7 @@
 
 struct Room;
 
+
 class EventMaps {
 public:
 	static void convertToMerchantRoom(Room& room);
@@ -20,6 +21,11 @@ public:
 
 	static void displayMerchantWindow(Room* room, Player& player, sf::RenderWindow& window, const sf::Font& font, int charSize);
 	static void renderSkillCheckText(Room& room, Player& player, sf::RenderWindow& window, const sf::Font& font, int charSize);
+
+	static std::string upgradeName;
+	static sf::Color upgradeColor;
+
+	static const bool debug = true;
 };
 
 #endif // EVENTMAPS_H

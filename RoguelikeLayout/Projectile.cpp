@@ -1,8 +1,8 @@
 #include "Projectile.h"
 #include <cmath>
 
-Projectile::Projectile(int startX, int startY, int targetX, int targetY, int damage, Player* player, sf::Color color)
-	: x(startX), y(startY), targetX(targetX), targetY(targetY), damage(damage), player(player), color(color), active(true) {
+Projectile::Projectile(int startX, int startY, int targetX, int targetY, int damage, Player* player, Enemy* attacker, sf::Color color)
+	: x(startX), y(startY), targetX(targetX), targetY(targetY), damage(damage), player(player), attacker(attacker), color(color), active(true) {
 	// Calculate the duration based on the distance to the target
 	float distance = std::sqrt(std::pow(targetX - startX, 2) + std::pow(targetY - startY, 2));
 	duration = distance * 0.05f; // Adjust the multiplier as needed to control the speed
@@ -22,7 +22,7 @@ void Projectile::update() {
 		// Check for collision with the player if player reference is provided
 		if (player && currentX == player->getX() && currentY == player->getY()) {
 			SoundManager::getInstance().playSound("skeleton_hit");
-			player->loseHealth(damage);
+			player->loseHealth(damage, attacker);
 			active = false;
 		}
 	}

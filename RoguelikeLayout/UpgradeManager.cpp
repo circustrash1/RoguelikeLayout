@@ -52,7 +52,7 @@ UpgradeManager::UpgradeManager() {
 			" ~~~~~~~~~ "
 		}, "+10 Attack Speed", ElementalType::None, 0, ClassType::Universal),
 
-		Upgrade("Attack Speed Boost", Rarity::Common, 1, {
+		Upgrade("Thorns", Rarity::Uncommon, 1, {
 			" _________ ",
 			"|Q |~~~|  |",
 			"|+ /o,o\\  |",
@@ -62,9 +62,9 @@ UpgradeManager::UpgradeManager() {
 			"|  \\o`o/ +|",
 			"|  |___| Q|",
 			" ~~~~~~~~~ "
-		}, "+10 Attack Speed", ElementalType::None, 0, ClassType::Universal),
+		}, "+10% Return Damage", ElementalType::None, 0, ClassType::Universal),
 
-		Upgrade("Life Leech", Rarity::Common, 1, {
+		Upgrade("Sharp Focus", Rarity::Uncommon, 1, {
 			" _________ ",
 			"|Q |~~~|  |",
 			"|+ /o,o\\  |",
@@ -74,7 +74,91 @@ UpgradeManager::UpgradeManager() {
 			"|  \\o`o/ +|",
 			"|  |___| Q|",
 			" ~~~~~~~~~ "
-		}, "+10% chance to lifesteal 1HP on attack", ElementalType::None, 0, ClassType::Universal),
+		}, "+5% Crit Chance", ElementalType::None, 0, ClassType::Universal),
+
+		Upgrade("Dying Rage", Rarity::Rare, 1, {
+			" _________ ",
+			"|Q |~~~|  |",
+			"|+ /o,o\\  |",
+			"|  \\_-_/  |",
+			"| _-~+_-~ |",
+			"|  /~-~\\  |",
+			"|  \\o`o/ +|",
+			"|  |___| Q|",
+			" ~~~~~~~~~ "
+		}, "+10 Damage when under 25% HP", ElementalType::None, 0, ClassType::Universal),
+
+		Upgrade("Lucky Five", Rarity::Rare, 1, {
+			" _________ ",
+			"|Q |~~~|  |",
+			"|+ /o,o\\  |",
+			"|  \\_-_/  |",
+			"| _-~+_-~ |",
+			"|  /~-~\\  |",
+			"|  \\o`o/ +|",
+			"|  |___| Q|",
+			" ~~~~~~~~~ "
+		}, "+Guaranteed crit every 5th attack", ElementalType::None, 0, ClassType::Universal),
+
+		Upgrade("Reaper's Scythe", Rarity::Epic, 1, {
+			" _________ ",
+			"|Q |~~~|  |",
+			"|+ /o,o\\  |",
+			"|  \\_-_/  |",
+			"| _-~+_-~ |",
+			"|  /~-~\\  |",
+			"|  \\o`o/ +|",
+			"|  |___| Q|",
+			" ~~~~~~~~~ "
+		}, "+5 Damage on kill \n-Resets after 5 seconds without a kill", ElementalType::None, 0, ClassType::Universal),
+
+		Upgrade("Soul Eater", Rarity::Legendary, 1, {
+			" _________ ",
+			"|Q |~~~|  |",
+			"|+ /o,o\\  |",
+			"|  \\_-_/  |",
+			"| _-~+_-~ |",
+			"|  /~-~\\  |",
+			"|  \\o`o/ +|",
+			"|  |___| Q|",
+			" ~~~~~~~~~ "
+		}, "+1 Permanent damage on kill", ElementalType::None, 0, ClassType::Universal),
+
+		Upgrade("Shockwave", Rarity::Epic, 1, {
+			" _________ ",
+			"|Q |~~~|  |",
+			"|+ /o,o\\  |",
+			"|  \\_-_/  |",
+			"| _-~+_-~ |",
+			"|  /~-~\\  |",
+			"|  \\o`o/ +|",
+			"|  |___| Q|",
+			" ~~~~~~~~~ "
+		}, "+1 Knockback Distance", ElementalType::None, 0, ClassType::Universal),
+
+		Upgrade("Glass Cannon", Rarity::Epic, 1, {
+			" _________ ",
+			"|Q |~~~|  |",
+			"|+ /o,o\\  |",
+			"|  \\_-_/  |",
+			"| _-~+_-~ |",
+			"|  /~-~\\  |",
+			"|  \\o`o/ +|",
+			"|  |___| Q|",
+			" ~~~~~~~~~ "
+		}, "+30% Attack Damage \n-25% Max Health", ElementalType::None, 0, ClassType::Universal),
+
+		Upgrade("Life Leech", Rarity::Rare, 1, {
+			" _________ ",
+			"|Q |~~~|  |",
+			"|+ /o,o\\  |",
+			"|  \\_-_/  |",
+			"| _-~+_-~ |",
+			"|  /~-~\\  |",
+			"|  \\o`o/ +|",
+			"|  |___| Q|",
+			" ~~~~~~~~~ "
+		}, "+1HP on a lifesteal hit (5% chance)", ElementalType::None, 0, ClassType::Universal),
 
 			// WARRIOR SPECIFIC UPGRADES
 

@@ -13,13 +13,12 @@ std::string wrapText(const std::string& text, const sf::Font& font, unsigned int
 class HealthBar {
 public:
 	HealthBar(float x, float y, float size, int maxHealth, float scaleX, float scaleY);
-	void update(int currentHealth);
+	void update(int currentHealth, int maxHealth);
 	void render(sf::RenderWindow& window);
 
 private:
 	sf::Text healthText;
 	sf::Font font;
-	int maxHealth;
 	float size;
 	float x;
 	float y;

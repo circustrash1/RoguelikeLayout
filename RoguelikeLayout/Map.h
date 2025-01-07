@@ -56,7 +56,7 @@ public:
 	bool isConnected(); // Function to check if all path tiles are connected
 	void advanceToNextLevel(Player* player, Game* game); // Function to advance to the next level
 	const std::vector<std::vector<char>>& getMap() const;
-	const std::vector<Enemy*>& getEnemies() const;
+	std::vector<Enemy*>& getEnemies();
 	std::vector<Room>& getRooms();
 
 	void updateEnemies(int playerX, int playerY, Player* player);

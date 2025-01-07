@@ -57,6 +57,9 @@ Game::Game()
 	window.setView(originalView); // Set the view to the original view
 
 	displayCharacterSelection();
+
+	// Debug
+	debugSystem = new DebugSystem(*player, *this);
 }
 
 Player* Game::createPlayer(const std::string& className) {
@@ -113,13 +116,13 @@ void Game::displayCharacterSelection() {
 			if (event.type == sf::Event::KeyPressed) {
 				if (event.key.code == sf::Keyboard::Num1) {
 					player = createPlayer("Warrior");
-					healthBar = new HealthBar(20, 300, 12, 150, scaleX, scaleY); // Initialize HealthBar for Warrior
+					healthBar = new HealthBar(20, 300, 12, player->getStatManager().getMaxHealth(), scaleX, scaleY); // Initialize HealthBar for Warrior
 					showStats = new ShowStats(*player); // Initialize ShowStats for Warrior
 					characterSelected = true;
 				}
 				else if (event.key.code == sf::Keyboard::Num2) {
 					player = createPlayer("Mage");
-					healthBar = new HealthBar(20, 300, 12, 100, scaleX, scaleY); // Initialize HealthBar for Mage
+					healthBar = new HealthBar(20, 300, 12, player->getStatManager().getMaxHealth(), scaleX, scaleY); // Initialize HealthBar for Mage
 					showStats = new ShowStats(*player); // Initialize ShowStats for Mage
 					characterSelected = true;
 				}
@@ -226,7 +229,7 @@ void Game::renderUpgradeOrMerchantWindow(const std::string& titleText, const std
 			cardNegativeEffects.setFillColor(greyColor);
 			cardCost.setFillColor(greyColor);
 		}
-		else if (isMerchantShop && player->getGold() < upgrades[i].getCost()) {
+		else if (isMerchantShop && player->getGold() < (static_cast<int>(upgrades[i].getCost() * player->getStatManager().getMerchantPriceModifier()))) {
 			sf::Color color = cardArt.getFillColor();
 			color.a = 50; // Lower opacity
 			cardArt.setFillColor(color);
@@ -265,6 +268,8 @@ void Game::renderUpgradeOrMerchantWindow(const std::string& titleText, const std
 	if (showStats != nullptr && player != nullptr) {
 		showStats->renderPlayerStats(window, *player, 24, scaleX, scaleY, nullptr, "");
 	}
+
+	displayCollectedUpgrades();
 
 	// Render stage counter
 	showStage->renderStage(window, stageCount, 500, 250, 24, scaleX, scaleY);
@@ -379,6 +384,7 @@ void Game::run() {
 		float deltaTime = clock.restart().asSeconds();
 		processEvents();
 		update(deltaTime);
+		handleInput();
 		SoundManager::getInstance().updateCrossfade();  // Update crossfade effect
 		render();
 	}
@@ -416,12 +422,18 @@ void Game::processEvents() {
 				modifyStat(player->getMutableStats(), "wisdom", 1, *player);
 			}
 			else if (event.key.code == sf::Keyboard::C) {
-				modifyStat(player->getMutableStats(), "dexterity", 1, *player);
+				modifyStat(player->getMutableStats(), "constitution", 1, *player);
 			}
 		}
-		else if (event.key.code == sf::Keyboard::Space) {
-			std::cout << "Space bar pressed" << std::endl;
-		}
+		debugSystem->handleInput();
+
+	}
+}
+
+void Game::handleInput(){
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		Room* currentRoom = getCurrentRoom();
+		player->attack(map.getEnemies(), map.getMap(), *currentRoom);
 	}
 }
 
@@ -433,9 +445,19 @@ void Game::modifyPlayerGold(int amount) {
 	}
 }
 
+void Game::refreshShop() {
+	// Logic to refresh the shop
+	for (Room& room : map.getRooms()) {
+		if (room.isMerchantRoom) {
+			room.merchantUpgrades = map.upgradeManager().generateUpgrades(3, player->getClassType());
+			availableUpgrades = room.merchantUpgrades;
+		}
+	}
+}
+
 void Game::updateHealth() {
 	healthText.setString("Health: " + std::to_string(player->getHealth()));
-	healthBar->update(player->getHealth());
+	healthBar->update(player->getHealth(), player->getMaxHealth());
 }
 
 void Game::update(float deltaTime) {
@@ -481,7 +503,7 @@ void Game::update(float deltaTime) {
 		screenShake(5.0f, 0.5f);
 	}
 
-	player->update(map.getEnemies());
+	player->update(map.getEnemies(), map.getMap());
 	updateHealth();
 
 	// Check for upgrade pickup
@@ -499,6 +521,7 @@ void Game::update(float deltaTime) {
 	for (Room& room : map.getRooms()) {
 		if (room.isEventRoom) {
 			EventMaps::checkEventInteraction(room, *player, window, font, 24);
+
 		}
 	}
 
@@ -519,14 +542,38 @@ void Game::update(float deltaTime) {
 
 	// Crossfader for music
 	static bool inMerchantRoom = false;
+	static bool inBossRoom = false;
+	static bool inBossCorridor = false;
+
 	bool currentlyInMerchantRoom = player->isInMerchantRoom(map.getRooms());
+	bool currentlyInBossRoom = player->isInBossRoom(map.getRooms());
+	bool currentlyInBossCorridor = player->isInBossCorridor(map.getRooms());
+
 	if (currentlyInMerchantRoom && !inMerchantRoom) {
 		SoundManager::getInstance().crossfadeMusic("main", "shop", 3.0f);
 		inMerchantRoom = true;
+		inBossRoom = false;
+		inBossCorridor = false;
+	}
+	else if (currentlyInBossRoom && !inBossRoom) {
+		SoundManager::getInstance().crossfadeMusic("main", "boss", 3.0f);
+		inBossRoom = true;
+		inMerchantRoom = false;
+		inBossCorridor = false;
+	}
+	else if (currentlyInBossCorridor && !inBossCorridor) {
+		SoundManager::getInstance().playMusic("boss");
+		inBossCorridor = true;
+		inMerchantRoom = false;
+		inBossRoom = false;
 	}
 	else if (!currentlyInMerchantRoom && inMerchantRoom) {
 		SoundManager::getInstance().crossfadeMusic("shop", "main", 3.0f);
 		inMerchantRoom = false;
+	}
+	else if (!currentlyInBossRoom && inBossRoom) {
+		SoundManager::getInstance().crossfadeMusic("boss", "main", 3.0f);
+		inBossRoom = false;
 	}
 
 	// Check for gold drops
@@ -581,6 +628,7 @@ void Game::update(float deltaTime) {
 		map.unblockExit();
 	}
 	
+	debugSystem->update();
 
 	map.advanceToNextLevel(player, this);
 }
@@ -819,10 +867,12 @@ void Game::initialize() {
 	// Load music
 	SoundManager::getInstance().loadMusic("main", "music/main.wav");
 	SoundManager::getInstance().loadMusic("shop", "music/shop.wav");
+	SoundManager::getInstance().loadMusic("boss", "music/boss.ogg");
 
 	// Set volumes for music
 	SoundManager::getInstance().setMusicVolume("main", 10.0f);
 	SoundManager::getInstance().setMusicVolume("shop", 10.0f);
+	SoundManager::getInstance().setMusicVolume("boss", 10.0f);
 
 	// Play main theme
 	SoundManager::getInstance().playMusic("main");
@@ -842,6 +892,8 @@ void Game::restartGame() {
 	showGold = new ShowGold();
 	showStage = new ShowStage();
 	stageCount = 0;
+	player->totalKillCount = 0;
+	player->bossKillCount = 0;
 
 	// Reset enemy scaling
 	map.getEnemyManager()->resetScaleFactors();
@@ -852,4 +904,21 @@ void Game::restartGame() {
 	originalView = window.getDefaultView();
 	window.setView(originalView);
 	displayCharacterSelection();
+}
+
+Room* Game::getCurrentRoom() {
+	for (Room& room : map.getRooms()) {
+		if (player->getX() >= room.startX && player->getX() <= room.endX &&
+			player->getY() >= room.startY && player->getY() <= room.endY) {
+			return &room;
+		}
+	}
+	return nullptr;
+}
+
+std::pair<int, int> Game::getPlayerKillCount() {
+	if (player != nullptr) {
+		return { player->totalKillCount, player->bossKillCount };
+	}
+	return { 0, 0 };
 }

@@ -8,32 +8,33 @@ int rollDice(int sides) {
 	return std::rand() % sides + 1;
 }
 
-bool skillCheck(int stat, int difficulty) {
+std::pair<int, bool> skillCheck(int stat, int difficulty) {
 	int roll = rollDice(20);
-	return (roll + stat) >= difficulty;
+    bool success = (roll + stat) >= difficulty;
+	return { roll, success };
 }
 
 void modifyStat(Stat& stats, const std::string& statName, int amount, Player& player) {
-	if (statName == "strength") {
-		stats.strength += amount;
-		player.updateAttackDamage();
-	}
-	else if (statName == "dexterity") {
-		stats.dexterity += amount;
-	}
-	else if (statName == "constitution") {
-		stats.constitution += amount;
-		player.updateHealth();
-	}
-	else if (statName == "intelligence") {
-		stats.intelligence += amount;
-	}
-	else if (statName == "wisdom") {
-		stats.wisdom += amount;
-	}
-	else if (statName == "charisma") {
-		stats.charisma += amount;
-	}
+    if (statName == "strength") {
+        stats.strength += amount;
+        player.updateAttackDamage();
+    }
+    else if (statName == "dexterity") {
+        stats.dexterity += amount;
+    }
+    else if (statName == "constitution") {
+        stats.constitution += amount;
+        player.increaseMaxHealth(amount * 10);
+    }
+    else if (statName == "intelligence") {
+        stats.intelligence += amount;
+    }
+    else if (statName == "wisdom") {
+        stats.wisdom += amount;
+    }
+    else if (statName == "charisma") {
+        stats.charisma += amount;
+    }
 }
 
 Stat generateRandomStats(int strSkew, int dexSkew, int conSkew, int intSkew, int wisSkew, int chaSkew) {

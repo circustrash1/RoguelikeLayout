@@ -30,12 +30,12 @@ void Map::generate() {
 
 	bool successfulGeneration = false;
 
-	generationCount++;
+	//generationCount++;
 
-	if (generationCount % 5 == 0) {
-		generateBossCorridor();
-		return;
-	}
+	//if (generationCount % 3 == 0) {
+	//	generateBossCorridor();
+	//	return;
+	//}
 
 	do {
 		entryPoints.clear();
@@ -868,8 +868,8 @@ const std::vector<std::vector<char>>& Map::getMap() const {
 	return map;
 }
 
-const std::vector<Enemy*>& Map::getEnemies() const {
-	return enemyManager->getEnemies(); // Assuming EnemyManager has a getEnemies method
+std::vector<Enemy*>& Map::getEnemies() {
+	return enemyManager->getEnemies();
 }
 
 void Map::dropUpgrade(Room& room) {
@@ -999,7 +999,14 @@ void Map::advanceToNextLevel(Player* player, Game* game) {
 	// Check if the player is at the exit
 	if (player->getX() == 61) {
 		firstGeneration = false;
-		if (generationCount % 5 == 0) {
+		generationCount++; // Increment generationCount for every level
+
+		int stageType = generationCount % 6;
+
+		if (stageType == 4) {
+			generateBossCorridor();
+		}
+		else if (stageType == 5) {
 			generateBossRoom();
 			chooseCarveExits();
 		}

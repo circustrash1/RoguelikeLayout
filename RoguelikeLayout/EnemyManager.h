@@ -22,7 +22,7 @@ public:
 	void spawnEnemies(int roomX, int roomY, int roomWidth, int roomHeight, std::vector<std::vector<char>>& map, const Room& room);
 	void updateEnemies(const std::vector<std::vector<char>>& map, int playerX, int playerY, Player* player);
 	void renderEnemies(sf::RenderWindow& window, int charSize, int playerX, int playerY, Player* player, const std::vector<std::vector<char>>& map);
-	const std::vector<Enemy*>& getEnemies() const;
+	std::vector<Enemy*>& getEnemies();
 	bool allEnemiesDead() const;
 	void clearEnemies();
 

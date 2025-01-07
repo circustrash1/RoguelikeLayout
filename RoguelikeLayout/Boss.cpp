@@ -112,7 +112,7 @@ void Boss::move(const std::vector<std::vector<char>>& map, int playerX, int play
     }
 }
 
-void Boss::attack(Player* player) {
+void Boss::attack(Player* player, const std::vector<std::vector<char>>& map) {
     // Boss attack logic
 }
 
@@ -169,10 +169,6 @@ void Boss::render(sf::RenderWindow& window, int charSize, int playerX, int playe
         isDisplayingFireDamage = false;
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-        std::cout << "Space bar pressed. Attacking enemy at (" << x << ", " << y << ")." << std::endl;
-        player->attack(const_cast<std::vector<Enemy*>&>(enemies));
-    }
 
     // Reset the damage flags after rendering
     if (enemyDamageClock.getElapsedTime().asSeconds() >= 0.1f) {
@@ -180,6 +176,13 @@ void Boss::render(sf::RenderWindow& window, int charSize, int playerX, int playe
     }
     if (fireDamageClock.getElapsedTime().asSeconds() >= 0.25f) {
         isTakingFireDamage = false;
+    }
+}
+
+void Boss::updateBodyParts(int deltaX, int deltaY) {
+    for (auto& part : bodyParts) {
+        part.first += deltaX;
+        part.second += deltaY;
     }
 }
 
@@ -229,7 +232,7 @@ bool Havok::isPlayerInRange(int playerX, int playerY) const {
     return false;
 }
 
-void Havok::attack(Player* player) {
+void Havok::attack(Player* player, const std::vector<std::vector<char>>& map) {
     adjustChargeDuration();
 
     if (!isCharging && chargeCooldownClock.getElapsedTime().asSeconds() >= chargeCooldown) {
@@ -288,9 +291,8 @@ void Havok::applyStunAndDamage(int playerX, int playerY, Player* player) {
                 int tileY = aoeCenterY + dy;
                 damagedTiles.push_back({ tileX, tileY });
                 if (tileX == playerX && tileY == playerY) {
-                    player->loseHealth(attackDamage); // Apply heavy damage
-                    // Apply stun effect (to be implemented)
-                    std::cout << "Player stunned and takes heavy damage!" << std::endl;
+                    player->loseHealth(attackDamage, this); // Apply heavy damage
+                    player->applyStun(2.0f);
                 }
             }
         }
@@ -417,10 +419,7 @@ void Havok::render(sf::RenderWindow& window, int charSize, int playerX, int play
         renderAOECircle(window, charSize, map);
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-        std::cout << "Space bar pressed. Attacking enemy at (" << x << ", " << y << ")." << std::endl;
-        player->attack(const_cast<std::vector<Enemy*>&>(enemies));
-    }
+
 
     // Reset the damage flags after rendering
     if (enemyDamageClock.getElapsedTime().asSeconds() >= 0.1f) {
@@ -444,7 +443,7 @@ void Infernos::move(const std::vector<std::vector<char>>& map, int playerX, int 
     Boss::move(map, playerX, playerY, enemies);
 }
 
-void Infernos::attack(Player* player) {
+void Infernos::attack(Player* player, const std::vector<std::vector<char>>& map) {
     // Infernos attack logic
 }
 

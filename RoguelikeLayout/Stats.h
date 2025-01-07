@@ -17,7 +17,7 @@ class Player; // Forward declaration
 Stat generateRandomStats(int strSkew = 0, int dexSkew = 0, int conSkew = 0, int intSkew = 0, int wisSkew = 0, int chaSkew = 0);
 
 int rollDice(int sides);
-bool skillCheck(int stat, int difficulty);
+std::pair<int, bool> skillCheck(int stat, int difficulty);
 void modifyStat(Stat& stats, const std::string& statName, int amount, Player& player);
 
 #endif // STATS_H

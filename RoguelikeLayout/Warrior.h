@@ -9,8 +9,11 @@
 class Warrior : public Player {
 public:
 	Warrior(int x, int y);
-	void attack(std::vector<Enemy*>& enemies) override;
+	void attack(std::vector<Enemy*>& enemies, const std::vector<std::vector<char>>& map, const Room& room) override;
 	void enableCleave();
+
+	// Debug
+	void disableCleave();
 private:
 	bool cleaveEnabled;
 	float warriorAttackCooldown;

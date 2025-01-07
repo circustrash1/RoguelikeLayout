@@ -4,7 +4,7 @@
 StatManager::StatManager(Player& player) : player(player) {}
 
 int StatManager::getAttackDamage() const {
-	return player.getStats().strength * 10; // Example: 10 damage per strength point
+	return maxHealth + player.getStats().strength * 10; // Example: 10 damage per strength point
 }
 
 float StatManager::getDodgeChance() const {

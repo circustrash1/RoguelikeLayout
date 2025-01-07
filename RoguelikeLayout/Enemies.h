@@ -19,7 +19,7 @@ public:
 	virtual ~Enemy() = default;
 
 	virtual void move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) = 0;
-	virtual void attack(Player* player) = 0;
+	virtual void attack(Player* player, const std::vector<std::vector<char>>& map) = 0;
 	virtual void render(sf::RenderWindow& window, int charSize, int playerX, int playerY, Player* player, const std::vector<Enemy*>& enemies, const std::vector<std::vector<char>>& map);
 
 	int getAttackDamage() const;
@@ -37,6 +37,7 @@ public:
 	void setColor(const sf::Color& color);
 	bool isAlive() const;
 	virtual void playDeathAnimation(sf::RenderWindow& window) = 0;
+	bool isDying() const;
 	bool isDeathAnimationComplete() const;
 	bool isPlayingDeathAnimation;
 
@@ -45,6 +46,10 @@ public:
 	char getSymbol() const;
 
 	int getHealth() const;
+
+	// Knockback mechanic
+	//void applyKnockback(Player* player, const std::vector<std::vector<char>>& map);
+	void setPosition(int newX, int newY);
 
 	// Elemental
 	void takeFireDamage(int damage);
@@ -92,13 +97,15 @@ protected:
 	int fireDamageOverTime;
 
 	sf::Color color;
+
+	int knockbackDistance;
 };
 
 class Goblin : public Enemy {
 public:
 	Goblin(int x, int y);
 	void move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) override;
-	void attack(Player* player) override;
+	void attack(Player* player, const std::vector<std::vector<char>>& map) override;
 	void playDeathAnimation(sf::RenderWindow& window) override;
 };
 
@@ -106,7 +113,7 @@ class Orc : public Enemy {
 public:
 	Orc(int x, int y);
 	void move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) override;
-	void attack(Player* player) override;
+	void attack(Player* player, const std::vector<std::vector<char>>& map) override;
 	void playDeathAnimation(sf::RenderWindow& window) override;
 };
 
@@ -114,7 +121,7 @@ class SkeletonArcher : public Enemy {
 public:
 	SkeletonArcher(int x, int y);
 	void move(const std::vector<std::vector<char>>& map, int playerX, int playerY, const std::vector<Enemy*>& enemies) override;
-	void attack(Player* player) override;
+	void attack(Player* player, const std::vector<std::vector<char>>& map) override;
 	void renderProjectiles(sf::RenderWindow& window, int charSize);
 	void playDeathAnimation(sf::RenderWindow& window) override;
 

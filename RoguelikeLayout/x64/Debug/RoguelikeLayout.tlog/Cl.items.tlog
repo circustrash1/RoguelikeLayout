@@ -2,12 +2,14 @@ C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Boss.cpp;C:\Code\C++\RoguelikeLayout
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\BossRoom.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\BossRoom.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Button.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\Button.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\DeathScreen.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\DeathScreen.obj
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\DebugSystem.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\DebugSystem.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Enemies.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\Enemies.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\EnemyManager.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\EnemyManager.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\EventMaps.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\EventMaps.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\FontManager.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\FontManager.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Game.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\Game.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\GuiElements.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\GuiElements.obj
+C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Knockback.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\Knockback.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Mage.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\Mage.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\main.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\main.obj
 C:\Code\C++\RoguelikeLayout\RoguelikeLayout\Map.cpp;C:\Code\C++\RoguelikeLayout\RoguelikeLayout\x64\Debug\Map.obj

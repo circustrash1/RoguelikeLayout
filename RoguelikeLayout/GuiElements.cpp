@@ -77,7 +77,7 @@ std::string wrapText(const std::string& text, const sf::Font& font, unsigned int
 }
 
 HealthBar::HealthBar(float x, float y, float size, int maxHealth, float scaleX, float scaleY)
-	: x(x), y(y), size(size), maxHealth(maxHealth), scaleX(scaleX), scaleY(scaleY) {
+	: x(x), y(y), size(size), scaleX(scaleX), scaleY(scaleY) {
 	if (!font.loadFromFile("fs-min.ttf")) {
 		std::cerr << "Error loading font!" << std::endl;
 		exit(-1);
@@ -90,7 +90,7 @@ HealthBar::HealthBar(float x, float y, float size, int maxHealth, float scaleX, 
 	std::cout << "HealthBar Position: (" << x * scaleX << ", " << y * scaleY << ")" << std::endl;
 }
 
-void HealthBar::update(int currentHealth) {
+void HealthBar::update(int currentHealth, int maxHealth) {
 	int barLength = (currentHealth * 10) / maxHealth;
 	if (currentHealth > 0) {
 		barLength = std::max(1, barLength);

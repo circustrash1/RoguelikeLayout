@@ -2,12 +2,18 @@
 #include "Map.h"
 #include "Stats.h"
 #include "SharedData.h"
+#include "Game.h"
 #include <algorithm>
 #include <random>
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
 extern SharedData sharedData;
+extern Game game;
+
+// Define the static member variable
+std::string EventMaps::upgradeName = "";
+sf::Color EventMaps::upgradeColor = sf::Color::White;
 
 void EventMaps::convertToMerchantRoom(Room& room) {
 	room.enemiesSpawned = false;
@@ -61,16 +67,43 @@ void displayDiceRoll(sf::RenderWindow& window, int roll, int statValue, const st
 	}
 }
 
-void displayResult(sf::RenderWindow& window, bool success, const std::string& effectDescription, const sf::Font& font) {
+void displayResult(sf::RenderWindow& window, bool success, const std::string& effectDescription, const sf::Font& font, const std::string& upgradeName = "", const sf::Color& upgradeColor = sf::Color::White) {
 	sf::Text text;
 	text.setFont(font);
-	text.setString(success ? "Success!\n" + effectDescription : "Failure!\n" + effectDescription);
-	text.setCharacterSize(24);
-	text.setFillColor(success ? sf::Color::Green : sf::Color::Red);
-	text.setPosition(300, 300);
+	std::string resultMessage = success ? "Success!\n" + effectDescription : "Failure!\n" + effectDescription;
+	if (success && !upgradeName.empty()) {
+		resultMessage += "\n\n+1 ";
+		text.setString(resultMessage);
+		text.setCharacterSize(24);
+		text.setFillColor(success ? sf::Color::Green : sf::Color::Red);
+		text.setPosition(300, 300);
 
-	window.clear();
-	window.draw(text);
+		window.clear();
+		window.draw(text);
+
+		// Draw the upgrade name with the specified color
+		sf::Text upgradeText;
+		upgradeText.setFont(font);
+		upgradeText.setString(upgradeName);
+		upgradeText.setCharacterSize(24);
+		upgradeText.setFillColor(upgradeColor);
+
+		// Calculate the position of the upgrade name
+		sf::FloatRect textBounds = text.getGlobalBounds();
+		upgradeText.setPosition(textBounds.left + textBounds.width - 550, textBounds.top + textBounds.height - text.getCharacterSize());
+
+		window.draw(upgradeText);
+	}
+	else {
+		text.setString(resultMessage);
+		text.setCharacterSize(24);
+		text.setFillColor(success ? sf::Color::Green : sf::Color::Red);
+		text.setPosition(300, 300);
+
+		window.clear();
+		window.draw(text);
+	}
+
 	window.display();
 
 	sf::sleep(sf::seconds(2));
@@ -94,16 +127,23 @@ void EventMaps::handleEventRoom(Room& room, Player& player, sf::RenderWindow& wi
 	std::vector<std::string> events = {
 		"You found a locked chest!",
 		"You found an ancient library!",
-		"You found a mystical fountain!"
+		"You found a mystical fountain!",
+		"You discovered a statue of riddles!"
 	};
 
-	std::default_random_engine rng(std::random_device{}());
-	std::uniform_int_distribution<int> dist(0, events.size() - 1);
-	int eventIndex = dist(rng);
-	std::string eventText = events[eventIndex];
-	std::cout << eventText << std::endl;
+	std::string eventText;
 
-	//displayMessage(window, eventText, font);      // Old way of displaying event message
+	if (debug) {
+		eventText = "You discovered a statue of riddles!";
+	}
+	else {
+		std::default_random_engine rng(std::random_device{}());
+		std::uniform_int_distribution<int> dist(0, events.size() - 1);
+		int eventIndex = dist(rng);
+		eventText = events[eventIndex];
+	}
+
+	std::cout << eventText << std::endl;
 
 	room.eventText = eventText;
 	room.eventTextClock.restart();
@@ -135,7 +175,7 @@ void EventMaps::checkEventInteraction(Room& room, Player& player, sf::RenderWind
 		window.clear();
 
 		bool success = false;
-		int roll = rollDice(20);
+		int roll = 0;
 		int statValue = 0;
 		std::string statName;
 		std::string effectDescription;
@@ -143,28 +183,33 @@ void EventMaps::checkEventInteraction(Room& room, Player& player, sf::RenderWind
 		if (room.eventText == "You found a locked chest!") {
 			statValue = player.getStats().dexterity;
 			statName = "DEX";
-			success = skillCheck(statValue, 15);
-			effectDescription = success ? "+1 Dexterity" : "-10 Health";
+			std::tie(roll, success) = skillCheck(statValue, 15);
+			effectDescription = success ? "+1 Free Card" : "-10 Health";
 		}
 		else if (room.eventText == "You found an ancient library!") {
 			statValue = player.getStats().intelligence;
 			statName = "INT";
-			success = skillCheck(statValue, 15);
+			std::tie(roll, success) = skillCheck(statValue, 15);
 			effectDescription = success ? "+1 Intelligence" : "-10 Health";
 		}
 		else if (room.eventText == "You found a mystical fountain!") {
 			statValue = player.getStats().wisdom;
 			statName = "WIS";
-			success = skillCheck(statValue, 15);
+			std::tie(roll, success) = skillCheck(statValue, 15);
 			effectDescription = success ? "+10 Health" : "-10 Health";
 		}
+		else if (room.eventText == "You discovered a statue of riddles!") {
+			statValue = player.getStats().intelligence;
+			statName = "INT";
+			std::tie(roll, success) = skillCheck(statValue, 1);
+			effectDescription = success ? "+1 Random Existing Upgrade" : "-10 Health";
+		}
 
-		displayDiceRoll(window, roll, statValue, statName, font);
-		displayResult(window, success, effectDescription, font);
+
 
 		if (success) {
 			if (room.eventText == "You found a locked chest!") {
-				modifyStat(player.getMutableStats(), "dexterity", 1, player);
+				game.handleUpgradePickup();
 			}
 			else if (room.eventText == "You found an ancient library!") {
 				modifyStat(player.getMutableStats(), "intelligence", 1, player);
@@ -172,28 +217,49 @@ void EventMaps::checkEventInteraction(Room& room, Player& player, sf::RenderWind
 			else if (room.eventText == "You found a mystical fountain!") {
 				player.gainHealth(10);
 			}
+			else if (success && room.eventText == "You discovered a statue of riddles!") {
+				// Re-apply a random upgrade that the player already has
+				auto& upgrades = player.getMutableCollectedUpgrades();
+				if (!upgrades.empty()) {
+					std::default_random_engine rng(std::random_device{}());
+					std::uniform_int_distribution<int> dist(0, upgrades.size() - 1);
+					int upgradeIndex = dist(rng);
+					Upgrade randomUpgrade = upgrades[upgradeIndex];
+					player.applyUpgrade(randomUpgrade);
+					upgradeName = randomUpgrade.getName();
+					upgradeColor = randomUpgrade.getColor(); // Assuming getColor() returns the color based on rarity
+				}
+			}
 		}
 		else {
 			if (room.eventText == "You found a locked chest!") {
-				player.loseHealth(10);
+				player.loseHealth(10, nullptr);
 			}
 			else if (room.eventText == "You found an ancient library!") {
-				player.loseHealth(10);
+				player.loseHealth(10, nullptr);
 			}
 			else if (room.eventText == "You found a mystical fountain!") {
-				player.loseHealth(10);
+				player.loseHealth(10, nullptr);
+			}
+			else if (room.eventText == "You discovered a statue of riddles!") {
+				player.loseHealth(10, nullptr);
 			}
 		}
 
+		displayDiceRoll(window, roll, statValue, statName, font);
+		displayResult(window, success, effectDescription, font, upgradeName, upgradeColor);
+
 		window.clear();
+
 		window.display();
 
 		room.eventResolved = true;
 		room.eventCharVisible = false;
 		sharedData.relevantStat.clear();
 	}
-	else if (!isNearEventChar)
+	else if (!isNearEventChar) {
 		sharedData.relevantStat.clear();
+	}
 }
 
 bool EventMaps::checkMerchantInteraction(Room& room, Player& player) {
@@ -245,6 +311,10 @@ void EventMaps::renderSkillCheckText(Room& room, Player& player, sf::RenderWindo
 		else if (room.eventText == "You found a mystical fountain!") {
 			skillCheckMsg += "Wisdom\nSuccess: +10 Health\nFailure: -10 Health";
 			sharedData.relevantStat = "WIS";
+		}
+		else if (room.eventText == "You discovered a statue of riddles!") {
+			skillCheckMsg += "Intelligence\nSuccess: +1 Random Existing Upgrade\nFailure: -10 Health";
+			sharedData.relevantStat = "INT";
 		}
 
 		skillCheckText.setString(skillCheckMsg);

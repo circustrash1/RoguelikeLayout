@@ -3,6 +3,7 @@
 #include "ElementalType.h"
 #include "SoundManager.h"
 #include "Boss.h"
+#include "Knockback.h"
 #include <iostream>
 #include <random>
 
@@ -89,6 +90,12 @@ void Enemy::takeFireDamage(int damage) {
 	lastFireDamageAmount = damage;
 	healthBarNeedsUpdate = true;
 	SoundManager::getInstance().playSound("burn_damage");
+
+	if (!alive && !goldDropped) {
+		std::cout << "Enemy died. Dropping gold" << std::endl;
+		goldDropped = true;
+		dropGold();
+	}
 }
 
 void Enemy::applyFireDamage(int damage) {
@@ -191,7 +198,6 @@ bool Enemy::isDeathAnimationComplete() const {
 	return deathAnimationClock.getElapsedTime().asSeconds() >= 1.0f;
 }
 
-
 void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int playerY, Player* player, const std::vector<Enemy*>& enemies, const std::vector<std::vector<char>>& map) {
 	static sf::Font font;
 	static bool fontLoaded = false;
@@ -219,11 +225,6 @@ void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int play
 
 	if (isAlive() && distance <= viewDistance) {
 		text.setFillColor(sf::Color(color.r, color.g, color.b, opacity));
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-			std::cout << "Space bar pressed. Attacking enemy at (" << x << ", " << y << ")." << std::endl;
-			player->attack(const_cast<std::vector<Enemy*>&>(enemies));
-		}
 
 		if (isTakingDamage && enemyDamageClock.getElapsedTime().asSeconds() < 0.1f) {        // Flash white when taking damage
 			text.setFillColor(sf::Color(255, 255, 255, opacity));
@@ -274,8 +275,6 @@ void Enemy::render(sf::RenderWindow& window, int charSize, int playerX, int play
 	}
 }
 
-
-
 void Enemy::scaleAttributes(float healthFactor, float damageFactor) {
 	maxHealth = static_cast<int>(maxHealth * healthFactor);
 	enemyHealth = maxHealth;	// Reset current health to max health
@@ -321,7 +320,7 @@ void Goblin::move(const std::vector<std::vector<char>>& map, int playerX, int pl
 	}
 }
 
-void Goblin::attack(Player* player) {
+void Goblin::attack(Player* player, const std::vector<std::vector<char>>& map) {
 	// Implement Goblin-specific attack logic
 }
 
@@ -376,7 +375,7 @@ void Orc::move(const std::vector<std::vector<char>>& map, int playerX, int playe
 	}
 }
 
-void Orc::attack(Player* player) {
+void Orc::attack(Player* player, const std::vector<std::vector<char>>& map) {
 	// Implement Orc-specific attack logic
 }
 
@@ -450,7 +449,7 @@ void SkeletonArcher::move(const std::vector<std::vector<char>>& map, int playerX
 	moveCooldownClock.restart();
 }
 
-void SkeletonArcher::attack(Player* player) {
+void SkeletonArcher::attack(Player* player, const std::vector<std::vector<char>>& map) {
 	if (isRetreating || attackCooldownClock.getElapsedTime().asSeconds() < attackCooldown) { // Cooldown between attacks
 		return;
 	}
@@ -458,7 +457,7 @@ void SkeletonArcher::attack(Player* player) {
 	int playerX = player->getX();
 	int playerY = player->getY();
 	SoundManager::getInstance().playSound("skeleton_attack");
-	projectile = new Projectile(x, y, playerX, playerY, attackDamage, player, sf::Color::Red);
+	projectile = new Projectile(x, y, playerX, playerY, attackDamage, player, this, sf::Color::Red);
 	attackCooldownClock.restart();
 }
 
@@ -519,4 +518,21 @@ const sf::Clock& Enemy::getAttackCooldownClock() const {
 
 float Enemy::getAttackCooldown() const {
 	return attackCooldown;
+}
+
+bool Enemy::isDying() const {
+	return !alive && deathAnimationClock.getElapsedTime().asSeconds() < 1.0f;
+}
+
+//// Knockback mechanic
+//void Enemy::applyKnockback(Player* player, const std::vector<std::vector<char>>& map) {
+//	int playerX = player->getX();
+//	int playerY = player->getY();
+//	Knockback::applyKnockback(playerX, playerY, x, y, map, knockbackDistance);
+//	player->setPosition(playerX, playerY);
+//}
+
+void Enemy::setPosition(int newX, int newY) {
+	x = newX;
+	y = newY;
 }

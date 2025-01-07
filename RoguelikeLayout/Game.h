@@ -1,16 +1,19 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "DebugSystem.h"
 #include <SFML/Graphics.hpp>
 #include "Button.h"
 #include "Map.h"
-#include "Player.h" // Include Player header
-#include "Warrior.h" // Include Warrior header"
+#include "Player.h"
+#include "Warrior.h"
 #include "Mage.h"
 #include "GuiElements.h"
 #include "BossRoom.h"
 #include <vector>
 #include <iostream>
+
+class DebugSystem;
 
 class Game {
 public:
@@ -18,7 +21,10 @@ public:
 	~Game();
 	void run();
 	void handleUpgradePickup();
+	void handleInput();
 	void initialize();
+
+	void updateHealth();
 
 	void renderGoldDrops(sf::RenderWindow& window);
 	void clearGoldDrops();
@@ -26,6 +32,7 @@ public:
 	int getStageCount() const;
 	void incrementStageCount();
 
+	void displayUpgradeSelection();
 	void displayCollectedUpgrades();
 
 	sf::Clock shopCloseClock;
@@ -35,8 +42,13 @@ public:
 
 	void enterBossRoom();
 
+	Room* getCurrentRoom();
+
+	std::pair<int, int> getPlayerKillCount();
+
 	// Cheats
 	void modifyPlayerGold(int amount);
+	void refreshShop();
 
 private:
 	sf::RenderWindow window;
@@ -46,7 +58,7 @@ private:
 	sf::RectangleShape mainBar;
 	sf::RectangleShape sideBar;
 	Map map;
-	Player* player; // Add player as a member of Game class
+	Player* player; 
 	int playerX;
 	int playerY;
 	float scaleX; // Add scaleX
@@ -57,10 +69,9 @@ private:
 
 	void displayCharacterSelection();
 	Player* createPlayer(const std::string& className);
-	void displayUpgradeSelection();
+
 	void displayMerchantWindow(Room& room);
 	void renderUpgradeOrMerchantWindow(const std::string& titleText, const std::vector<Upgrade>& upgrades, bool isMerchantShop);
-	void updateHealth();
 
 	HealthBar* healthBar;
 	ShowStats* showStats;
@@ -81,6 +92,9 @@ private:
 	void processEvents();
 	void update(float deltaTime);
 	void render();
+
+	// Debug
+	DebugSystem* debugSystem;
 };
 
 #endif // GAME_H

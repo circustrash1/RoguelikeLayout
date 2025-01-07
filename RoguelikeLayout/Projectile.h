@@ -4,12 +4,14 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "SoundManager.h"
+#include "Enemies.h"
 
 class Player;
+class Enemy;
 
 class Projectile {
 public:
-	Projectile(int startX, int startY, int targetX, int targetY, int damage = 0, Player* player = nullptr, sf::Color color = sf::Color::White);
+	Projectile(int startX, int startY, int targetX, int targetY, int damage = 0, Player* player = nullptr, Enemy* attacker = nullptr, sf::Color color = sf::Color::White);
 	void update();
 	void render(sf::RenderWindow& window, int charSize);
 	bool isActive() const;
@@ -22,6 +24,7 @@ private:
 	float duration; // Duration for the projectile to reach the target
 	sf::Clock clock;
 	Player* player;
+	Enemy* attacker;
 	sf::Color color; // Color attribute for the projectile
 };
 

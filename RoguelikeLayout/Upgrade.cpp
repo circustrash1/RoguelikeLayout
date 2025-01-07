@@ -63,9 +63,35 @@ void Upgrade::applyUpgrade(Player& player) const {
 	else if (name == "Attack Speed Boost") {
 		player.increaseAttackSpeed(0.02f);
 	}
-	//else if (name == "Life Leech") {
-	//	player.lifesteal();
-	//}
+	else if (name == "Life Leech") {
+		player.increaseLifesteal(1);
+	}
+	else if (name == "Glass Cannon") {
+		player.applyGlassCannon();
+		std::cout << "Applying glass cannon" << std::endl;
+
+	}
+	else if (name == "Thorns") {
+		player.applyThorns(10);
+	}
+	else if (name == "Sharp Focus") {
+		player.applyCritChance(10);
+	}
+	else if (name == "Dying Rage") {
+		player.applyDyingRage(10);
+	}
+	else if (name == "Lucky Five") {
+		player.applyLuckyFive();
+	}
+	else if (name == "Reaper's Scythe") {
+		player.applyReapersScythe();
+	}
+	else if (name == "Soul Eater") {
+		player.applySoulEater();
+	}
+	else if (name == "Shockwave") {
+		player.applyShockwave();
+	}
 
 	// Apply elemental damage
 	std::cout << "You picked up: " << elementalTypeToString(elementalType) << " elemental.\n";
